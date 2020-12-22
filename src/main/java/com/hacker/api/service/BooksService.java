@@ -18,7 +18,7 @@ public class BooksService {
     private Logger logger = LoggerFactory.getLogger(BooksService.class);
 
     @Value("${google.sheets.books.spreadsheet}")
-    private String spredsheetId;
+    private String spreadsheetId;
 
     @Value("${google.sheets.books.sheet}")
     private String sheetId;
@@ -30,7 +30,7 @@ public class BooksService {
     private GoogleSheetsToBooksTransformer transformer;
 
     public Collection<Book> getBooks() throws IOException {
-        ValueRange response = sheetsClient.getValuesFromSheet(spredsheetId, sheetId);
+        ValueRange response = sheetsClient.getValuesFromSheet(spreadsheetId, sheetId);
         Collection<Book> books = transformer.transform(response.getValues());
         return books;
     }

@@ -15,8 +15,7 @@ public class BooksController {
     @Autowired
     private BooksService service;
 
-    @GetMapping(path = "/", produces = "application/json")
-    @ResponseBody
+    @GetMapping("/")
     public Collection<Book> getBooks() throws IOException {
         Collection<Book> result = service.getBooks();
         return result;

@@ -4,12 +4,12 @@ import com.hacker.api.domain.Employee;
 import com.hacker.api.domain.books.Book;
 import com.hacker.api.service.EmployeesService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.nio.file.FileSystemException;
+import java.rmi.RemoteException;
 import java.util.Collection;
 
 @RestController
@@ -19,8 +19,7 @@ public class EmployeesController {
     @Autowired
     private EmployeesService service;
 
-    @GetMapping(path = "/", produces = "application/json")
-    @ResponseBody
+    @GetMapping("/")
     public Collection<Employee> getEmployees() throws IOException {
         Collection<Employee> result = service.getEmployees();
         return result;

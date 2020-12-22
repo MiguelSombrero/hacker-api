@@ -27,29 +27,13 @@ public class GoogleSheetsToEmployeesTransformer {
     @Autowired
     private EmployeeReducer employeeReducer;
 
-    @Autowired
-    private SkillReducer skillReducer;
-
     public Collection<Employee> transform(List<List<Object>> values) {
         Collection<Employee> employees = values.stream()
                 .map(row -> employeeMapper(row))
                 .collect(Collectors.groupingBy(Employee::hashCode, Collectors.reducing(null, employeeReducer.reduce())))
                 .values();
 
-        Collection<Employee> employees2 = employees.stream()
-                .map(employee -> {
-
-                    Collection<Skill> skills = employee.getSkills().stream()
-                        .collect(Collectors.groupingBy(Skill::hashCode, Collectors.reducing(null, skillReducer.reduce())))
-                        .values();
-
-                    employee.setSkills(skills.stream().collect(Collectors.toList()));
-
-                    return employee;
-
-                }).collect(Collectors.toList());
-
-        return employees2;
+        return employees;
     }
 
     private static Employee employeeMapper(List<Object> row) {
