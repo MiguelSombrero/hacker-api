@@ -13,10 +13,10 @@ public class GoogleSheetsClient {
     @Autowired
     private Sheets sheetsClient;
 
-    public ValueRange getValuesFromSheet(String sheetId) throws IOException {
+    public ValueRange getValuesFromSheet(String spreadsheetId, String sheetId) throws IOException {
         ValueRange response = sheetsClient.spreadsheets()
                 .values()
-                .get(sheetId, "Sheet1")
+                .get(spreadsheetId, sheetId)
                 .execute();
 
         return response;

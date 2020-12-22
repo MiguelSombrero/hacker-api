@@ -1,6 +1,5 @@
 package com.hacker.api.service;
 
-import com.google.api.services.sheets.v4.Sheets;
 import com.hacker.api.client.GoogleSheetsClient;
 import com.hacker.api.domain.books.Book;
 import com.hacker.api.utils.GoogleSheetsToBooksTransformer;
@@ -18,18 +17,21 @@ import java.util.Collection;
 public class BooksService {
     private Logger logger = LoggerFactory.getLogger(BooksService.class);
 
-    @Value("${google.sheets.books.id}")
-    private String id;
+    @Value("${google.sheets.books.spreadsheet}")
+    private String spredsheetId;
+
+    @Value("${google.sheets.books.sheet}")
+    private String sheetId;
 
     @Autowired
     private GoogleSheetsClient sheetsClient;
 
+    @Autowired
+    private GoogleSheetsToBooksTransformer transformer;
+
     public Collection<Book> getBooks() throws IOException {
-        ValueRange response = sheetsClient.getValuesFromSheet(id);
-
-        Collection<Book> books = GoogleSheetsToBooksTransformer
-                .transform(response.getValues());
-
+        ValueRange response = sheetsClient.getValuesFromSheet(spredsheetId, sheetId);
+        Collection<Book> books = transformer.transform(response.getValues());
         return books;
     }
 

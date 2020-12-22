@@ -17,18 +17,21 @@ import java.util.Collection;
 public class EmployeesService {
     private Logger logger = LoggerFactory.getLogger(EmployeesService.class);
 
-    @Value("${google.sheets.projects.id}")
-    private String id;
+    @Value("${google.sheets.projects.spreadsheet}")
+    private String spredsheetId;
+
+    @Value("${google.sheets.projects.sheet}")
+    private String sheetId;
 
     @Autowired
     private GoogleSheetsClient sheetsClient;
 
+    @Autowired
+    private GoogleSheetsToEmployeesTransformer transformer;
+
     public Collection<Employee> getEmployees() throws IOException {
-        ValueRange response = sheetsClient.getValuesFromSheet(id);
-
-        Collection<Employee> employees = GoogleSheetsToEmployeesTransformer
-                .transform(response.getValues());
-
+        ValueRange response = sheetsClient.getValuesFromSheet(spredsheetId, sheetId);
+        Collection<Employee> employees = transformer.transform(response.getValues());
         return employees;
     }
 

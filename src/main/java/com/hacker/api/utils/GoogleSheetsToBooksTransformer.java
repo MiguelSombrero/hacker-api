@@ -4,20 +4,26 @@ import com.hacker.api.domain.Employee;
 import com.hacker.api.domain.books.Author;
 import com.hacker.api.domain.books.Book;
 import com.hacker.api.domain.books.Review;
+import com.hacker.api.reducers.BookReducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
-import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
+@Component
 public class GoogleSheetsToBooksTransformer {
     private static Logger logger = LoggerFactory.getLogger(GoogleSheetsToBooksTransformer.class);
 
-    public static Collection<Book> transform(List<List<Object>> values) {
+    @Autowired
+    private BookReducer reducer;
+
+    public Collection<Book> transform(List<List<Object>> values) {
         Collection<Book> books = values.stream()
                 .map(row -> bookMapper(row))
-                .collect(Collectors.groupingBy(Book::hashCode, Collectors.reducing(null, bookReducer())))
+                .collect(Collectors.groupingBy(Book::hashCode, Collectors.reducing(null, reducer.reduce())))
                 .values();
 
         return books;
@@ -37,24 +43,13 @@ public class GoogleSheetsToBooksTransformer {
         return book;
     }
 
-    private static BinaryOperator<Book> bookReducer() {
-        BinaryOperator<Book> reducer = (a, b) -> Optional.ofNullable(a)
-                .map(current -> {
-                    current.getReviews().addAll(b.getReviews());
-                    return current;
-                })
-                .orElseGet(() -> new Book(b.getName(), b.getAuthor(), new ArrayList<>(b.getReviews())));
-
-        return reducer;
-    }
-
     private static Author parseAuthor(List<Object> row) {
         String names = (String) row.get(0);
         String[] parts = names.split(",");
 
         Author author = new Author();
-        author.setFirstname(parts[1]);
-        author.setLastname(parts[0]);
+        author.setFirstname(parts[1].trim());
+        author.setLastname(parts[0].trim());
 
         return author;
     }
