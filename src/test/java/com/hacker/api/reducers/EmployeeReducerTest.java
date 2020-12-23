@@ -2,6 +2,7 @@ package com.hacker.api.reducers;
 
 import com.hacker.api.domain.Employee;
 import com.hacker.api.domain.projects.Skill;
+import com.hacker.api.utils.DomainObjectFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,40 +17,19 @@ public class EmployeeReducerTest {
 
     @Test
     public void testMerge() {
-        Skill skill1 = new Skill();
-        skill1.setName("Java");
-        skill1.setKnowHowMonths(5);
+        Skill skill1 = DomainObjectFactory.getSkill("Java", 5);
+        Skill skill2 = DomainObjectFactory.getSkill("Java", 2);
+        Skill skill3 = DomainObjectFactory.getSkill("React", 5);
+        Skill skill4 = DomainObjectFactory.getSkill("Java", 11);
+        Skill skill5 = DomainObjectFactory.getSkill("XML", 8);
+        Skill skill6 = DomainObjectFactory.getSkill("XML", 2);
 
-        Skill skill2 = new Skill();
-        skill2.setName("Java");
-        skill2.setKnowHowMonths(2);
-
-        Skill skill3 = new Skill();
-        skill3.setName("React");
-        skill3.setKnowHowMonths(5);
-
-        Skill skill4 = new Skill();
-        skill4.setName("Java");
-        skill4.setKnowHowMonths(11);
-
-        Skill skill5 = new Skill();
-        skill5.setName("XML");
-        skill5.setKnowHowMonths(8);
-
-        Skill skill6 = new Skill();
-        skill6.setName("XML");
-        skill6.setKnowHowMonths(2);
-
-        Employee employee1 = new Employee();
-        employee1.setFirstname("Miika");
-        employee1.setLastname("Somero");
+        Employee employee1 = DomainObjectFactory.getEmployee("Miika", "Somero");
         employee1.getSkills().add(skill1);
         employee1.getSkills().add(skill2);
         employee1.getSkills().add(skill3);
 
-        Employee employee2 = new Employee();
-        employee2.setFirstname("Miika");
-        employee2.setLastname("Somero");
+        Employee employee2 = DomainObjectFactory.getEmployee("Miika", "Somero");
         employee2.getSkills().add(skill4);
         employee2.getSkills().add(skill5);
         employee2.getSkills().add(skill6);

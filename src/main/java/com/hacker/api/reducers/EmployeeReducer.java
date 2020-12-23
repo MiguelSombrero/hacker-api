@@ -18,18 +18,14 @@ public class EmployeeReducer extends ReducerTemplate<Employee> {
 
     @Override
     protected Employee merge(Employee current, Employee next) {
-        Employee employee = new Employee();
-        employee.setFirstname(current.getFirstname());
-        employee.setLastname(current.getLastname());
-
         current.getSkills().addAll(next.getSkills());
 
         Collection<Skill> skills = current.getSkills().stream()
                 .collect(Collectors.groupingBy(Skill::hashCode, Collectors.reducing(null, skillReducer.reduce())))
                 .values();
 
-        employee.setSkills(skills.stream().collect(Collectors.toList()));
+        current.setSkills(skills.stream().collect(Collectors.toList()));
 
-        return employee;
+        return current;
     }
 }

@@ -2,6 +2,7 @@ package com.hacker.api.reducers;
 
 import com.hacker.api.domain.books.Book;
 import com.hacker.api.domain.books.Review;
+import com.hacker.api.utils.DomainObjectFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,22 +17,15 @@ public class BookReducerTest {
 
     @Test
     public void testMerge() {
-        Review review1 = new Review();
-        review1.setReview("Pretty good book");
+        Review review1 = DomainObjectFactory.getReview("Pretty good book");
+        Review review2 = DomainObjectFactory.getReview("Could be worse");
+        Review review3 = DomainObjectFactory.getReview("Did not like");
 
-        Review review2 = new Review();
-        review1.setReview("Could be Worse");
-
-        Review review3 = new Review();
-        review1.setReview("Did not like");
-
-        Book book1 = new Book();
-        book1.setName("Apocalypse Now");
+        Book book1 = DomainObjectFactory.getBook("Apocalypse Now");
         book1.getReviews().add(review1);
         book1.getReviews().add(review2);
 
-        Book book2 = new Book();
-        book1.setName("Apocalypse Now");
+        Book book2 = DomainObjectFactory.getBook("Apocalypse Now");
         book2.getReviews().add(review3);
 
         Book book3 = bookReducer.merge(book1, book2);
