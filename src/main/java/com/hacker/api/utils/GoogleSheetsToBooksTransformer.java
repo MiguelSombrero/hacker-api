@@ -26,6 +26,8 @@ public class GoogleSheetsToBooksTransformer {
                 .collect(Collectors.groupingBy(Book::hashCode, Collectors.reducing(null, reducer.reduce())))
                 .values();
 
+        books.stream().forEach(book -> book.calculateRating());
+
         return books;
     }
 
@@ -64,6 +66,7 @@ public class GoogleSheetsToBooksTransformer {
     private static Review parseReview(List<Object> row) {
         Review review = new Review();
         review.setReview((String) row.get(4));
+        review.setRating(Integer.valueOf((String) row.get(5)));
 
         return review;
     }

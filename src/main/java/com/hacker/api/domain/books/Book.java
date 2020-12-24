@@ -13,5 +13,15 @@ public class Book {
     private Author author;
 
     @EqualsAndHashCode.Exclude
+    private Double rating;
+
+    @EqualsAndHashCode.Exclude
     private List<Review> reviews = new ArrayList<>();
+
+    public void calculateRating() {
+        this.rating = this.getReviews().stream()
+                .mapToInt(review -> review.getRating())
+                .average()
+                .orElse(Double.NaN);
+    }
 }

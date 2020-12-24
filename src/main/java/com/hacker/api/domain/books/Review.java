@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Review {
     private String review;
+    private Integer rating;
     private Employee reviewer;
 }

@@ -8,10 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import com.google.api.services.sheets.v4.model.ValueRange;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class BooksService {
@@ -30,8 +30,8 @@ public class BooksService {
     private GoogleSheetsToBooksTransformer transformer;
 
     public Collection<Book> getBooks() throws IOException {
-        ValueRange response = sheetsClient.getValuesFromSheet(spreadsheetId, sheetId);
-        Collection<Book> books = transformer.transform(response.getValues());
+        List<List<Object>> response = sheetsClient.getValuesFromSheet(spreadsheetId, sheetId);
+        Collection<Book> books = transformer.transform(response);
         return books;
     }
 

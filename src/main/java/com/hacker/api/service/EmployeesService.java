@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class EmployeesService {
@@ -30,8 +31,8 @@ public class EmployeesService {
     private GoogleSheetsToEmployeesTransformer transformer;
 
     public Collection<Employee> getEmployees() throws IOException {
-        ValueRange response = sheetsClient.getValuesFromSheet(spredsheetId, sheetId);
-        Collection<Employee> employees = transformer.transform(response.getValues());
+        List<List<Object>> response = sheetsClient.getValuesFromSheet(spredsheetId, sheetId);
+        Collection<Employee> employees = transformer.transform(response);
         return employees;
     }
 

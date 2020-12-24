@@ -12,6 +12,8 @@ import java.nio.file.FileSystemException;
 import java.rmi.RemoteException;
 import java.util.Collection;
 
+import static org.springframework.http.ResponseEntity.ok;
+
 @RestController
 @RequestMapping("/employees")
 public class EmployeesController {
@@ -19,7 +21,7 @@ public class EmployeesController {
     @Autowired
     private EmployeesService service;
 
-    @GetMapping("/")
+    @GetMapping("")
     public Collection<Employee> getEmployees() throws IOException {
         Collection<Employee> result = service.getEmployees();
         return result;

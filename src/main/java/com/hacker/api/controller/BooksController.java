@@ -15,7 +15,7 @@ public class BooksController {
     @Autowired
     private BooksService service;
 
-    @GetMapping("/")
+    @GetMapping("")
     public Collection<Book> getBooks() throws IOException {
         Collection<Book> result = service.getBooks();
         return result;
