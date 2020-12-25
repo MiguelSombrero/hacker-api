@@ -75,7 +75,7 @@ public class EmployeesControllerTest {
     public void getEmployees() throws Exception {
         Mockito.when(employeesService.getEmployees()).thenReturn(Arrays.asList(employee1, employee2));
 
-        MvcResult result = mockMvc.perform(get("/employees/"))
+        MvcResult result = mockMvc.perform(get("/employees"))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", "application/json"))
                 .andExpect(jsonPath("$[0].firstname", is("Miika")))

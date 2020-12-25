@@ -10,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Book {
     private String name;
-    private Author author;
+    private List<Author> authors = new ArrayList<>();
 
     @EqualsAndHashCode.Exclude
     private Double rating;

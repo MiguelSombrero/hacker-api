@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Author {
-    private String lastname;
     private String firstname;
+    private String lastname;
 }

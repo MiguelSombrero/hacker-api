@@ -2,7 +2,8 @@ package com.hacker.api.service;
 
 import com.hacker.api.client.GoogleSheetsClient;
 import com.hacker.api.domain.books.Book;
-import com.hacker.api.utils.GoogleSheetsToBooksTransformer;
+import com.hacker.api.reducers.BookReducer;
+import com.hacker.api.parsers.BooksParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +28,17 @@ public class BooksService {
     private GoogleSheetsClient sheetsClient;
 
     @Autowired
-    private GoogleSheetsToBooksTransformer transformer;
+    private BookReducer reducer;
 
     public Collection<Book> getBooks() throws IOException {
-        List<List<Object>> response = sheetsClient.getValuesFromSheet(spreadsheetId, sheetId);
-        Collection<Book> books = transformer.transform(response);
+        List<List<Object>> values = sheetsClient.getValuesFromSheet(spreadsheetId, sheetId);
+
+        BooksParser parser = new BooksParser(values);
+
+        Collection<Book> books = reducer.reduce(parser.getAll());
+
+        books.stream().forEach(book -> book.calculateRating());
+
         return books;
     }
 
