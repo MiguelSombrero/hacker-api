@@ -10,10 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-public class EmployeeReducerTest {
+public class EmployeesReducerTest {
 
     @Autowired
-    private EmployeeReducer employeeReducer;
+    private EmployeesReducer employeesReducer;
 
     @Test
     public void testMerge() {
@@ -34,7 +34,7 @@ public class EmployeeReducerTest {
         employee2.getSkills().add(skill5);
         employee2.getSkills().add(skill6);
 
-        Employee result = employeeReducer.merge(employee1, employee2);
+        Employee result = employeesReducer.merge(employee1, employee2);
 
         assertEquals("Miika", result.getFirstname());
         assertEquals("Somero", result.getLastname());

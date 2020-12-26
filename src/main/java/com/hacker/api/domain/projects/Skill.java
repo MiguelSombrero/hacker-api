@@ -12,5 +12,5 @@ public class Skill {
     private String name;
 
     @EqualsAndHashCode.Exclude
-    private Integer knowHowMonths;
+    private int knowHowMonths;
 }

@@ -21,6 +21,7 @@ public class Book {
     public void calculateRating() {
         this.rating = this.getReviews().stream()
                 .mapToInt(review -> review.getRating())
+                .filter(rating -> rating != 0)
                 .average()
                 .orElse(Double.NaN);
     }

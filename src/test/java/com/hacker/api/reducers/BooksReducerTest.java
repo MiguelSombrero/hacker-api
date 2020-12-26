@@ -10,10 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-public class BookReducerTest {
+public class BooksReducerTest {
 
     @Autowired
-    private BookReducer bookReducer;
+    private BooksReducer booksReducer;
 
     @Test
     public void testMerge() {
@@ -28,7 +28,7 @@ public class BookReducerTest {
         Book book2 = DomainObjectFactory.getBook("Apocalypse Now");
         book2.getReviews().add(review3);
 
-        Book book3 = bookReducer.merge(book1, book2);
+        Book book3 = booksReducer.merge(book1, book2);
 
         assertEquals("Apocalypse Now", book3.getName());
         assertEquals(3, book3.getReviews().size());

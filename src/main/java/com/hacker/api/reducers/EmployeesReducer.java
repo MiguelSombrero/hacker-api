@@ -9,9 +9,9 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Component
-public class EmployeeReducer extends ReducerTemplate<Employee> {
+public class EmployeesReducer extends ReducerTemplate<Employee> {
     @Autowired
-    private SkillReducer reducer;
+    private SkillsReducer reducer;
 
     @Override
     protected Employee merge(Employee current, Employee next) {
