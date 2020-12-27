@@ -37,7 +37,7 @@ public class BooksService {
 
         Collection<Book> books = reducer.reduce(parser.parseBooks());
 
-        books.stream().forEach(book -> book.calculateRating());
+        books.stream().forEach(Book::calculateRating);
 
         return books;
     }

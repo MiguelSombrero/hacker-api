@@ -16,6 +16,7 @@ public class EmployeesReducer extends ReducerTemplate<Employee> {
     @Override
     protected Employee merge(Employee current, Employee next) {
         current.getSkills().addAll(next.getSkills());
+        current.getProjects().addAll(next.getProjects());
 
         Collection<Skill> skills = reducer.reduce(current.getSkills());
 

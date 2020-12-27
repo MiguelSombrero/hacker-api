@@ -27,9 +27,11 @@ public class SpreadsheetToBooksParser extends SpreadsheetParserTemplate {
 
         Review review = parseReview(row);
         review.setReviewer(reviewer);
+        review.setId(review.hashCode());
 
         Book book = parseBook(row);
         book.setAuthors(authors);
+        book.setId(book.hashCode());
         book.getReviews().add(review);
 
         return book;
@@ -40,7 +42,14 @@ public class SpreadsheetToBooksParser extends SpreadsheetParserTemplate {
         String[] parts = text.split(";");
 
         List<Author> authors = Arrays.stream(parts)
-                .map(author -> new Author(author.split(",")[1].trim(), author.split(",")[0].trim()))
+                .map(part -> {
+                    Author author = new Author();
+                    author.setFirstname(part.split(",")[1].trim());
+                    author.setLastname(part.split(",")[0].trim());
+                    author.setId(author.hashCode());
+
+                    return author;
+                })
                 .collect(Collectors.toList());
 
         return authors;
@@ -68,6 +77,7 @@ public class SpreadsheetToBooksParser extends SpreadsheetParserTemplate {
         Employee employee = new Employee();
         employee.setFirstname(getStringValue(row, 2));
         employee.setLastname(getStringValue(row, 3));
+        employee.setId(employee.hashCode());
 
         return employee;
     }

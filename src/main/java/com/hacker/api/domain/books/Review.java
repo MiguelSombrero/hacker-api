@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Review {
+    private int id;
     private String review;
     private int rating;
     private Employee reviewer;

@@ -1,4 +1,4 @@
-package com.hacker.api.controller;
+package com.hacker.api.conf;
 
 import com.hacker.api.parsers.SpreadsheetParserTemplate;
 import org.slf4j.Logger;

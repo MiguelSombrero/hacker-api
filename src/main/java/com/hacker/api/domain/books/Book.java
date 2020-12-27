@@ -9,20 +9,23 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Book {
+    private int id;
     private String name;
     private List<Author> authors = new ArrayList<>();
 
     @EqualsAndHashCode.Exclude
-    private Double rating;
+    private double rating;
 
     @EqualsAndHashCode.Exclude
     private List<Review> reviews = new ArrayList<>();
 
     public void calculateRating() {
-        this.rating = this.getReviews().stream()
+        double value = this.getReviews().stream()
                 .mapToInt(review -> review.getRating())
                 .filter(rating -> rating != 0)
                 .average()
                 .orElse(Double.NaN);
+
+        this.rating = (double) Math.round(value * 10) / 10;
     }
 }

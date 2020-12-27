@@ -1,5 +1,6 @@
 package com.hacker.api.domain;
 
+import com.hacker.api.domain.projects.Project;
 import com.hacker.api.domain.projects.Skill;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,9 +14,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Employee {
+    private int id;
     private String firstname;
     private String lastname;
 
     @EqualsAndHashCode.Exclude
     private List<Skill> skills = new ArrayList<>();
+
+    @EqualsAndHashCode.Exclude
+    private List<Project> projects = new ArrayList<>();
 }
