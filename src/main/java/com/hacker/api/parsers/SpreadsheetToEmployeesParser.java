@@ -84,47 +84,47 @@ public class SpreadsheetToEmployeesParser extends SpreadsheetParserTemplate {
     }
 
     private String getEmployeeFirstname(List<Object> row) {
-        return getStringValue(row, 0);
+        return parseStringValue(row, 0);
     }
 
     private String getEmployeeLastname(List<Object> row) {
-        return getStringValue(row, 1);
+        return parseStringValue(row, 1);
     }
 
     private String getEmployerName(List<Object> row) {
-        return getStringValue(row, 2);
+        return parseStringValue(row, 2);
     }
 
     private String getProjectName(List<Object> row) {
-        return getStringValue(row, 3);
+        return parseStringValue(row, 3);
     }
 
     private String getRoleName(List<Object> row) {
-        return getStringValue(row, 4);
+        return parseStringValue(row, 4);
     }
 
     private String getRoleTasks(List<Object> row) {
-        return getStringValue(row, 5);
+        return parseStringValue(row, 5);
     }
 
     private LocalDate getStartDate(List<Object> row) {
-        return getDateValue(row, 6);
+        return parseDateValue(row, 6);
     }
 
     private LocalDate getEndDate(List<Object> row) {
-        return getDateValue(row, 7);
+        return parseDateValue(row, 7);
     }
 
     private String getClientName(List<Object> row) {
-        return getStringValue(row, 8);
+        return parseStringValue(row, 8);
     }
 
     private String getSkills(List<Object> row) {
-        return getStringValue(row, 9);
+        return parseStringValue(row, 9);
     }
 
     private String getProjectDescription(List<Object> row) {
-        return getStringValue(row, 10);
+        return parseStringValue(row, 10);
     }
 
     private int getProjectDuration(List<Object> row) {

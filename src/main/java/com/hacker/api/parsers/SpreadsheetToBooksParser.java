@@ -38,8 +38,7 @@ public class SpreadsheetToBooksParser extends SpreadsheetParserTemplate {
     }
 
     private List<Author> parseAuthors(List<Object> row) {
-        String text = getStringValue(row, 0);
-        String[] parts = text.split(";");
+        String[] parts = getAuthorsNames(row).split(";");
 
         List<Author> authors = Arrays.stream(parts)
                 .map(part -> {
@@ -57,28 +56,49 @@ public class SpreadsheetToBooksParser extends SpreadsheetParserTemplate {
 
     private Book parseBook(List<Object> row) {
         Book book = new Book();
-        book.setName(getStringValue(row, 1));
+        book.setName(getBookName(row));
 
         return book;
     }
 
     private Review parseReview(List<Object> row) {
-        String reviewText = getStringValue(row, 4);
-        int rating = getIntegerValue(row, 5);
-
         Review review = new Review();
-        review.setReview(reviewText);
-        review.setRating(rating);
+        review.setReview(getBookReview(row));
+        review.setRating(getBookRating(row));
 
         return review;
     }
 
     private Employee parseEmployee(List<Object> row) {
         Employee employee = new Employee();
-        employee.setFirstname(getStringValue(row, 2));
-        employee.setLastname(getStringValue(row, 3));
+        employee.setFirstname(getEmployeeFirstname(row));
+        employee.setLastname(getEmployeeLastname(row));
         employee.setId(employee.hashCode());
 
         return employee;
+    }
+
+    private String getAuthorsNames(List<Object> row) {
+        return parseStringValue(row, 0);
+    }
+
+    private String getBookName(List<Object> row) {
+        return parseStringValue(row, 1);
+    }
+
+    private String getEmployeeFirstname(List<Object> row) {
+        return parseStringValue(row, 2);
+    }
+
+    private String getEmployeeLastname(List<Object> row) {
+        return parseStringValue(row, 3);
+    }
+
+    private String getBookReview(List<Object> row) {
+        return parseStringValue(row, 4);
+    }
+
+    private int getBookRating(List<Object> row) {
+        return parseIntegerValue(row, 5);
     }
 }

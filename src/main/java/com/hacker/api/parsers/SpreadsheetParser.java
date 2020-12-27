@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface SpreadsheetParser {
-    String getStringValue(List<Object> row, Integer index);
-    int getIntegerValue(List<Object> row, Integer index);
-    LocalDate getDateValue(List<Object> row, Integer index);
+    String parseStringValue(List<Object> row, Integer index);
+    int parseIntegerValue(List<Object> row, Integer index);
+    LocalDate parseDateValue(List<Object> row, Integer index);
 }

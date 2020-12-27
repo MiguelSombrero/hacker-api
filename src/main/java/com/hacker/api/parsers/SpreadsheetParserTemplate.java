@@ -13,7 +13,7 @@ import java.util.List;
 public class SpreadsheetParserTemplate implements SpreadsheetParser {
     protected static Logger logger = LoggerFactory.getLogger(SpreadsheetParserTemplate.class);
 
-    public String getStringValue(List<Object> row, Integer index) {
+    public String parseStringValue(List<Object> row, Integer index) {
         try {
             return (String) row.get(index);
         } catch (IndexOutOfBoundsException e) {
@@ -24,7 +24,7 @@ public class SpreadsheetParserTemplate implements SpreadsheetParser {
         return "";
     }
 
-    public int getIntegerValue(List<Object> row, Integer index) {
+    public int parseIntegerValue(List<Object> row, Integer index) {
         try {
             return Integer.valueOf((String) row.get(index));
         } catch (IndexOutOfBoundsException e) {
@@ -38,7 +38,7 @@ public class SpreadsheetParserTemplate implements SpreadsheetParser {
         return 0;
     }
 
-    public LocalDate getDateValue(List<Object> row, Integer index) {
+    public LocalDate parseDateValue(List<Object> row, Integer index) {
         try {
             String value = (String) row.get(index);
             return LocalDate.parse(value, getFormatter());
