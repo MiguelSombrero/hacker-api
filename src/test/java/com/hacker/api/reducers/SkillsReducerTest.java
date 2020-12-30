@@ -1,7 +1,5 @@
 package com.hacker.api.reducers;
 
-import com.hacker.api.domain.books.Book;
-import com.hacker.api.domain.books.Review;
 import com.hacker.api.domain.projects.Skill;
 import com.hacker.api.utils.DomainObjectFactory;
 import org.junit.jupiter.api.Test;

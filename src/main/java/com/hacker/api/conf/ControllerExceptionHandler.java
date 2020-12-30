@@ -22,12 +22,12 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         logger.info(ex.getLocalizedMessage());
 
         return handleExceptionInternal(ex, body,
-                new HttpHeaders(), HttpStatus.CONFLICT, request);
+                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(value = { IndexOutOfBoundsException.class })
     protected ResponseEntity<Object> handleIndexOutOfBounds(RuntimeException ex, WebRequest request) {
-        String body = "Index out of bounds";
+        String body = "Cannot parse data from Sheet";
 
         logger.info(ex.getLocalizedMessage());
 

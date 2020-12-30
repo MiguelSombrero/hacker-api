@@ -2,13 +2,13 @@ package com.hacker.api.domain.books;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class Author {
-    private int id;
-    private String firstname;
-    private String lastname;
+@NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class AudioBook {
+    private int duration;
 }

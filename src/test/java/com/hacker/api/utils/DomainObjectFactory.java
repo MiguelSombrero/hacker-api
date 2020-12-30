@@ -1,7 +1,7 @@
 package com.hacker.api.utils;
 
 import com.hacker.api.domain.Employee;
-import com.hacker.api.domain.books.Book;
+import com.hacker.api.domain.books.VisualBook;
 import com.hacker.api.domain.books.Review;
 import com.hacker.api.domain.projects.Skill;
 
@@ -30,8 +30,8 @@ public class DomainObjectFactory {
         return review;
     }
 
-    public static Book getBook(String name) {
-        Book book = new Book();
+    public static VisualBook getBook(String name) {
+        VisualBook book = new VisualBook();
         book.setName(name);
 
         return book;

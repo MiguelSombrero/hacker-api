@@ -1,6 +1,9 @@
 package com.hacker.api.domain.books;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,15 +11,18 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Book {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public abstract class Book {
     private int id;
+
+    @EqualsAndHashCode.Include
     private String name;
-    private List<Author> authors = new ArrayList<>();
 
-    @EqualsAndHashCode.Exclude
+    @EqualsAndHashCode.Include
+    private BookType type;
+
+    private String authors;
     private double rating;
-
-    @EqualsAndHashCode.Exclude
     private List<Review> reviews = new ArrayList<>();
 
     public void calculateRating() {

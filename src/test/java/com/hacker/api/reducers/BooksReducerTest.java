@@ -1,6 +1,7 @@
 package com.hacker.api.reducers;
 
 import com.hacker.api.domain.books.Book;
+import com.hacker.api.domain.books.VisualBook;
 import com.hacker.api.domain.books.Review;
 import com.hacker.api.utils.DomainObjectFactory;
 import org.junit.jupiter.api.Test;
@@ -21,11 +22,11 @@ public class BooksReducerTest {
         Review review2 = DomainObjectFactory.getReview("Could be worse");
         Review review3 = DomainObjectFactory.getReview("Did not like");
 
-        Book book1 = DomainObjectFactory.getBook("Apocalypse Now");
+        VisualBook book1 = DomainObjectFactory.getBook("Apocalypse Now");
         book1.getReviews().add(review1);
         book1.getReviews().add(review2);
 
-        Book book2 = DomainObjectFactory.getBook("Apocalypse Now");
+        VisualBook book2 = DomainObjectFactory.getBook("Apocalypse Now");
         book2.getReviews().add(review3);
 
         Book book3 = booksReducer.merge(book1, book2);

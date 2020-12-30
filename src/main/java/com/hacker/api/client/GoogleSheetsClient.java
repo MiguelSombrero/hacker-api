@@ -1,6 +1,7 @@
 package com.hacker.api.client;
 
 import com.google.api.services.sheets.v4.Sheets;
+import com.google.api.services.sheets.v4.model.ValueRange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,16 @@ public class GoogleSheetsClient {
                 .get(spreadsheetId, sheetId)
                 .execute()
                 .getValues();
+
+        return response;
+    }
+
+    public List<ValueRange> getValuesFromMultipleSheet(String spreadsheetId, List<String> ranges) throws IOException {
+        List<ValueRange> response = sheetsClient.spreadsheets()
+                .values()
+                .batchGet(spreadsheetId)
+                .setRanges(ranges)
+                .execute().getValueRanges();
 
         return response;
     }
