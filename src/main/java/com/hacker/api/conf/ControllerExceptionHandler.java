@@ -1,6 +1,6 @@
 package com.hacker.api.conf;
 
-import com.hacker.api.parsers.SpreadsheetParserTemplate;
+import com.hacker.api.parsers.SheetToBooksParserTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -13,7 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @RestControllerAdvice
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
-    protected static Logger logger = LoggerFactory.getLogger(SpreadsheetParserTemplate.class);
+    protected static Logger logger = LoggerFactory.getLogger(SheetToBooksParserTemplate.class);
 
     @ExceptionHandler(value = { IllegalArgumentException.class, IllegalStateException.class })
     protected ResponseEntity<Object> handleConflict(RuntimeException ex, WebRequest request) {

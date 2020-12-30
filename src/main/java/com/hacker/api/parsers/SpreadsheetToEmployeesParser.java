@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
-public class SpreadsheetToEmployeesParser extends SpreadsheetParserTemplate {
+public class SpreadsheetToEmployeesParser extends SheetParserTemplate {
 
     private List<List<Object>> values;
 

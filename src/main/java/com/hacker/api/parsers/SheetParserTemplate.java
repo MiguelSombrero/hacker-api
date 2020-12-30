@@ -11,8 +11,8 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @NoArgsConstructor
-public class SpreadsheetParserTemplate implements SpreadsheetParser {
-    protected static Logger logger = LoggerFactory.getLogger(SpreadsheetParserTemplate.class);
+public class SheetParserTemplate implements SheetParser {
+    protected static Logger logger = LoggerFactory.getLogger(SheetParserTemplate.class);
 
     public String parseStringValue(List<Object> row, Integer index) {
         try {

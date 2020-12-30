@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class BooksService {
@@ -47,11 +49,14 @@ public class BooksService {
         visualBookValues.remove(0);
         audioBookValues.remove(0);
 
-        //SheetToVisualBooksParser parser = new SheetToVisualBooksParser(visualBookValues);
+        SheetToVisualBooksParser visualBookParser = new SheetToVisualBooksParser(visualBookValues);
+        SheetToAudioBooksParser audioBookParser = new SheetToAudioBooksParser(audioBookValues);
 
-        SheetToAudioBooksParser parser = new SheetToAudioBooksParser(audioBookValues);
+        Collection<Book> visualBooks = reducer.reduce(visualBookParser.parseBooks());
+        Collection<Book> audioBooks = reducer.reduce(audioBookParser.parseBooks());
 
-        Collection<Book> books = reducer.reduce(parser.parseBooks());
+        Collection<Book> books = Stream.concat(visualBooks.stream(), audioBooks.stream())
+                .collect(Collectors.toList());
 
         books.stream().forEach(book -> book.calculateRating(book.getReviews()));
 

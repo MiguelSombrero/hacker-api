@@ -1,6 +1,5 @@
 package com.hacker.api.parsers;
 
-import com.hacker.api.domain.Employee;
 import com.hacker.api.domain.books.*;
 import lombok.AllArgsConstructor;
 
@@ -9,32 +8,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
-public class SheetToAudioBooksParser extends SpreadsheetParserTemplate {
+public class SheetToAudioBooksParser extends SheetToBooksParserTemplate {
 
     private List<List<Object>> values;
 
     public List<Book> parseBooks() {
         return this.values.stream()
-                .map(row -> mapToBook(row))
+                .map(row -> parse(row))
                 .collect(Collectors.toList());
     }
 
-    private AudioBook mapToBook(List<Object> row) {
-        logger.info(String.format("Parsing row %s", row));
-
-        Employee reviewer = parseEmployee(row);
-
-        Review review = parseReview(row);
-        review.setReviewer(reviewer);
-        review.setId(review.hashCode());
-
-        AudioBook book = parseBook(row);
-        book.getReviews().add(review);
-
-        return book;
-    }
-
-    private AudioBook parseBook(List<Object> row) {
+    protected Book parseBook(List<Object> row) {
         AudioBook book = new AudioBook();
         book.setName(getBookName(row));
         book.setDuration(getBookDurationInMM(row));
@@ -45,44 +29,11 @@ public class SheetToAudioBooksParser extends SpreadsheetParserTemplate {
         return book;
     }
 
-    private Review parseReview(List<Object> row) {
-        Review review = new Review();
-        review.setCreated(getTimestamp(row));
-        review.setReview(getBookReview(row));
-        review.setRating(getBookRating(row));
-
-        return review;
-    }
-
-    private Employee parseEmployee(List<Object> row) {
-        Employee employee = new Employee();
-        String firstname = "";
-        String lastName = "";
-
-        try {
-            String email = getEmail(row);
-            String[] parts = email.split("@");
-            String[] names = parts[0].split("\\.");
-
-            firstname = names[0];
-            lastName = names[1];
-
-        } catch (ArrayIndexOutOfBoundsException e) {
-            logger.info(String.format("Could not parse names from row %s", row));
-        }
-
-        employee.setFirstname(firstname);
-        employee.setLastname(lastName);
-        employee.setId(employee.hashCode());
-
-        return employee;
-    }
-
-    private LocalDateTime getTimestamp(List<Object> row) {
+    protected LocalDateTime getTimestamp(List<Object> row) {
         return parseDateTimeValue(row, 0);
     }
 
-    private String getEmail(List<Object> row) {
+    protected String getEmail(List<Object> row) {
         return parseStringValue(row, 1);
     }
 
@@ -114,7 +65,7 @@ public class SheetToAudioBooksParser extends SpreadsheetParserTemplate {
         return parseStringValue(row, 8);
     }
 
-    private String getBookReview(List<Object> row) {
+    protected String getBookReview(List<Object> row) {
         return parseStringValue(row, 9);
     }
 
@@ -122,7 +73,7 @@ public class SheetToAudioBooksParser extends SpreadsheetParserTemplate {
         return parseStringValue(row, 10);
     }
 
-    private int getBookRating(List<Object> row) {
+    protected int getBookRating(List<Object> row) {
         return parseIntegerValue(row, 11);
     }
 
