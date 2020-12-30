@@ -3,6 +3,7 @@ package com.hacker.api.parsers;
 import com.hacker.api.domain.books.Book;
 import com.hacker.api.domain.books.VisualBook;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
@@ -14,6 +15,9 @@ import static org.junit.Assert.assertEquals;
 
 @SpringBootTest
 public class SheetToVisualBookParserTest {
+
+    @Autowired
+    private SheetToVisualBooksParser visualBooksParser;
 
     @Test
     public void parseBooksWhenAllFieldsAreCorrect() {
@@ -85,10 +89,9 @@ public class SheetToVisualBookParserTest {
 
     private VisualBook getVisualBook(List<Object> row) {
         List<List<Object>> values = Arrays.asList(row);
-        SheetToVisualBooksParser parser = new SheetToVisualBooksParser(values);
-        List<Book> books = parser.parseBooks();
+        Book book = visualBooksParser.parseBook(row);
 
-        return (VisualBook) books.get(0);
+        return (VisualBook) book;
     }
 
 }

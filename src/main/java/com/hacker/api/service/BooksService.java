@@ -38,25 +38,35 @@ public class BooksService {
     @Autowired
     private BooksReducer reducer;
 
+    @Autowired
+    private SheetToAudioBooksParser audioBooksParser;
+
+    @Autowired
+    private SheetToVisualBooksParser visualBooksParser;
+
     public Collection<Book> getBooks() throws IOException {
         List<String> ranges = Arrays.asList(bookSheetId, audioSheetId);
 
-        List<ValueRange> values2 = sheetsClient.getValuesFromMultipleSheet(spreadsheetId, ranges);
+        List<ValueRange> values = sheetsClient.getValuesFromMultipleSheet(spreadsheetId, ranges);
 
-        List<List<Object>> visualBookValues = values2.get(0).getValues();
-        List<List<Object>> audioBookValues = values2.get(1).getValues();
+        List<List<Object>> visualBookValues = values.get(0).getValues();
+        List<List<Object>> audioBookValues = values.get(1).getValues();
 
         visualBookValues.remove(0);
         audioBookValues.remove(0);
 
-        SheetToVisualBooksParser visualBookParser = new SheetToVisualBooksParser(visualBookValues);
-        SheetToAudioBooksParser audioBookParser = new SheetToAudioBooksParser(audioBookValues);
+        Collection<Book> visualBooks = visualBookValues.stream()
+                .map(row -> visualBooksParser.parse(row))
+                .collect(Collectors.toList());
 
-        Collection<Book> visualBooks = reducer.reduce(visualBookParser.parseBooks());
-        Collection<Book> audioBooks = reducer.reduce(audioBookParser.parseBooks());
+        Collection<Book> audioBooks = audioBookValues.stream()
+                .map(row -> audioBooksParser.parse(row))
+                .collect(Collectors.toList());
 
         Collection<Book> books = Stream.concat(visualBooks.stream(), audioBooks.stream())
                 .collect(Collectors.toList());
+
+        books = reducer.reduce(books);
 
         books.stream().forEach(book -> book.calculateRating(book.getReviews()));
 

@@ -1,6 +1,5 @@
 package com.hacker.api.parsers;
 
-import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +9,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
-@NoArgsConstructor
 public class SheetParserTemplate implements SheetParser {
     protected static Logger logger = LoggerFactory.getLogger(SheetParserTemplate.class);
 

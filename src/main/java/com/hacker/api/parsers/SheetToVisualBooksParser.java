@@ -2,29 +2,19 @@ package com.hacker.api.parsers;
 
 import com.hacker.api.domain.books.*;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
+@Component
 public class SheetToVisualBooksParser extends SheetToBooksParserTemplate {
 
-    private List<List<Object>> values;
-
-    public List<Book> parseBooks() {
-        return this.values.stream()
-                .map(row -> parse(row))
-                .collect(Collectors.toList());
-    }
-
-    protected Book parseBook(List<Object> row) {
+    public Book parseBook(List<Object> row) {
         VisualBook book = new VisualBook();
-        book.setName(getBookName(row));
         book.setPages(getBookPageCount(row));
         book.setType(BookType.getBookTypeByTextValue(getBookType(row)));
-        book.setAuthors(getBookAuthors(row));
-        book.setId(book.hashCode());
 
         return book;
     }
@@ -37,11 +27,7 @@ public class SheetToVisualBooksParser extends SheetToBooksParserTemplate {
         return parseStringValue(row, 1);
     }
 
-    private String getBonusType(List<Object> row) {
-        return parseStringValue(row, 2);
-    }
-
-    private String getBookName(List<Object> row) {
+    protected String getBookName(List<Object> row) {
         return parseStringValue(row, 3);
     }
 
@@ -49,7 +35,7 @@ public class SheetToVisualBooksParser extends SheetToBooksParserTemplate {
         return parseIntegerValue(row, 4);
     }
 
-    private String getBookAuthors(List<Object> row) {
+    protected String getBookAuthors(List<Object> row) {
         return parseStringValue(row, 5);
     }
 
@@ -59,10 +45,6 @@ public class SheetToVisualBooksParser extends SheetToBooksParserTemplate {
 
     protected String getBookReview(List<Object> row) {
         return parseStringValue(row, 7);
-    }
-
-    private String getBookRecommendations(List<Object> row) {
-        return parseStringValue(row, 8);
     }
 
     protected int getBookRating(List<Object> row) {
