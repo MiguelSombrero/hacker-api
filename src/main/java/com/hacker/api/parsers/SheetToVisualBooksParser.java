@@ -29,8 +29,6 @@ public class SheetToVisualBooksParser extends SpreadsheetParserTemplate {
         review.setId(review.hashCode());
 
         VisualBook book = parseBook(row);
-        book.setAuthors(getBookAuthors(row));
-        book.setId(book.hashCode());
         book.getReviews().add(review);
 
         return book;
@@ -41,6 +39,8 @@ public class SheetToVisualBooksParser extends SpreadsheetParserTemplate {
         book.setName(getBookName(row));
         book.setPages(getBookPageCount(row));
         book.setType(BookType.getBookTypeByTextValue(getBookType(row)));
+        book.setAuthors(getBookAuthors(row));
+        book.setId(book.hashCode());
 
         return book;
     }

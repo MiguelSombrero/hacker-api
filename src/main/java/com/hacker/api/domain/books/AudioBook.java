@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class AudioBook {
+@EqualsAndHashCode(callSuper=true)
+public class AudioBook extends Book {
     private int duration;
 }

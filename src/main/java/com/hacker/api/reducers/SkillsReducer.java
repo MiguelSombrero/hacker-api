@@ -10,4 +10,9 @@ public class SkillsReducer extends ReducerTemplate<Skill> {
         current.setKnowHowMonths(current.getKnowHowMonths() + next.getKnowHowMonths());
         return current;
     }
+
+    @Override
+    protected int getId(Skill skill) {
+        return skill.getId();
+    }
 }

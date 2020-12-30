@@ -14,11 +14,13 @@ public abstract class ReducerTemplate<T> implements Reducer<T> {
 
     public Collection<T> reduce(Collection<T> objects) {
         return objects.stream()
-                .collect(groupingBy(T::hashCode, reducing(null, (first, next) -> Optional.ofNullable(first)
+                .collect(groupingBy(this::getId, reducing(null, (first, next) -> Optional.ofNullable(first)
                         .map(current -> merge(current, next))
                         .orElse(next))))
                 .values();
     }
 
     protected abstract T merge(T current, T next);
+
+    protected abstract int getId(T object);
 }

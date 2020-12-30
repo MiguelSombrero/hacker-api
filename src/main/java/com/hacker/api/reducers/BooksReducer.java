@@ -10,4 +10,9 @@ public class BooksReducer extends ReducerTemplate<Book> {
         current.getReviews().addAll(next.getReviews());
         return current;
     }
+
+    @Override
+    protected int getId(Book book) {
+        return book.getId();
+    }
 }

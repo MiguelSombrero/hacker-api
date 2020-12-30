@@ -24,4 +24,9 @@ public class EmployeesReducer extends ReducerTemplate<Employee> {
 
         return current;
     }
+
+    @Override
+    protected int getId(Employee employee) {
+        return employee.getId();
+    }
 }

@@ -1,7 +1,9 @@
 package com.hacker.api.service;
 
+import com.google.api.services.sheets.v4.model.ValueRange;
 import com.hacker.api.client.GoogleSheetsClient;
 import com.hacker.api.domain.books.Book;
+import com.hacker.api.parsers.SheetToAudioBooksParser;
 import com.hacker.api.parsers.SheetToVisualBooksParser;
 import com.hacker.api.reducers.BooksReducer;
 import org.slf4j.Logger;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -34,16 +37,19 @@ public class BooksService {
     private BooksReducer reducer;
 
     public Collection<Book> getBooks() throws IOException {
-        /*List<String> ranges = Arrays.asList(bookSheetId, audioSheetId);
+        List<String> ranges = Arrays.asList(bookSheetId, audioSheetId);
 
-        List<ValueRange> values = sheetsClient.getValuesFromSheets(spreadsheetId, ranges);
-*/
+        List<ValueRange> values2 = sheetsClient.getValuesFromMultipleSheet(spreadsheetId, ranges);
 
-        List<List<Object>> values = sheetsClient.getValuesFromSheet(spreadsheetId, bookSheetId);
+        List<List<Object>> visualBookValues = values2.get(0).getValues();
+        List<List<Object>> audioBookValues = values2.get(1).getValues();
 
-        values.remove(0);
+        visualBookValues.remove(0);
+        audioBookValues.remove(0);
 
-        SheetToVisualBooksParser parser = new SheetToVisualBooksParser(values);
+        //SheetToVisualBooksParser parser = new SheetToVisualBooksParser(visualBookValues);
+
+        SheetToAudioBooksParser parser = new SheetToAudioBooksParser(audioBookValues);
 
         Collection<Book> books = reducer.reduce(parser.parseBooks());
 
@@ -52,15 +58,4 @@ public class BooksService {
         return books;
     }
 
-    /*public Collection<Book> getBooks() throws IOException {
-        List<List<Object>> values = sheetsClient.getValuesFromSheet(spreadsheetId, sheetId);
-
-        SpreadsheetToBooksParser parser = new SpreadsheetToBooksParser(values);
-
-        Collection<Book> books = reducer.reduce(parser.parseBooks());
-
-        books.stream().forEach(Book::calculateRating);
-
-        return books;
-    }*/
 }
