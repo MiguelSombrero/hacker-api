@@ -1,10 +1,7 @@
 package com.hacker.api.parsers;
 
 import com.hacker.api.domain.Employee;
-import com.hacker.api.domain.books.Book;
-import com.hacker.api.domain.books.BookType;
-import com.hacker.api.domain.books.VisualBook;
-import com.hacker.api.domain.books.Review;
+import com.hacker.api.domain.books.*;
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -58,13 +55,24 @@ public class SheetToVisualBooksParser extends SpreadsheetParserTemplate {
     }
 
     private Employee parseEmployee(List<Object> row) {
-        String email = getEmail(row);
-        String[] parts = email.split("@");
-        String[] names = parts[0].split("\\.");
-
         Employee employee = new Employee();
-        employee.setFirstname(names[0]);
-        employee.setLastname(names[1]);
+        String firstname = "";
+        String lastName = "";
+
+        try {
+            String email = getEmail(row);
+            String[] parts = email.split("@");
+            String[] names = parts[0].split("\\.");
+
+            firstname = names[0];
+            lastName = names[1];
+
+        } catch (ArrayIndexOutOfBoundsException e) {
+            logger.info(String.format("Could not parse names from row %s", row));
+        }
+
+        employee.setFirstname(firstname);
+        employee.setLastname(lastName);
         employee.setId(employee.hashCode());
 
         return employee;

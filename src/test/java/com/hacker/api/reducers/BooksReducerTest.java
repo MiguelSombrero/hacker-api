@@ -22,11 +22,11 @@ public class BooksReducerTest {
         Review review2 = DomainObjectFactory.getReview("Could be worse");
         Review review3 = DomainObjectFactory.getReview("Did not like");
 
-        VisualBook book1 = DomainObjectFactory.getBook("Apocalypse Now");
+        VisualBook book1 = DomainObjectFactory.getVisualBook("Apocalypse Now");
         book1.getReviews().add(review1);
         book1.getReviews().add(review2);
 
-        VisualBook book2 = DomainObjectFactory.getBook("Apocalypse Now");
+        VisualBook book2 = DomainObjectFactory.getVisualBook("Apocalypse Now");
         book2.getReviews().add(review3);
 
         Book book3 = booksReducer.merge(book1, book2);

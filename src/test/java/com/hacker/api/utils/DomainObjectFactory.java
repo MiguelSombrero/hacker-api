@@ -30,7 +30,7 @@ public class DomainObjectFactory {
         return review;
     }
 
-    public static VisualBook getBook(String name) {
+    public static VisualBook getVisualBook(String name) {
         VisualBook book = new VisualBook();
         book.setName(name);
 

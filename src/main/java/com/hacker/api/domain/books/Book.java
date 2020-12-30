@@ -25,8 +25,8 @@ public abstract class Book {
     private double rating;
     private List<Review> reviews = new ArrayList<>();
 
-    public void calculateRating() {
-        double value = this.getReviews().stream()
+    public void calculateRating(List<Review> reviews) {
+        double value = reviews.stream()
                 .mapToInt(review -> review.getRating())
                 .filter(rating -> rating != 0)
                 .average()

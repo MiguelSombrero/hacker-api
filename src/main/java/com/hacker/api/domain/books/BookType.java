@@ -3,7 +3,8 @@ package com.hacker.api.domain.books;
 public enum BookType {
     AUDIO("Äänikirja"),
     PAPER("Paperiversio"),
-    EBOOK("eBook");
+    EBOOK("eBook"),
+    UNDEFINED("undefined");
 
     private String name;
 
@@ -21,6 +22,6 @@ public enum BookType {
                 return type;
             }
         }
-        return null;
+        return UNDEFINED;
     }
 }
