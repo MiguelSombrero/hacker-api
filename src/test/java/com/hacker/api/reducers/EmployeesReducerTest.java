@@ -4,6 +4,8 @@ import com.hacker.api.domain.Employee;
 import com.hacker.api.domain.projects.Skill;
 import com.hacker.api.utils.DomainObjectFactory;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -11,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 public class EmployeesReducerTest {
+    protected static Logger logger = LoggerFactory.getLogger(EmployeesReducerTest.class);
 
     @Autowired
     private EmployeesReducer employeesReducer;

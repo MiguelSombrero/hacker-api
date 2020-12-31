@@ -1,7 +1,9 @@
 package com.hacker.api.parsers;
 
 import com.hacker.api.domain.Employee;
+import com.hacker.api.reducers.EmployeesReducer;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
@@ -14,20 +16,17 @@ import java.util.stream.Stream;
 import static org.junit.Assert.assertEquals;
 
 @SpringBootTest
-public class SpreadsheetToEmployeesParserTest {
+public class SheetToEmployeeParserTest {
+
+    @Autowired
+    private SheetToEmployeeParser sheetToEmployeeParser;
 
     @Test
     public void parseWhenAllFieldsAreCorrect() {
         List<Object> row = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", "Toteutus", "8/1/2020", "11/1/2020", "Alfame", "Java, Ansible, React", "Verkkokaupan toteutus")
                 .collect(Collectors.toList());
 
-        List<List<Object>> values = Arrays.asList(row);
-
-        SpreadsheetToEmployeesParser parser = new SpreadsheetToEmployeesParser(values);
-
-        List<Employee> employees = parser.parseEmployees();
-
-        Employee employee = employees.get(0);
+        Employee employee = sheetToEmployeeParser.parse(row);
 
         assertEquals("Miika", employee.getFirstname());
         assertEquals("Somero", employee.getLastname());
@@ -42,13 +41,7 @@ public class SpreadsheetToEmployeesParserTest {
         List<Object> row = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", "Toteutus", "", "11/1/2020", "Alfame", "Java, Ansible, React", "Verkkokaupan toteutus")
                 .collect(Collectors.toList());
 
-        List<List<Object>> values = Arrays.asList(row);
-
-        SpreadsheetToEmployeesParser parser = new SpreadsheetToEmployeesParser(values);
-
-        List<Employee> employees = parser.parseEmployees();
-
-        Employee employee = employees.get(0);
+        Employee employee = sheetToEmployeeParser.parse(row);
 
         assertEquals("Miika", employee.getFirstname());
         assertEquals("Somero", employee.getLastname());
@@ -63,16 +56,9 @@ public class SpreadsheetToEmployeesParserTest {
         List<Object> row = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", "Toteutus", "8/1/2020", "", "Alfame", "Java,Ansible,React", "Verkkokaupan toteutus")
                 .collect(Collectors.toList());
 
-        List<List<Object>> values = Arrays.asList(row);
+        Employee employee = sheetToEmployeeParser.parse(row);
 
-        SpreadsheetToEmployeesParser parser = new SpreadsheetToEmployeesParser(values);
-
-        List<Employee> employees = parser.parseEmployees();
-
-        Employee employee = employees.get(0);
-
-        int knowHow = Period
-                .between(LocalDate.of(2020, 8, 1), LocalDate.now())
+        int knowHow = Period.between(LocalDate.of(2020, 8, 1), LocalDate.now())
                 .plusMonths(1)
                 .getMonths();
 

@@ -11,6 +11,7 @@ public class DomainObjectFactory {
         Employee employee = new Employee();
         employee.setFirstname(firstname);
         employee.setLastname(lastname);
+        employee.setId(employee.hashCode());
 
         return employee;
     }
@@ -19,6 +20,7 @@ public class DomainObjectFactory {
         Skill skill = new Skill();
         skill.setName(name);
         skill.setKnowHowMonths(knowHowMonths);
+        skill.setId(skill.hashCode());
 
         return skill;
     }

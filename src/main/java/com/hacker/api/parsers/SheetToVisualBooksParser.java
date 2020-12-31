@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @Component
 public class SheetToVisualBooksParser extends SheetToBooksParserTemplate {
 
-    public Book parseBook(List<Object> row) {
+    protected Book parseBook(List<Object> row) {
         VisualBook book = new VisualBook();
         book.setPages(getBookPageCount(row));
         book.setType(BookType.getBookTypeByTextValue(getBookType(row)));

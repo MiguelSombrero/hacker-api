@@ -6,7 +6,7 @@ import com.hacker.api.domain.books.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public abstract class SheetToBooksParserTemplate extends SheetParserTemplate {
+public abstract class SheetToBooksParserTemplate extends SheetParserImpl {
 
     public Book parse(List<Object> row) {
         logger.info(String.format("Parsing row %s", row));

@@ -3,7 +3,7 @@ package com.hacker.api.service;
 import com.hacker.api.client.GoogleSheetsClient;
 import com.hacker.api.domain.Employee;
 import com.hacker.api.reducers.EmployeesReducer;
-import com.hacker.api.parsers.SpreadsheetToEmployeesParser;
+import com.hacker.api.parsers.SheetToEmployeeParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class EmployeesService {
@@ -30,12 +31,17 @@ public class EmployeesService {
     @Autowired
     private EmployeesReducer reducer;
 
+    @Autowired
+    private SheetToEmployeeParser sheetToEmployeeParser;
+
     public Collection<Employee> getEmployees() throws IOException {
         List<List<Object>> values = sheetsClient.getValuesFromSheet(spredsheetId, sheetId);
 
-        SpreadsheetToEmployeesParser parser = new SpreadsheetToEmployeesParser(values);
+        Collection<Employee> employees = values.stream()
+                .map(row -> sheetToEmployeeParser.parse(row))
+                .collect(Collectors.toList());
 
-        Collection<Employee> employees = reducer.reduce(parser.parseEmployees());
+        employees = reducer.reduce(employees);
 
         return employees;
     }

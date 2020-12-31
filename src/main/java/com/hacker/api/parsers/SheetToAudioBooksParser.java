@@ -9,7 +9,7 @@ import java.util.List;
 @Component
 public class SheetToAudioBooksParser extends SheetToBooksParserTemplate {
 
-    public Book parseBook(List<Object> row) {
+    protected Book parseBook(List<Object> row) {
         AudioBook book = new AudioBook();
         book.setDuration(getBookDurationInMM(row));
         book.setType(BookType.AUDIO);

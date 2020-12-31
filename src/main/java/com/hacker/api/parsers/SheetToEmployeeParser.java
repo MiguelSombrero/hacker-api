@@ -4,7 +4,7 @@ import com.hacker.api.domain.Employee;
 import com.hacker.api.domain.projects.Project;
 import com.hacker.api.domain.projects.Role;
 import com.hacker.api.domain.projects.Skill;
-import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -12,18 +12,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@AllArgsConstructor
-public class SpreadsheetToEmployeesParser extends SheetParserTemplate {
+@Component
+public class SheetToEmployeeParser extends SheetParserImpl {
 
-    private List<List<Object>> values;
-
-    public List<Employee> parseEmployees() {
-        return this.values.stream()
-                .map(row -> mapToEmployee(row))
-                .collect(Collectors.toList());
-    }
-
-    private Employee mapToEmployee(List<Object> row) {
+    public Employee parse(List<Object> row) {
         List<Skill> skills = parseSkills(row);
         Project project = parseProject(row);
 

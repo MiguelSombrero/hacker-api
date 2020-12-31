@@ -24,7 +24,7 @@ public class SheetToVisualBookParserTest {
         List<Object> row = Stream.of("6/18/2019 14:04:36", "miika.somero@gmail.com", "Kirjabonus", "Yksikkötestaus", "30", "Manninen, Olli-Pekka", "eBook", "Ihan hyvä kirja", "Suosittelen kaikille", "4", "2019", "6", "2019")
                 .collect(Collectors.toList());
 
-        VisualBook book = getVisualBook(row);
+        VisualBook book = (VisualBook) visualBooksParser.parse(row);
 
         assertEquals("Yksikkötestaus", book.getName());
         assertEquals("Manninen, Olli-Pekka", book.getAuthors());
@@ -37,11 +37,28 @@ public class SheetToVisualBookParserTest {
     }
 
     @Test
+    public void parseBooksWhenThereIsTextInNumberFields() {
+        List<Object> row = Stream.of("6/18/2019 14:04:36", "miika.somero@gmail.com", "Kirjabonus", "Yksikkötestaus", "kolmekymmentä", "Manninen, Olli-Pekka", "eBook", "Ihan hyvä kirja", "Suosittelen kaikille", "neljä", "2019", "6", "2019")
+                .collect(Collectors.toList());
+
+        VisualBook book = (VisualBook) visualBooksParser.parse(row);
+
+        assertEquals("Yksikkötestaus", book.getName());
+        assertEquals("Manninen, Olli-Pekka", book.getAuthors());
+        assertEquals(0, book.getReviews().get(0).getRating());
+        assertEquals("Ihan hyvä kirja", book.getReviews().get(0).getReview());
+        assertEquals("miika", book.getReviews().get(0).getReviewer().getFirstname());
+        assertEquals("somero", book.getReviews().get(0).getReviewer().getLastname());
+        assertEquals("EBOOK", book.getType().toString());
+        assertEquals(0, book.getPages());
+    }
+
+    @Test
     public void parseBooksWhenBookTypeNotFound() {
         List<Object> row = Stream.of("6/18/2019 14:04:36", "miika.somero@gmail.com", "Kirjabonus", "Yksikkötestaus", "30", "Manninen, Olli-Pekka", "ei ole tällaista tyyppiä", "Ihan hyvä kirja", "Suosittelen kaikille", "4", "2019", "6", "2019")
                 .collect(Collectors.toList());
 
-        VisualBook book = getVisualBook(row);
+        VisualBook book = (VisualBook) visualBooksParser.parse(row);
 
         assertEquals("Yksikkötestaus", book.getName());
         assertEquals("Manninen, Olli-Pekka", book.getAuthors());
@@ -58,7 +75,7 @@ public class SheetToVisualBookParserTest {
         List<Object> row = Stream.of("6/18/2019 14:04:36", "miika.somero@gmail.com", "Kirjabonus", "Yksikkötestaus", "30", "Manninen, Olli-Pekka", "eBook", "", "Suosittelen kaikille", "", "2019", "6", "2019")
                 .collect(Collectors.toList());
 
-        VisualBook book = getVisualBook(row);
+        VisualBook book = (VisualBook) visualBooksParser.parse(row);
 
         assertEquals("Yksikkötestaus", book.getName());
         assertEquals("Manninen, Olli-Pekka", book.getAuthors());
@@ -75,7 +92,7 @@ public class SheetToVisualBookParserTest {
         List<Object> row = Stream.of("6/18/2019 14:04:36", "miikasomero@gmail.com", "Kirjabonus", "Yksikkötestaus", "30", "Manninen, Olli-Pekka", "eBook", "Ihan hyvä kirja", "Suosittelen kaikille", "4", "2019", "6", "2019")
                 .collect(Collectors.toList());
 
-        VisualBook book = getVisualBook(row);
+        VisualBook book = (VisualBook) visualBooksParser.parse(row);
 
         assertEquals("Yksikkötestaus", book.getName());
         assertEquals("Manninen, Olli-Pekka", book.getAuthors());
@@ -85,13 +102,6 @@ public class SheetToVisualBookParserTest {
         assertEquals("", book.getReviews().get(0).getReviewer().getLastname());
         assertEquals("EBOOK", book.getType().toString());
         assertEquals(30, book.getPages());
-    }
-
-    private VisualBook getVisualBook(List<Object> row) {
-        List<List<Object>> values = Arrays.asList(row);
-        Book book = visualBooksParser.parseBook(row);
-
-        return (VisualBook) book;
     }
 
 }

@@ -9,8 +9,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
-public class SheetParserTemplate implements SheetParser {
-    protected static Logger logger = LoggerFactory.getLogger(SheetParserTemplate.class);
+public class SheetParserImpl implements SheetParser {
+    protected static Logger logger = LoggerFactory.getLogger(SheetParserImpl.class);
 
     public String parseStringValue(List<Object> row, Integer index) {
         try {
