@@ -79,4 +79,27 @@ public class BooksReducerTest {
         assertEquals(4, apocalypse.getReviews().size());
         assertEquals(1, selfish.getReviews().size());
     }
+
+    @Test
+    public void testReduceThatPageNumberDoesNotAffectBookHashCode() {
+        Review review1 = DomainObjectFactory.getReview("Pretty good book");
+        Review review2 = DomainObjectFactory.getReview("Could be worse");
+
+        VisualBook book1 = DomainObjectFactory.getPaperBook("Clean Code");
+        book1.getReviews().add(review1);
+        book1.setPages(431);
+        book1.setId(book1.hashCode());
+
+        VisualBook book2 = DomainObjectFactory.getPaperBook("Clean Code");
+        book2.getReviews().add(review2);
+        book2.setPages(434);
+        book2.setId(book2.hashCode());
+
+        List<Book> books = booksReducer.reduce(Arrays
+                .asList(book1, book2));
+
+        assertEquals(1, books.size());
+        assertEquals("Clean Code", books.get(0).getName());
+        assertEquals(2, books.get(0).getReviews().size());
+    }
 }

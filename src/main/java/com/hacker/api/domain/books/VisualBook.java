@@ -5,7 +5,7 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper=true)
+@EqualsAndHashCode(callSuper=true, onlyExplicitlyIncluded = true)
 public class VisualBook extends Book {
     private int pages;
 }

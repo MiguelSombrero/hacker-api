@@ -3,6 +3,7 @@ package com.hacker.api.service;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import com.hacker.api.client.GoogleSheetsClient;
 import com.hacker.api.domain.books.Book;
+import com.hacker.api.parsers.SheetParserImpl;
 import com.hacker.api.parsers.SheetToAudioBooksParser;
 import com.hacker.api.parsers.SheetToVisualBooksParser;
 import com.hacker.api.reducers.BooksReducer;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -44,7 +44,7 @@ public class BooksService {
     @Autowired
     private SheetToVisualBooksParser visualBooksParser;
 
-    public Collection<Book> getBooks() throws IOException {
+    public List<Book> getBooks() throws IOException {
         List<String> ranges = Arrays.asList(bookSheetId, audioSheetId);
 
         List<ValueRange> values = sheetsClient.getValuesFromMultipleSheet(spreadsheetId, ranges);
@@ -55,20 +55,23 @@ public class BooksService {
         visualBookValues.remove(0);
         audioBookValues.remove(0);
 
-        Collection<Book> visualBooks = visualBookValues.stream()
-                .map(row -> visualBooksParser.parse(row))
-                .collect(Collectors.toList());
+        List<Book> visualBooks = parseBooks(visualBookValues, visualBooksParser);
+        List<Book> audioBooks = parseBooks(audioBookValues, audioBooksParser);
 
-        Collection<Book> audioBooks = audioBookValues.stream()
-                .map(row -> audioBooksParser.parse(row))
-                .collect(Collectors.toList());
-
-        Collection<Book> books = Stream.concat(visualBooks.stream(), audioBooks.stream())
+        List<Book> books = Stream.concat(visualBooks.stream(), audioBooks.stream())
                 .collect(Collectors.toList());
 
         books = reducer.reduce(books);
 
         books.stream().forEach(book -> book.calculateRating(book.getReviews()));
+
+        return books;
+    }
+
+    private List<Book> parseBooks(List<List<Object>> values, SheetParserImpl parser) {
+        List<Book> books = values.stream()
+                .map(row -> (Book) parser.parse(row))
+                .collect(Collectors.toList());
 
         return books;
     }

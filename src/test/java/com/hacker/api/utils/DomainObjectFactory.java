@@ -1,6 +1,7 @@
 package com.hacker.api.utils;
 
 import com.hacker.api.domain.Employee;
+import com.hacker.api.domain.books.AudioBook;
 import com.hacker.api.domain.books.BookType;
 import com.hacker.api.domain.books.VisualBook;
 import com.hacker.api.domain.books.Review;
@@ -37,8 +38,14 @@ public class DomainObjectFactory {
         VisualBook book = new VisualBook();
         book.setName(name);
         book.setType(BookType.PAPER);
-        book.setId(book.hashCode());
-        book.setPages(200);
+
+        return book;
+    }
+
+    public static AudioBook getAudioBook(String name) {
+        AudioBook book = new AudioBook();
+        book.setName(name);
+        book.setType(BookType.AUDIO);
 
         return book;
     }

@@ -8,7 +8,7 @@ import java.util.List;
 
 public abstract class SheetToBooksParserTemplate extends SheetParserImpl {
 
-    public Book parse(List<Object> row) {
+    public Object parse(List<Object> row) {
         logger.info(String.format("Parsing row %s", row));
 
         Employee reviewer = parseEmployee(row);

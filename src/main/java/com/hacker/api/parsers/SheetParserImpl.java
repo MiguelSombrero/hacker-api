@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
-public class SheetParserImpl implements SheetParser {
+public abstract class SheetParserImpl implements SheetParser {
     protected static Logger logger = LoggerFactory.getLogger(SheetParserImpl.class);
 
     public String parseStringValue(List<Object> row, Integer index) {
@@ -77,4 +77,5 @@ public class SheetParserImpl implements SheetParser {
         return DateTimeFormatter.ofPattern("M/d/yyyy H:mm:ss");
     }
 
+    public abstract Object parse(List<Object> row);
 }

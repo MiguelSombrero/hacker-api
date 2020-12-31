@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @Component
 public class SheetToEmployeeParser extends SheetParserImpl {
 
-    public Employee parse(List<Object> row) {
+    public Object parse(List<Object> row) {
         List<Skill> skills = parseSkills(row);
         Project project = parseProject(row);
 

@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,11 +33,11 @@ public class EmployeesService {
     @Autowired
     private SheetToEmployeeParser sheetToEmployeeParser;
 
-    public Collection<Employee> getEmployees() throws IOException {
+    public List<Employee> getEmployees() throws IOException {
         List<List<Object>> values = sheetsClient.getValuesFromSheet(spredsheetId, sheetId);
 
-        Collection<Employee> employees = values.stream()
-                .map(row -> sheetToEmployeeParser.parse(row))
+        List<Employee> employees = values.stream()
+                .map(row -> (Employee) sheetToEmployeeParser.parse(row))
                 .collect(Collectors.toList());
 
         employees = reducer.reduce(employees);
