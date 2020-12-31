@@ -5,13 +5,19 @@ import com.hacker.api.domain.books.VisualBook;
 import com.hacker.api.domain.books.Review;
 import com.hacker.api.utils.DomainObjectFactory;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 public class BooksReducerTest {
+    protected static Logger logger = LoggerFactory.getLogger(BooksReducerTest.class);
 
     @Autowired
     private BooksReducer booksReducer;
@@ -22,16 +28,55 @@ public class BooksReducerTest {
         Review review2 = DomainObjectFactory.getReview("Could be worse");
         Review review3 = DomainObjectFactory.getReview("Did not like");
 
-        VisualBook book1 = DomainObjectFactory.getVisualBook("Apocalypse Now");
+        VisualBook book1 = DomainObjectFactory.getPaperBook("Apocalypse Now");
         book1.getReviews().add(review1);
         book1.getReviews().add(review2);
 
-        VisualBook book2 = DomainObjectFactory.getVisualBook("Apocalypse Now");
+        VisualBook book2 = DomainObjectFactory.getPaperBook("Apocalypse Now");
         book2.getReviews().add(review3);
 
         Book book3 = booksReducer.merge(book1, book2);
 
         assertEquals("Apocalypse Now", book3.getName());
         assertEquals(3, book3.getReviews().size());
+    }
+
+    @Test
+    public void testReduceWhenOnlyVisualBooks() {
+        Review review1 = DomainObjectFactory.getReview("Pretty good book");
+        Review review2 = DomainObjectFactory.getReview("Could be worse");
+        Review review3 = DomainObjectFactory.getReview("Did not like");
+        Review review4 = DomainObjectFactory.getReview("Will read again");
+        Review review5 = DomainObjectFactory.getReview("No, not for me");
+
+        Book book1 = DomainObjectFactory.getPaperBook("Apocalypse Now");
+        book1.getReviews().add(review1);
+        book1.getReviews().add(review2);
+
+        Book book2 = DomainObjectFactory.getPaperBook("Apocalypse Now");
+        book2.getReviews().add(review3);
+
+        Book book3 = DomainObjectFactory.getPaperBook("The Selfish Gene");
+        book3.getReviews().add(review4);
+
+        Book book4 = DomainObjectFactory.getPaperBook("Apocalypse Now");
+        book4.getReviews().add(review5);
+
+        List<Book> books = booksReducer.reduce(Arrays
+                .asList(book1, book2, book3, book4));
+
+        Book apocalypse = books.stream()
+                .filter(book -> book.getName().equals("Apocalypse Now"))
+                .findFirst().get();
+
+        Book selfish = books.stream()
+                .filter(book -> book.getName().equals("The Selfish Gene"))
+                .findFirst().get();
+
+        assertEquals(2, books.size());
+        assertEquals("Apocalypse Now", apocalypse.getName());
+        assertEquals("The Selfish Gene", selfish.getName());
+        assertEquals(4, apocalypse.getReviews().size());
+        assertEquals(1, selfish.getReviews().size());
     }
 }

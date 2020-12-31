@@ -44,8 +44,8 @@ public class BooksControllerTest {
                 .apply(springSecurity())
                 .build();
 
-        Book book1 = DomainObjectFactory.getVisualBook("Apocalypse Now");
-        Book book2 = DomainObjectFactory.getVisualBook("Geenin Itsekkyys");
+        Book book1 = DomainObjectFactory.getPaperBook("Apocalypse Now");
+        Book book2 = DomainObjectFactory.getPaperBook("Geenin Itsekkyys");
 
         this.book1 = book1;
         this.book2 = book2;
