@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 public class SheetToVisualBookParserTest {
@@ -32,6 +33,21 @@ public class SheetToVisualBookParserTest {
         assertEquals("somero", book.getReviews().get(0).getReviewer().getLastname());
         assertEquals("EBOOK", book.getType().toString());
         assertEquals(30, book.getPages());
+    }
+
+    @Test
+    public void parseBookNameIsCaseInsensitive() {
+        List<Object> row1 = Stream.of("6/18/2019 14:04:36", "miika.somero@gmail.com", "Kirjabonus", "Yksikkötestaus", "30", "Manninen, Olli-Pekka", "eBook", "Ihan hyvä kirja", "Suosittelen kaikille", "4", "2019", "6", "2019")
+                .collect(Collectors.toList());
+        List<Object> row2 = Stream.of("6/18/2019 14:04:36", "miika.somero@gmail.com", "Kirjabonus", "yksikköTestaus", "30", "Manninen, Olli-Pekka", "eBook", "Ihan hyvä kirja", "Suosittelen kaikille", "4", "2019", "6", "2019")
+                .collect(Collectors.toList());
+
+        VisualBook book1 = (VisualBook) visualBooksParser.parse(row1);
+        VisualBook book2 = (VisualBook) visualBooksParser.parse(row2);
+
+        assertEquals("Yksikkötestaus", book1.getName());
+        assertEquals("Yksikkötestaus", book2.getName());
+        assertTrue(book1.equals(book2));
     }
 
     @Test

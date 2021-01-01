@@ -2,6 +2,7 @@ package com.hacker.api.parsers;
 
 import com.hacker.api.domain.Employee;
 import com.hacker.api.domain.books.*;
+import org.apache.commons.text.WordUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,7 +19,7 @@ public abstract class SheetToBooksParserTemplate extends SheetParserImpl {
         review.setId(review.hashCode());
 
         Book book = parseBook(row);
-        book.setName(getBookName(row));
+        book.setName(WordUtils.capitalizeFully(getBookName(row)));
         book.setAuthors(getBookAuthors(row));
         book.setId(book.hashCode());
         book.getReviews().add(review);

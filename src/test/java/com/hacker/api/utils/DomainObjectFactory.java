@@ -38,6 +38,16 @@ public class DomainObjectFactory {
         VisualBook book = new VisualBook();
         book.setName(name);
         book.setType(BookType.PAPER);
+        book.setId(book.hashCode());
+
+        return book;
+    }
+
+    public static VisualBook getEBook(String name) {
+        VisualBook book = new VisualBook();
+        book.setName(name);
+        book.setType(BookType.EBOOK);
+        book.setId(book.hashCode());
 
         return book;
     }
@@ -46,6 +56,7 @@ public class DomainObjectFactory {
         AudioBook book = new AudioBook();
         book.setName(name);
         book.setType(BookType.AUDIO);
+        book.setId(book.hashCode());
 
         return book;
     }

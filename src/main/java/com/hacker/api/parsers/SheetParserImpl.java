@@ -14,7 +14,8 @@ public abstract class SheetParserImpl implements SheetParser {
 
     public String parseStringValue(List<Object> row, Integer index) {
         try {
-            return (String) row.get(index);
+            String value = (String) row.get(index);
+            return value.trim();
         } catch (IndexOutOfBoundsException e) {
             logger.info("Spreadsheet is missing value in index " + index);
             logger.info("Row: " + row.toString());
@@ -25,10 +26,8 @@ public abstract class SheetParserImpl implements SheetParser {
 
     public int parseIntegerValue(List<Object> row, Integer index) {
         try {
-            return Integer.valueOf((String) row.get(index));
-        } catch (IndexOutOfBoundsException e) {
-            logger.info("Spreadsheet is missing value in index " + index);
-            logger.info("Row: " + row.toString());
+            String value = parseStringValue(row, index);
+            return Integer.valueOf(value);
         } catch (NumberFormatException e) {
             logger.info("Cannot parse value to integer");
             logger.info("Value: " + row.get(index));
@@ -39,11 +38,8 @@ public abstract class SheetParserImpl implements SheetParser {
 
     public LocalDate parseDateValue(List<Object> row, Integer index) {
         try {
-            String value = (String) row.get(index);
-            return LocalDate.parse(value, getFormatter());
-        } catch (IndexOutOfBoundsException e) {
-            logger.info("Spreadsheet is missing value in index " + index);
-            logger.info("Row: " + row.toString());
+            String value = parseStringValue(row, index);
+            return LocalDate.parse(value, getDateFormatter());
         } catch (DateTimeParseException e) {
             logger.info("Cannot parse value to LocalDate");
             logger.info("Value: " + row.get(index));
@@ -55,11 +51,8 @@ public abstract class SheetParserImpl implements SheetParser {
 
     public LocalDateTime parseDateTimeValue(List<Object> row, Integer index) {
         try {
-            String value = (String) row.get(index);
+            String value = parseStringValue(row, index);
             return LocalDateTime.parse(value, getDateTimeFormatter());
-        } catch (IndexOutOfBoundsException e) {
-            logger.info("Spreadsheet is missing value in index " + index);
-            logger.info("Row: " + row.toString());
         } catch (DateTimeParseException e) {
             logger.info("Cannot parse value to LocalDateTime");
             logger.info("Value: " + row.get(index));
@@ -69,7 +62,7 @@ public abstract class SheetParserImpl implements SheetParser {
         return LocalDateTime.now();
     }
 
-    private DateTimeFormatter getFormatter() {
+    private DateTimeFormatter getDateFormatter() {
         return DateTimeFormatter.ofPattern("M/d/yyyy");
     }
 
