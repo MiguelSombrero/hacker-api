@@ -81,7 +81,7 @@ public class BooksReducerTest {
     }
 
     @Test
-    public void testReduceThatPageNumberDoesNotAffectBookHashCode() {
+    public void testThatPageNumberDoesNotAffectBookHashCode() {
         Review review1 = DomainObjectFactory.getReview("Pretty good book");
         Review review2 = DomainObjectFactory.getReview("Could be worse");
 

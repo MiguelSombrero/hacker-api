@@ -29,8 +29,8 @@ public class SheetToAudioBookParserTest {
         assertEquals("Takanen, Kimmo", book.getAuthors());
         assertEquals(4, book.getReviews().get(0).getRating());
         assertEquals("Ihan hyvä kirja", book.getReviews().get(0).getReview());
-        assertEquals("miika", book.getReviews().get(0).getReviewer().getFirstname());
-        assertEquals("somero", book.getReviews().get(0).getReviewer().getLastname());
+        assertEquals("Miika", book.getReviews().get(0).getReviewer().getFirstname());
+        assertEquals("Somero", book.getReviews().get(0).getReviewer().getLastname());
         assertEquals("AUDIO", book.getType().toString());
         assertEquals(608, book.getDuration());
     }
@@ -46,8 +46,8 @@ public class SheetToAudioBookParserTest {
         assertEquals("Takanen, Kimmo", book.getAuthors());
         assertEquals(0, book.getReviews().get(0).getRating());
         assertEquals("Ihan hyvä kirja", book.getReviews().get(0).getReview());
-        assertEquals("miika", book.getReviews().get(0).getReviewer().getFirstname());
-        assertEquals("somero", book.getReviews().get(0).getReviewer().getLastname());
+        assertEquals("Miika", book.getReviews().get(0).getReviewer().getFirstname());
+        assertEquals("Somero", book.getReviews().get(0).getReviewer().getLastname());
         assertEquals("AUDIO", book.getType().toString());
         assertEquals(0, book.getDuration());
     }
@@ -63,8 +63,8 @@ public class SheetToAudioBookParserTest {
         assertEquals("Takanen, Kimmo", book.getAuthors());
         assertEquals(4, book.getReviews().get(0).getRating());
         assertEquals("Ihan hyvä kirja", book.getReviews().get(0).getReview());
-        assertEquals("miika", book.getReviews().get(0).getReviewer().getFirstname());
-        assertEquals("somero", book.getReviews().get(0).getReviewer().getLastname());
+        assertEquals("Miika", book.getReviews().get(0).getReviewer().getFirstname());
+        assertEquals("Somero", book.getReviews().get(0).getReviewer().getLastname());
         assertEquals("AUDIO", book.getType().toString());
         assertEquals(0, book.getDuration());
     }
@@ -80,8 +80,8 @@ public class SheetToAudioBookParserTest {
         assertEquals("Takanen, Kimmo", book.getAuthors());
         assertEquals(0, book.getReviews().get(0).getRating());
         assertEquals("", book.getReviews().get(0).getReview());
-        assertEquals("miika", book.getReviews().get(0).getReviewer().getFirstname());
-        assertEquals("somero", book.getReviews().get(0).getReviewer().getLastname());
+        assertEquals("Miika", book.getReviews().get(0).getReviewer().getFirstname());
+        assertEquals("Somero", book.getReviews().get(0).getReviewer().getLastname());
         assertEquals("AUDIO", book.getType().toString());
         assertEquals(608, book.getDuration());
     }
@@ -97,8 +97,8 @@ public class SheetToAudioBookParserTest {
         assertEquals("Takanen, Kimmo", book.getAuthors());
         assertEquals(4, book.getReviews().get(0).getRating());
         assertEquals("Ihan hyvä kirja", book.getReviews().get(0).getReview());
-        assertEquals("miika", book.getReviews().get(0).getReviewer().getFirstname());
-        assertEquals("somero", book.getReviews().get(0).getReviewer().getLastname());
+        assertEquals("Miika", book.getReviews().get(0).getReviewer().getFirstname());
+        assertEquals("Somero", book.getReviews().get(0).getReviewer().getLastname());
         assertEquals("AUDIO", book.getType().toString());
         assertEquals(608, book.getDuration());
     }

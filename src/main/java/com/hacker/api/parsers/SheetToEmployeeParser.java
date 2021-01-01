@@ -4,6 +4,7 @@ import com.hacker.api.domain.Employee;
 import com.hacker.api.domain.projects.Project;
 import com.hacker.api.domain.projects.Role;
 import com.hacker.api.domain.projects.Skill;
+import org.apache.commons.text.WordUtils;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -20,8 +21,8 @@ public class SheetToEmployeeParser extends SheetParserImpl {
         Project project = parseProject(row);
 
         Employee employee = new Employee();
-        employee.setFirstname(getEmployeeFirstname(row));
-        employee.setLastname(getEmployeeLastname(row));
+        employee.setFirstname(WordUtils.capitalizeFully(getEmployeeFirstname(row)));
+        employee.setLastname(WordUtils.capitalizeFully(getEmployeeLastname(row)));
         employee.setId(employee.hashCode());
         employee.getSkills().addAll(skills);
         employee.getProjects().add(project);
@@ -37,7 +38,7 @@ public class SheetToEmployeeParser extends SheetParserImpl {
         List<Skill> skills = Arrays.stream(parts)
                 .map(name -> {
                     Skill skill = new Skill();
-                    skill.setName(name.trim());
+                    skill.setName(WordUtils.capitalizeFully(name.trim()));
                     skill.setId(skill.hashCode());
                     skill.setKnowHowMonths(knowHow);
 
@@ -50,7 +51,7 @@ public class SheetToEmployeeParser extends SheetParserImpl {
 
     private Project parseProject(List<Object> row) {
         Project project = new Project();
-        project.setName(getProjectName(row));
+        project.setName(WordUtils.capitalizeFully(getProjectName(row)));
         project.setClient(getClientName(row));
         project.setDescription(getProjectDescription(row));
         project.setEmployer(getEmployerName(row));
@@ -68,7 +69,7 @@ public class SheetToEmployeeParser extends SheetParserImpl {
                 .collect(Collectors.toList());
 
         Role role = new Role();
-        role.setName(getRoleName(row));
+        role.setName(WordUtils.capitalizeFully(getRoleName(row)));
         role.getTasks().addAll(tasks);
         role.setId(role.hashCode());
 

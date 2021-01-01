@@ -29,8 +29,8 @@ public class SheetToVisualBookParserTest {
         assertEquals("Manninen, Olli-Pekka", book.getAuthors());
         assertEquals(4, book.getReviews().get(0).getRating());
         assertEquals("Ihan hyvä kirja", book.getReviews().get(0).getReview());
-        assertEquals("miika", book.getReviews().get(0).getReviewer().getFirstname());
-        assertEquals("somero", book.getReviews().get(0).getReviewer().getLastname());
+        assertEquals("Miika", book.getReviews().get(0).getReviewer().getFirstname());
+        assertEquals("Somero", book.getReviews().get(0).getReviewer().getLastname());
         assertEquals("EBOOK", book.getType().toString());
         assertEquals(30, book.getPages());
     }
@@ -61,8 +61,8 @@ public class SheetToVisualBookParserTest {
         assertEquals("Manninen, Olli-Pekka", book.getAuthors());
         assertEquals(0, book.getReviews().get(0).getRating());
         assertEquals("Ihan hyvä kirja", book.getReviews().get(0).getReview());
-        assertEquals("miika", book.getReviews().get(0).getReviewer().getFirstname());
-        assertEquals("somero", book.getReviews().get(0).getReviewer().getLastname());
+        assertEquals("Miika", book.getReviews().get(0).getReviewer().getFirstname());
+        assertEquals("Somero", book.getReviews().get(0).getReviewer().getLastname());
         assertEquals("EBOOK", book.getType().toString());
         assertEquals(0, book.getPages());
     }
@@ -78,8 +78,8 @@ public class SheetToVisualBookParserTest {
         assertEquals("Manninen, Olli-Pekka", book.getAuthors());
         assertEquals(4, book.getReviews().get(0).getRating());
         assertEquals("Ihan hyvä kirja", book.getReviews().get(0).getReview());
-        assertEquals("miika", book.getReviews().get(0).getReviewer().getFirstname());
-        assertEquals("somero", book.getReviews().get(0).getReviewer().getLastname());
+        assertEquals("Miika", book.getReviews().get(0).getReviewer().getFirstname());
+        assertEquals("Somero", book.getReviews().get(0).getReviewer().getLastname());
         assertEquals("UNDEFINED", book.getType().toString());
         assertEquals(30, book.getPages());
     }
@@ -95,8 +95,8 @@ public class SheetToVisualBookParserTest {
         assertEquals("Manninen, Olli-Pekka", book.getAuthors());
         assertEquals(0, book.getReviews().get(0).getRating());
         assertEquals("", book.getReviews().get(0).getReview());
-        assertEquals("miika", book.getReviews().get(0).getReviewer().getFirstname());
-        assertEquals("somero", book.getReviews().get(0).getReviewer().getLastname());
+        assertEquals("Miika", book.getReviews().get(0).getReviewer().getFirstname());
+        assertEquals("Somero", book.getReviews().get(0).getReviewer().getLastname());
         assertEquals("EBOOK", book.getType().toString());
         assertEquals(30, book.getPages());
     }
@@ -112,7 +112,7 @@ public class SheetToVisualBookParserTest {
         assertEquals("Manninen, Olli-Pekka", book.getAuthors());
         assertEquals(4, book.getReviews().get(0).getRating());
         assertEquals("Ihan hyvä kirja", book.getReviews().get(0).getReview());
-        assertEquals("miikasomero", book.getReviews().get(0).getReviewer().getFirstname());
+        assertEquals("Miikasomero", book.getReviews().get(0).getReviewer().getFirstname());
         assertEquals("", book.getReviews().get(0).getReviewer().getLastname());
         assertEquals("EBOOK", book.getType().toString());
         assertEquals(30, book.getPages());

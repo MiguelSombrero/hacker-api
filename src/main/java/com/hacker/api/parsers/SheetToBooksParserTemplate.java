@@ -37,8 +37,8 @@ public abstract class SheetToBooksParserTemplate extends SheetParserImpl {
             String[] parts = email.split("@");
             String[] names = parts[0].split("\\.");
 
-            firstname = names[0];
-            lastName = names[1];
+            firstname = WordUtils.capitalizeFully(names[0]);
+            lastName = WordUtils.capitalizeFully(names[1]);
 
         } catch (ArrayIndexOutOfBoundsException e) {
             logger.info(String.format("Could not parse names from row %s", row));
