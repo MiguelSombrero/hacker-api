@@ -5,7 +5,9 @@ import com.hacker.api.domain.books.AudioBook;
 import com.hacker.api.domain.books.BookType;
 import com.hacker.api.domain.books.VisualBook;
 import com.hacker.api.domain.books.Review;
+import com.hacker.api.domain.projects.Project;
 import com.hacker.api.domain.projects.Skill;
+import org.apache.commons.text.WordUtils;
 
 public class DomainObjectFactory {
 
@@ -25,6 +27,14 @@ public class DomainObjectFactory {
         skill.setId(skill.hashCode());
 
         return skill;
+    }
+
+    public static Project getProject(String name) {
+        Project project = new Project();
+        project.setName(name);
+        project.setId(project.hashCode());
+
+        return project;
     }
 
     public static Review getReview(String text) {

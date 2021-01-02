@@ -17,11 +17,7 @@ public class Project {
     private String client;
     private String employer;
     private Role role;
-
-    @JsonFormat (shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
     private LocalDate start;
-
-    @JsonFormat (shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy")
     private LocalDate end;
 
     @EqualsAndHashCode.Exclude

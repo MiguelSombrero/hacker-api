@@ -1,5 +1,6 @@
 package com.hacker.api.domain.books;
 
+import com.hacker.api.domain.BaseDomainTest;
 import com.hacker.api.utils.DomainObjectFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -7,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
-public class BookTest {
+public class BookTest extends BaseDomainTest {
 
     @Test
     public void ifSameNameBookIsSame() {
@@ -17,10 +18,8 @@ public class BookTest {
         AudioBook book3 = DomainObjectFactory.getAudioBook("Apocalypse Now");
         AudioBook book4 = DomainObjectFactory.getAudioBook("Apocalypse Now");
 
-        assertTrue(book1.equals(book2));
-        assertTrue(book3.equals(book4));
-        assertTrue(book1.hashCode() == book2.hashCode());
-        assertTrue(book3.hashCode() == book4.hashCode());
+        isSame(book1, book2);
+        isSame(book3, book4);
     }
 
     @Test
@@ -31,8 +30,7 @@ public class BookTest {
         VisualBook book2 = DomainObjectFactory.getPaperBook("Apocalypse Now");
         book2.setPages(345);
 
-        assertTrue(book1.equals(book2));
-        assertTrue(book1.hashCode() == book2.hashCode());
+        isSame(book1, book2);
     }
 
     @Test
@@ -43,8 +41,7 @@ public class BookTest {
         AudioBook book2 = DomainObjectFactory.getAudioBook("Apocalypse Now");
         book2.setDuration(2);
 
-        assertTrue(book1.equals(book2));
-        assertTrue(book1.hashCode() == book2.hashCode());
+        isSame(book1, book2);
     }
 
     @Test
@@ -61,10 +58,8 @@ public class BookTest {
         AudioBook book4 = DomainObjectFactory.getAudioBook("Apocalypse Now");
         book4.setAuthors("Jukka Rantala");
 
-        assertTrue(book1.equals(book2));
-        assertTrue(book3.equals(book4));
-        assertTrue(book1.hashCode() == book2.hashCode());
-        assertTrue(book3.hashCode() == book4.hashCode());
+        isSame(book1, book2);
+        isSame(book3, book4);
     }
 
     @Test
@@ -74,10 +69,8 @@ public class BookTest {
         AudioBook book3 = DomainObjectFactory.getAudioBook("Apocalypse Now");
         AudioBook book4 = DomainObjectFactory.getAudioBook("Apocalypse Nov");
 
-        assertTrue(!book1.equals(book2));
-        assertTrue(!book3.equals(book4));
-        assertTrue(book1.hashCode() != book2.hashCode());
-        assertTrue(book3.hashCode() != book4.hashCode());
+        isDifferent(book1, book2);
+        isDifferent(book3, book4);
     }
 
     @Test
@@ -86,10 +79,8 @@ public class BookTest {
         VisualBook book2 = DomainObjectFactory.getEBook("Apocalypse Now");
         AudioBook book3 = DomainObjectFactory.getAudioBook("Apocalypse Now");
 
-        assertTrue(!book1.equals(book2));
-        assertTrue(!book2.equals(book3));
-        assertTrue(book1.hashCode() != book2.hashCode());
-        assertTrue(book2.hashCode() != book3.hashCode());
+        isDifferent(book1, book2);
+        isDifferent(book2, book3);
     }
 
 
