@@ -1,6 +1,6 @@
 package com.hacker.api.domain.books;
 
-import com.hacker.api.domain.Employee;
+import com.hacker.api.domain.Hacker;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,5 +15,5 @@ public class Review {
     private LocalDateTime created;
     private String review;
     private int rating;
-    private Employee reviewer;
+    private Hacker reviewer;
 }

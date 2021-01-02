@@ -1,9 +1,9 @@
 package com.hacker.api.service;
 
 import com.hacker.api.client.GoogleSheetsClient;
-import com.hacker.api.domain.Employee;
-import com.hacker.api.reducers.EmployeesReducer;
-import com.hacker.api.parsers.SheetToEmployeeParser;
+import com.hacker.api.domain.Hacker;
+import com.hacker.api.reducers.HackersReducer;
+import com.hacker.api.parsers.SheetToHackerParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class EmployeesService {
-    private Logger logger = LoggerFactory.getLogger(EmployeesService.class);
+public class HackersService {
+    private Logger logger = LoggerFactory.getLogger(HackersService.class);
 
     @Value("${google.sheets.projects.spreadsheet}")
     private String spredsheetId;
@@ -28,21 +28,21 @@ public class EmployeesService {
     private GoogleSheetsClient sheetsClient;
 
     @Autowired
-    private EmployeesReducer reducer;
+    private HackersReducer reducer;
 
     @Autowired
-    private SheetToEmployeeParser sheetToEmployeeParser;
+    private SheetToHackerParser sheetToHackerParser;
 
-    public List<Employee> getEmployees() throws IOException {
+    public List<Hacker> getEmployees() throws IOException {
         List<List<Object>> values = sheetsClient.getValuesFromSheet(spredsheetId, sheetId);
 
-        List<Employee> employees = values.stream()
-                .map(row -> (Employee) sheetToEmployeeParser.parse(row))
+        List<Hacker> hackers = values.stream()
+                .map(row -> (Hacker) sheetToHackerParser.parse(row))
                 .collect(Collectors.toList());
 
-        employees = reducer.reduce(employees);
+        hackers = reducer.reduce(hackers);
 
-        return employees;
+        return hackers;
     }
 
 }

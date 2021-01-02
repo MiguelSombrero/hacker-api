@@ -1,6 +1,6 @@
 package com.hacker.api.reducers;
 
-import com.hacker.api.domain.Employee;
+import com.hacker.api.domain.Hacker;
 import com.hacker.api.domain.projects.Skill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -9,12 +9,12 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Component
-public class EmployeesReducer extends ReducerTemplate<Employee> {
+public class HackersReducer extends ReducerTemplate<Hacker> {
     @Autowired
     private SkillsReducer reducer;
 
     @Override
-    protected Employee merge(Employee current, Employee next) {
+    protected Hacker merge(Hacker current, Hacker next) {
         current.getSkills().addAll(next.getSkills());
         current.getProjects().addAll(next.getProjects());
 
@@ -26,7 +26,7 @@ public class EmployeesReducer extends ReducerTemplate<Employee> {
     }
 
     @Override
-    protected int getId(Employee employee) {
-        return employee.getId();
+    protected int getId(Hacker hacker) {
+        return hacker.getId();
     }
 }

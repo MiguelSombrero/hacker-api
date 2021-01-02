@@ -12,7 +12,7 @@ public class GoogleAuthorizationUtil {
 
     public static Credential getCredential() throws IOException {
         InputStream in = GoogleAuthorizationUtil.class
-                .getResourceAsStream("/hacker-api-service-account.json");
+                .getResourceAsStream("/secrets.json");
 
         GoogleCredential credential = GoogleCredential.fromStream(in)
                 .createScoped(Collections.singleton(SheetsScopes.SPREADSHEETS_READONLY));

@@ -1,5 +1,8 @@
 package com.hacker.api.domain.books;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum BookType {
     AUDIO("Äänikirja"),
     PAPER("Paperiversio"),

@@ -1,6 +1,6 @@
 package com.hacker.api.parsers;
 
-import com.hacker.api.domain.Employee;
+import com.hacker.api.domain.Hacker;
 import com.hacker.api.domain.books.*;
 import org.apache.commons.text.WordUtils;
 
@@ -10,7 +10,7 @@ import java.util.List;
 public abstract class SheetToBooksParserTemplate extends SheetParserImpl {
 
     public Object parse(List<Object> row) {
-        Employee reviewer = parseEmployee(row);
+        Hacker reviewer = parseEmployee(row);
 
         Review review = parseReview(row);
         review.setReviewer(reviewer);
@@ -25,8 +25,8 @@ public abstract class SheetToBooksParserTemplate extends SheetParserImpl {
         return book;
     }
 
-    private Employee parseEmployee(List<Object> row) {
-        Employee employee = new Employee();
+    private Hacker parseEmployee(List<Object> row) {
+        Hacker hacker = new Hacker();
         String firstname = "";
         String lastName = "";
 
@@ -42,11 +42,11 @@ public abstract class SheetToBooksParserTemplate extends SheetParserImpl {
             logger.info(String.format("Could not parse names from row %s", row));
         }
 
-        employee.setFirstname(firstname);
-        employee.setLastname(lastName);
-        employee.setId(employee.hashCode());
+        hacker.setFirstname(firstname);
+        hacker.setLastname(lastName);
+        hacker.setId(hacker.hashCode());
 
-        return employee;
+        return hacker;
     }
 
     private Review parseReview(List<Object> row) {

@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Employee {
+public class Hacker {
     private int id;
     private String firstname;
     private String lastname;

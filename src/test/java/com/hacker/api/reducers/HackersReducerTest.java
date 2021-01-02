@@ -1,6 +1,6 @@
 package com.hacker.api.reducers;
 
-import com.hacker.api.domain.Employee;
+import com.hacker.api.domain.Hacker;
 import com.hacker.api.domain.projects.Skill;
 import com.hacker.api.utils.DomainObjectFactory;
 import org.junit.jupiter.api.Test;
@@ -12,11 +12,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-public class EmployeesReducerTest {
-    protected static Logger logger = LoggerFactory.getLogger(EmployeesReducerTest.class);
+public class HackersReducerTest {
+    protected static Logger logger = LoggerFactory.getLogger(HackersReducerTest.class);
 
     @Autowired
-    private EmployeesReducer employeesReducer;
+    private HackersReducer hackersReducer;
 
     @Test
     public void testMerge() {
@@ -27,17 +27,17 @@ public class EmployeesReducerTest {
         Skill skill5 = DomainObjectFactory.getSkill("XML", 8);
         Skill skill6 = DomainObjectFactory.getSkill("XML", 2);
 
-        Employee employee1 = DomainObjectFactory.getEmployee("Miika", "Somero");
-        employee1.getSkills().add(skill1);
-        employee1.getSkills().add(skill2);
-        employee1.getSkills().add(skill3);
+        Hacker hacker1 = DomainObjectFactory.getEmployee("Miika", "Somero");
+        hacker1.getSkills().add(skill1);
+        hacker1.getSkills().add(skill2);
+        hacker1.getSkills().add(skill3);
 
-        Employee employee2 = DomainObjectFactory.getEmployee("Miika", "Somero");
-        employee2.getSkills().add(skill4);
-        employee2.getSkills().add(skill5);
-        employee2.getSkills().add(skill6);
+        Hacker hacker2 = DomainObjectFactory.getEmployee("Miika", "Somero");
+        hacker2.getSkills().add(skill4);
+        hacker2.getSkills().add(skill5);
+        hacker2.getSkills().add(skill6);
 
-        Employee result = employeesReducer.merge(employee1, employee2);
+        Hacker result = hackersReducer.merge(hacker1, hacker2);
 
         assertEquals("Miika", result.getFirstname());
         assertEquals("Somero", result.getLastname());

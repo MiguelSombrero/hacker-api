@@ -1,9 +1,8 @@
 package com.hacker.api.controller;
 
-import com.hacker.api.domain.Employee;
+import com.hacker.api.domain.Hacker;
 import com.hacker.api.domain.projects.Skill;
-import com.hacker.api.reducers.ReducerTemplate;
-import com.hacker.api.service.EmployeesService;
+import com.hacker.api.service.HackersService;
 import com.hacker.api.utils.DomainObjectFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,11 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -30,14 +27,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ActiveProfiles("test")
 @SpringBootTest
-public class EmployeesControllerTest {
-    private Logger logger = LoggerFactory.getLogger(EmployeesControllerTest.class);
+public class HackersControllerTest {
+    private Logger logger = LoggerFactory.getLogger(HackersControllerTest.class);
 
-    Employee employee1;
-    Employee employee2;
+    Hacker hacker1;
+    Hacker hacker2;
 
     @MockBean
-    private EmployeesService employeesService;
+    private HackersService hackersService;
 
     @Autowired
     private WebApplicationContext webAppContext;
@@ -57,23 +54,23 @@ public class EmployeesControllerTest {
         Skill skill5 = DomainObjectFactory.getSkill("XML", 8);
         Skill skill6 = DomainObjectFactory.getSkill("XML", 2);
 
-        Employee employee1 = DomainObjectFactory.getEmployee("Miika", "Somero");
-        employee1.getSkills().add(skill1);
-        employee1.getSkills().add(skill2);
-        employee1.getSkills().add(skill3);
+        Hacker hacker1 = DomainObjectFactory.getEmployee("Miika", "Somero");
+        hacker1.getSkills().add(skill1);
+        hacker1.getSkills().add(skill2);
+        hacker1.getSkills().add(skill3);
 
-        Employee employee2 = DomainObjectFactory.getEmployee("Jukka", "Kainulainen");
-        employee2.getSkills().add(skill4);
-        employee2.getSkills().add(skill5);
-        employee2.getSkills().add(skill6);
+        Hacker hacker2 = DomainObjectFactory.getEmployee("Jukka", "Kainulainen");
+        hacker2.getSkills().add(skill4);
+        hacker2.getSkills().add(skill5);
+        hacker2.getSkills().add(skill6);
 
-        this.employee1 = employee1;
-        this.employee2 = employee2;
+        this.hacker1 = hacker1;
+        this.hacker2 = hacker2;
     }
 
     @Test
     public void getEmployees() throws Exception {
-        Mockito.when(employeesService.getEmployees()).thenReturn(Arrays.asList(employee1, employee2));
+        Mockito.when(hackersService.getEmployees()).thenReturn(Arrays.asList(hacker1, hacker2));
 
         MvcResult result = mockMvc.perform(get("/employees"))
                 .andExpect(status().isOk())

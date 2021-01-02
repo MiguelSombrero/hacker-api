@@ -1,23 +1,22 @@
 package com.hacker.api.utils;
 
-import com.hacker.api.domain.Employee;
+import com.hacker.api.domain.Hacker;
 import com.hacker.api.domain.books.AudioBook;
 import com.hacker.api.domain.books.BookType;
 import com.hacker.api.domain.books.VisualBook;
 import com.hacker.api.domain.books.Review;
 import com.hacker.api.domain.projects.Project;
 import com.hacker.api.domain.projects.Skill;
-import org.apache.commons.text.WordUtils;
 
 public class DomainObjectFactory {
 
-    public static Employee getEmployee(String firstname, String lastname) {
-        Employee employee = new Employee();
-        employee.setFirstname(firstname);
-        employee.setLastname(lastname);
-        employee.setId(employee.hashCode());
+    public static Hacker getEmployee(String firstname, String lastname) {
+        Hacker hacker = new Hacker();
+        hacker.setFirstname(firstname);
+        hacker.setLastname(lastname);
+        hacker.setId(hacker.hashCode());
 
-        return employee;
+        return hacker;
     }
 
     public static Skill getSkill(String name, Integer knowHowMonths) {

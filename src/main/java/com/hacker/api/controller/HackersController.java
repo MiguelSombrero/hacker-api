@@ -1,7 +1,7 @@
 package com.hacker.api.controller;
 
-import com.hacker.api.domain.Employee;
-import com.hacker.api.service.EmployeesService;
+import com.hacker.api.domain.Hacker;
+import com.hacker.api.service.HackersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,14 +10,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/employees")
-public class EmployeesController {
+public class HackersController {
 
     @Autowired
-    private EmployeesService service;
+    private HackersService service;
 
     @GetMapping("")
-    public List<Employee> getEmployees() throws IOException {
-        List<Employee> result = service.getEmployees();
+    public List<Hacker> getEmployees() throws IOException {
+        List<Hacker> result = service.getEmployees();
         return result;
     }
 }

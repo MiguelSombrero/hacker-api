@@ -1,6 +1,6 @@
 package com.hacker.api.parsers;
 
-import com.hacker.api.domain.Employee;
+import com.hacker.api.domain.Hacker;
 import com.hacker.api.domain.projects.Project;
 import com.hacker.api.domain.projects.Role;
 import com.hacker.api.domain.projects.Skill;
@@ -14,20 +14,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class SheetToEmployeeParser extends SheetParserImpl {
+public class SheetToHackerParser extends SheetParserImpl {
 
     public Object parse(List<Object> row) {
         List<Skill> skills = parseSkills(row);
         Project project = parseProject(row);
 
-        Employee employee = new Employee();
-        employee.setFirstname(WordUtils.capitalizeFully(getEmployeeFirstname(row)));
-        employee.setLastname(WordUtils.capitalizeFully(getEmployeeLastname(row)));
-        employee.setId(employee.hashCode());
-        employee.getSkills().addAll(skills);
-        employee.getProjects().add(project);
+        Hacker hacker = new Hacker();
+        hacker.setFirstname(WordUtils.capitalizeFully(getEmployeeFirstname(row)));
+        hacker.setLastname(WordUtils.capitalizeFully(getEmployeeLastname(row)));
+        hacker.setId(hacker.hashCode());
+        hacker.getSkills().addAll(skills);
+        hacker.getProjects().add(project);
 
-        return employee;
+        return hacker;
     }
 
     private List<Skill> parseSkills(List<Object> row) {
