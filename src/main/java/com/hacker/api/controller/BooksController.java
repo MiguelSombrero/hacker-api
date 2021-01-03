@@ -13,11 +13,11 @@ import java.util.List;
 public class BooksController {
 
     @Autowired
-    private BooksService service;
+    private BooksService booksService;
 
     @GetMapping("")
     public List<Book> getBooks() throws IOException {
-        List<Book> result = service.getBooks();
+        List<Book> result = booksService.getBooks();
         return result;
     }
 }

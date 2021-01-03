@@ -1,8 +1,8 @@
 # Hacker API
 
 Hacker API serves `Book` (/api/books) and `Hacker` (/api/hackers) objects by API endpoints.
-It uses Google API Client to make API calls for Google Sheets and fetches the data corresponding to the object.
-After that it parses this data to Java objects and sends a JSON response to caller.  
+It uses Google API Client for fetching data from Google Sheets corresponding to the requested object.
+Data is parsed to Java objects and send to caller as JSON response.  
 
 ## In production
 
@@ -145,13 +145,13 @@ Example spreadsheet can be found [here](https://docs.google.com/spreadsheets/d/1
 
 ## Requirements
 
-Hacker API uses Google Sheets API via Google API Client and requires authentication.
+Hacker API uses Google Sheets API via Google API Client which requires authentication.
 
 To use Hacker API you need to do the following
 
 ### Create a project
 
-Create new project in [Google Developer Console](https://console.developers.google.com/) and enable Google Sheets API to that project.
+Create new project in [Google Developer Console](https://console.developers.google.com/) and enable Google Sheets API.
 
 Add service account credentials to you project and new key. Upload credentials to you machine.
 
@@ -163,7 +163,7 @@ Class `GoogleAuthorizationUtil` reads credentials from that file and authenticat
 ### Create spreadsheets
 
 Create spreadsheets that corresponds to examples shown above.
-Give spreadsheets viewing rights to your service account.
+Give viewing rights to spreadsheets for your service account.
 
 ### Update application.properties files
 
@@ -175,28 +175,31 @@ In development, you only have to update file `application-development.properties
 
 ## Available scripts
 
-### Clone and run
+### Clone project
 
 To clone application
 
     git clone git@github.com:MiguelSombrero/hacker-api.git
 
-#### Development mode
+### Build project
 
-Navigate to project folder and run in development mode
+    mvn clean install
+    
+### Run project in development mode
 
-    cd hacker-api
+By default, application runs on development mode so no need to specify active profile
+
     mvn spring-boot:run
 
-#### Test mode
+### Run project in test mode
 
-By default, application runs on development mode. To run application in test mode (needed for integration testing with hacker-UI)
+To run application in test mode (needed for integration testing with hacker-UI)
 
     SPRING_PROFILES_ACTIVE=test mvn spring-boot:run
     
-#### Production mode
+### Run project in production mode
 
-Run application in production mode
+To run application in production mode
 
     SPRING_PROFILES_ACTIVE=production mvn spring-boot:run
 

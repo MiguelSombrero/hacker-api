@@ -36,7 +36,7 @@ public class BooksService {
     private GoogleSheetsClient sheetsClient;
 
     @Autowired
-    private BooksReducer reducer;
+    private BooksReducer booksReducer;
 
     @Autowired
     private SheetToAudioBooksParser audioBooksParser;
@@ -46,29 +46,24 @@ public class BooksService {
 
     public List<Book> getBooks() throws IOException {
         List<String> ranges = Arrays.asList(bookSheetId, audioSheetId);
-
         List<ValueRange> values = sheetsClient.getValuesFromMultipleSheet(spreadsheetId, ranges);
 
-        List<List<Object>> visualBookValues = values.get(0).getValues();
-        List<List<Object>> audioBookValues = values.get(1).getValues();
-
-        visualBookValues.remove(0);
-        audioBookValues.remove(0);
-
-        List<Book> visualBooks = parseBooks(visualBookValues, visualBooksParser);
-        List<Book> audioBooks = parseBooks(audioBookValues, audioBooksParser);
+        List<Book> visualBooks = parseBooks(values.get(0).getValues(), visualBooksParser);
+        List<Book> audioBooks = parseBooks(values.get(1).getValues(), audioBooksParser);
 
         List<Book> books = Stream.concat(visualBooks.stream(), audioBooks.stream())
                 .collect(Collectors.toList());
 
-        books = reducer.reduce(books);
+        books = booksReducer.reduce(books);
 
-        books.stream().forEach(book -> book.calculateRating(book.getReviews()));
+        books.stream().forEach(book -> book.setRating(book.calculateRating()));
 
         return books;
     }
 
     private List<Book> parseBooks(List<List<Object>> values, SheetParserImpl parser) {
+        values.remove(0);
+
         List<Book> books = values.stream()
                 .map(row -> (Book) parser.parse(row))
                 .collect(Collectors.toList());

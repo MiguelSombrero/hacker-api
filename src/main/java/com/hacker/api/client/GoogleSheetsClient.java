@@ -32,7 +32,8 @@ public class GoogleSheetsClient {
                 .values()
                 .batchGet(spreadsheetId)
                 .setRanges(ranges)
-                .execute().getValueRanges();
+                .execute()
+                .getValueRanges();
 
         return response;
     }

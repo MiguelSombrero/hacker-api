@@ -28,7 +28,7 @@ public class HackersService {
     private GoogleSheetsClient sheetsClient;
 
     @Autowired
-    private HackersReducer reducer;
+    private HackersReducer hackersReducer;
 
     @Autowired
     private SheetToHackerParser sheetToHackerParser;
@@ -40,7 +40,7 @@ public class HackersService {
                 .map(row -> (Hacker) sheetToHackerParser.parse(row))
                 .collect(Collectors.toList());
 
-        hackers = reducer.reduce(hackers);
+        hackers = hackersReducer.reduce(hackers);
 
         return hackers;
     }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SkillsReducer extends ReducerTemplate<Skill> {
+
     @Override
     protected Skill merge(Skill current, Skill next) {
         current.setKnowHowMonths(current.getKnowHowMonths() + next.getKnowHowMonths());

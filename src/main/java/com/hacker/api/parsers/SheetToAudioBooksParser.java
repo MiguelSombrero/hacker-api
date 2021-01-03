@@ -25,9 +25,7 @@ public class SheetToAudioBooksParser extends SheetToBooksParserTemplate {
         return parseStringValue(row, 1);
     }
 
-    protected String getBookName(List<Object> row) {
-        return parseStringValue(row, 5);
-    }
+    protected String getBookName(List<Object> row) { return parseStringValue(row, 5); }
 
     protected String getBookAuthors(List<Object> row) {
         return parseStringValue(row, 7);

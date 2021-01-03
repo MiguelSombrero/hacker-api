@@ -11,6 +11,8 @@ import java.util.List;
 
 public abstract class SheetParserImpl implements SheetParser {
     protected static Logger logger = LoggerFactory.getLogger(SheetParserImpl.class);
+    private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("M/d/yyyy");
+    private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("M/d/yyyy H:mm:ss");
 
     public String parseStringValue(List<Object> row, Integer index) {
         try {
@@ -39,7 +41,7 @@ public abstract class SheetParserImpl implements SheetParser {
     public LocalDate parseDateValue(List<Object> row, Integer index) {
         try {
             String value = parseStringValue(row, index);
-            return LocalDate.parse(value, getDateFormatter());
+            return LocalDate.parse(value, dateFormatter);
         } catch (DateTimeParseException e) {
             logger.info("Cannot parse value to LocalDate");
             logger.info("Value: " + row.get(index));
@@ -52,7 +54,7 @@ public abstract class SheetParserImpl implements SheetParser {
     public LocalDateTime parseDateTimeValue(List<Object> row, Integer index) {
         try {
             String value = parseStringValue(row, index);
-            return LocalDateTime.parse(value, getDateTimeFormatter());
+            return LocalDateTime.parse(value, dateTimeFormatter);
         } catch (DateTimeParseException e) {
             logger.info("Cannot parse value to LocalDateTime");
             logger.info("Value: " + row.get(index));
@@ -60,14 +62,6 @@ public abstract class SheetParserImpl implements SheetParser {
         }
 
         return LocalDateTime.now();
-    }
-
-    private DateTimeFormatter getDateFormatter() {
-        return DateTimeFormatter.ofPattern("M/d/yyyy");
-    }
-
-    private DateTimeFormatter getDateTimeFormatter() {
-        return DateTimeFormatter.ofPattern("M/d/yyyy H:mm:ss");
     }
 
     public abstract Object parse(List<Object> row);

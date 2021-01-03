@@ -10,15 +10,16 @@ import java.util.stream.Collectors;
 
 @Component
 public class HackersReducer extends ReducerTemplate<Hacker> {
+
     @Autowired
-    private SkillsReducer reducer;
+    private SkillsReducer skillsReducer;
 
     @Override
     protected Hacker merge(Hacker current, Hacker next) {
         current.getSkills().addAll(next.getSkills());
         current.getProjects().addAll(next.getProjects());
 
-        Collection<Skill> skills = reducer.reduce(current.getSkills());
+        Collection<Skill> skills = skillsReducer.reduce(current.getSkills());
 
         current.setSkills(skills.stream().collect(Collectors.toList()));
 

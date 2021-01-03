@@ -25,13 +25,13 @@ public abstract class Book {
     private double rating;
     private List<Review> reviews = new ArrayList<>();
 
-    public void calculateRating(List<Review> reviews) {
-        double value = reviews.stream()
+    public double calculateRating() {
+        double value = this.reviews.stream()
                 .mapToInt(review -> review.getRating())
                 .filter(rating -> rating != 0)
                 .average()
                 .orElse(Double.NaN);
 
-        this.rating = (double) Math.round(value * 10) / 10;
+        return (double) Math.round(value * 10) / 10;
     }
 }
