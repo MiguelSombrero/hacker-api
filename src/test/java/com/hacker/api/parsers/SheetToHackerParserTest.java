@@ -35,6 +35,54 @@ public class SheetToHackerParserTest {
     }
 
     @Test
+    public void calculatesProjectDurationRightWhenOneMonthProject() {
+        List<Object> row = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", "Toteutus", "8/1/2020", "8/1/2020", "Alfame", "Java, Ansible, React", "Verkkokaupan toteutus")
+                .collect(Collectors.toList());
+
+        Hacker hacker = (Hacker) sheetToHackerParser.parse(row);
+
+        assertEquals(1, hacker.getSkills().get(0).getKnowHowMonths());
+        assertEquals(1, hacker.getSkills().get(1).getKnowHowMonths());
+        assertEquals(1, hacker.getSkills().get(2).getKnowHowMonths());
+    }
+
+    @Test
+    public void calculatesProjectDurationRightWhenTwoMonthProject() {
+        List<Object> row = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", "Toteutus", "8/1/2020", "9/1/2020", "Alfame", "Java, Ansible, React", "Verkkokaupan toteutus")
+                .collect(Collectors.toList());
+
+        Hacker hacker = (Hacker) sheetToHackerParser.parse(row);
+
+        assertEquals(2, hacker.getSkills().get(0).getKnowHowMonths());
+        assertEquals(2, hacker.getSkills().get(1).getKnowHowMonths());
+        assertEquals(2, hacker.getSkills().get(2).getKnowHowMonths());
+    }
+
+    @Test
+    public void calculatesProjectDurationRightWhenEndsLastDayOfMonth() {
+        List<Object> row = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", "Toteutus", "8/1/2020", "10/31/2020", "Alfame", "Java, Ansible, React", "Verkkokaupan toteutus")
+                .collect(Collectors.toList());
+
+        Hacker hacker = (Hacker) sheetToHackerParser.parse(row);
+
+        assertEquals(3, hacker.getSkills().get(0).getKnowHowMonths());
+        assertEquals(3, hacker.getSkills().get(1).getKnowHowMonths());
+        assertEquals(3, hacker.getSkills().get(2).getKnowHowMonths());
+    }
+
+    @Test
+    public void calculatesProjectDurationRightWhenStartsAndEndsMiddleOfMonth() {
+        List<Object> row = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", "Toteutus", "8/19/2020", "11/04/2020", "Alfame", "Java, Ansible, React", "Verkkokaupan toteutus")
+                .collect(Collectors.toList());
+
+        Hacker hacker = (Hacker) sheetToHackerParser.parse(row);
+
+        assertEquals(4, hacker.getSkills().get(0).getKnowHowMonths());
+        assertEquals(4, hacker.getSkills().get(1).getKnowHowMonths());
+        assertEquals(4, hacker.getSkills().get(2).getKnowHowMonths());
+    }
+
+    @Test
     public void parseWhenStartDateIsMissing() {
         List<Object> row = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", "Toteutus", "", "11/1/2020", "Alfame", "Java, Ansible, React", "Verkkokaupan toteutus")
                 .collect(Collectors.toList());

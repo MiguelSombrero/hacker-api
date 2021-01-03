@@ -121,8 +121,10 @@ public class SheetToHackerParser extends SheetParserImpl {
     }
 
     private int getProjectDuration(List<Object> row) {
-        Period period = Period.between(getStartDate(row), getEndDate(row))
-                .plusMonths(1);
+        LocalDate start = getStartDate(row).withDayOfMonth(1);
+        LocalDate end = getEndDate(row).plusMonths(1).withDayOfMonth(1);
+
+        Period period = Period.between(start, end);
 
         return period.isNegative() ? 0 : period.getMonths();
     }

@@ -111,6 +111,33 @@ public class BookTest extends BaseDomainTest {
     }
 
     @Test
+    public void calculatesRatingRightWhenContainsZeros() {
+        Review review1 = DomainObjectFactory.getReview("Pretty good book");
+        review1.setRating(3);
+
+        Review review2 = DomainObjectFactory.getReview("Could be worse");
+        review2.setRating(4);
+
+        Review review3 = DomainObjectFactory.getReview("Seen better");
+        review3.setRating(0);
+
+        Review review4 = DomainObjectFactory.getReview("Not my book");
+        review4.setRating(0);
+
+        Review review5 = DomainObjectFactory.getReview("OK");
+        review5.setRating(2);
+
+        VisualBook book = DomainObjectFactory.getPaperBook("Apocalypse Now");
+        book.getReviews().add(review1);
+        book.getReviews().add(review2);
+        book.getReviews().add(review3);
+        book.getReviews().add(review4);
+        book.getReviews().add(review5);
+
+        assertEquals(3.0, book.calculateRating(), 0.01);
+    }
+
+    @Test
     public void calculatesRatingRightWhenFractions() {
         Review review1 = DomainObjectFactory.getReview("Pretty good book");
         review1.setRating(4);
