@@ -126,6 +126,6 @@ public class SheetToHackerParser extends SheetParserImpl {
 
         Period period = Period.between(start, end);
 
-        return period.isNegative() ? 0 : period.getMonths();
+        return period.isNegative() ? 0 : period.getYears() * 12 + period.getMonths();
     }
 }

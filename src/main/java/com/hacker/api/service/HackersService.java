@@ -2,7 +2,6 @@ package com.hacker.api.service;
 
 import com.hacker.api.client.GoogleSheetsClient;
 import com.hacker.api.domain.Hacker;
-import com.hacker.api.domain.projects.Skill;
 import com.hacker.api.reducers.HackersReducer;
 import com.hacker.api.parsers.SheetToHackerParser;
 import com.hacker.api.reducers.SkillsReducer;
@@ -42,7 +41,12 @@ public class HackersService {
 
     public List<Hacker> getHackers() throws IOException {
         List<List<Object>> values = sheetsClient.getValuesFromSheet(spredsheetId, sheetId);
+        List<Hacker> hackers = parseHackers(values);
 
+        return hackers;
+    }
+
+    private List<Hacker> parseHackers(List<List<Object>> values) {
         Map<Integer, Hacker> hackers = values.stream()
                 .map(row -> (Hacker) sheetToHackerParser.parse(row))
                 .collect(groupingBy(Hacker::getId, reducing(null, hackersReducer.reduce())));

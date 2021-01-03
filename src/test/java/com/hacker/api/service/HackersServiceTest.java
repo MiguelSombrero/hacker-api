@@ -2,7 +2,6 @@ package com.hacker.api.service;
 
 import com.hacker.api.client.GoogleSheetsClient;
 import com.hacker.api.domain.Hacker;
-import com.hacker.api.reducers.HackersReducerTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;

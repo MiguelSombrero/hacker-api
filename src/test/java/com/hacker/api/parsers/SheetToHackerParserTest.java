@@ -83,6 +83,18 @@ public class SheetToHackerParserTest {
     }
 
     @Test
+    public void calculatesProjectDurationRightWhenOverYearProject() {
+        List<Object> row = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", "Toteutus", "8/1/2018", "12/1/2020", "Alfame", "Java, Ansible, React", "Verkkokaupan toteutus")
+                .collect(Collectors.toList());
+
+        Hacker hacker = (Hacker) sheetToHackerParser.parse(row);
+
+        assertEquals(29, hacker.getSkills().get(0).getKnowHowMonths());
+        assertEquals(29, hacker.getSkills().get(1).getKnowHowMonths());
+        assertEquals(29, hacker.getSkills().get(2).getKnowHowMonths());
+    }
+
+    @Test
     public void parseWhenStartDateIsMissing() {
         List<Object> row = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", "Toteutus", "", "11/1/2020", "Alfame", "Java, Ansible, React", "Verkkokaupan toteutus")
                 .collect(Collectors.toList());

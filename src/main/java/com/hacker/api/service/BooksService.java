@@ -65,8 +65,6 @@ public class BooksService {
     }
 
     private List<Book> parseBooks(List<List<Object>> values, SheetParserImpl parser) {
-        values.remove(0);
-
         List<Book> books = values.stream()
                 .map(row -> (Book) parser.parse(row))
                 .collect(Collectors.toList());
