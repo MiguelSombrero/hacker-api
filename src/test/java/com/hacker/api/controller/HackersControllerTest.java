@@ -70,7 +70,7 @@ public class HackersControllerTest {
 
     @Test
     public void getEmployees() throws Exception {
-        Mockito.when(hackersService.getEmployees()).thenReturn(Arrays.asList(hacker1, hacker2));
+        Mockito.when(hackersService.getHackers()).thenReturn(Arrays.asList(hacker1, hacker2));
 
         MvcResult result = mockMvc.perform(get("/employees"))
                 .andExpect(status().isOk())

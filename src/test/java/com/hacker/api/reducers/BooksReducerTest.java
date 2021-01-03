@@ -10,9 +10,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.reducing;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
@@ -62,8 +67,10 @@ public class BooksReducerTest {
         Book book4 = DomainObjectFactory.getPaperBook("Apocalypse Now");
         book4.getReviews().add(review5);
 
-        List<Book> books = booksReducer.reduce(Arrays
-                .asList(book1, book2, book3, book4));
+        Map<Integer, Book> booksMap = Arrays.asList(book1, book2, book3, book4).stream()
+                .collect(groupingBy(Book::getId, reducing(null, booksReducer.reduce())));
+
+        List<Book> books = new ArrayList<>(booksMap.values());
 
         Book apocalypse = books.stream()
                 .filter(book -> book.getName().equals("Apocalypse Now"))
@@ -95,8 +102,10 @@ public class BooksReducerTest {
         book2.setPages(434);
         book2.setId(book2.hashCode());
 
-        List<Book> books = booksReducer.reduce(Arrays
-                .asList(book1, book2));
+        Map<Integer, Book> booksMap = Arrays.asList(book1, book2).stream()
+                .collect(groupingBy(Book::getId, reducing(null, booksReducer.reduce())));
+
+        List<Book> books = new ArrayList<>(booksMap.values());
 
         assertEquals(1, books.size());
         assertEquals("Clean Code", books.get(0).getName());

@@ -14,10 +14,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.reducing;
 
 @Service
 public class BooksService {
@@ -51,14 +56,12 @@ public class BooksService {
         List<Book> visualBooks = parseBooks(values.get(0).getValues(), visualBooksParser);
         List<Book> audioBooks = parseBooks(values.get(1).getValues(), audioBooksParser);
 
-        List<Book> books = Stream.concat(visualBooks.stream(), audioBooks.stream())
-                .collect(Collectors.toList());
+        Map<Integer, Book> books = Stream.concat(visualBooks.stream(), audioBooks.stream())
+                .collect(groupingBy(Book::getId, reducing(null, booksReducer.reduce())));
 
-        books = booksReducer.reduce(books);
+        books.values().stream().forEach(book -> book.setRating(book.calculateRating()));
 
-        books.stream().forEach(book -> book.setRating(book.calculateRating()));
-
-        return books;
+        return new ArrayList<>(books.values());
     }
 
     private List<Book> parseBooks(List<List<Object>> values, SheetParserImpl parser) {

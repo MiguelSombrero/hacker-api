@@ -5,8 +5,12 @@ import com.hacker.api.domain.projects.Skill;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.reducing;
 
 @Component
 public class HackersReducer extends ReducerTemplate<Hacker> {
@@ -16,18 +20,14 @@ public class HackersReducer extends ReducerTemplate<Hacker> {
 
     @Override
     protected Hacker merge(Hacker current, Hacker next) {
-        current.getSkills().addAll(next.getSkills());
         current.getProjects().addAll(next.getProjects());
 
-        Collection<Skill> skills = skillsReducer.reduce(current.getSkills());
+        Map<Integer, Skill> skills = Stream
+                .concat(current.getSkills().stream(), next.getSkills().stream())
+                .collect(groupingBy(Skill::getId, reducing(null, skillsReducer.reduce())));
 
-        current.setSkills(skills.stream().collect(Collectors.toList()));
+        current.setSkills(new ArrayList<>(skills.values()));
 
         return current;
-    }
-
-    @Override
-    protected int getId(Hacker hacker) {
-        return hacker.getId();
     }
 }

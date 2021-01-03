@@ -1,8 +1,7 @@
 package com.hacker.api.reducers;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.function.BinaryOperator;
 
 public interface Reducer<T> {
-    List<T> reduce(Collection<T> objects);
+    BinaryOperator<T> reduce();
 }

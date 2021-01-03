@@ -10,9 +10,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
+import static java.util.stream.Collectors.reducing;
+import static java.util.stream.Collectors.groupingBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
@@ -60,6 +64,12 @@ public class HackersReducerTest {
         Skill skill5 = DomainObjectFactory.getSkill("XML", 8);
         Skill skill6 = DomainObjectFactory.getSkill("XML", 2);
 
+        Skill skill7 = DomainObjectFactory.getSkill("Java", 11);
+        Skill skill8 = DomainObjectFactory.getSkill("XML", 8);
+        Skill skill9 = DomainObjectFactory.getSkill("XML", 2);
+
+        Skill skill10 = DomainObjectFactory.getSkill("XML", 8);
+
         Project project1 = DomainObjectFactory.getProject("Verkkokauppa");
         Project project2 = DomainObjectFactory.getProject("Karkkikauppa");
         Project project3 = DomainObjectFactory.getProject("IDM");
@@ -72,13 +82,6 @@ public class HackersReducerTest {
         hacker1.getSkills().add(skill2);
         hacker1.getSkills().add(skill3);
 
-        Hacker hacker2 = DomainObjectFactory.getEmployee("Siiri", "Siirinen");
-        hacker2.getProjects().add(project2);
-        hacker2.getProjects().add(project4);
-        hacker2.getSkills().add(skill4);
-        hacker2.getSkills().add(skill5);
-        hacker2.getSkills().add(skill6);
-
         Hacker hacker3 = DomainObjectFactory.getEmployee("Miika", "Somero");
         hacker3.getProjects().add(project3);
         hacker3.getSkills().add(skill4);
@@ -88,12 +91,23 @@ public class HackersReducerTest {
         hacker4.getSkills().add(skill5);
         hacker4.getSkills().add(skill6);
 
+        Hacker hacker2 = DomainObjectFactory.getEmployee("Siiri", "Siirinen");
+        hacker2.getProjects().add(project2);
+        hacker2.getProjects().add(project4);
+        hacker2.getSkills().add(skill7);
+        hacker2.getSkills().add(skill8);
+
+        Hacker hacker6 = DomainObjectFactory.getEmployee("Siiri", "Siirinen");
+        hacker6.getSkills().add(skill9);
+
         Hacker hacker5 = DomainObjectFactory.getEmployee("Jussi", "Jussinen");
         hacker5.getProjects().add(project5);
-        hacker5.getSkills().add(skill5);
+        hacker5.getSkills().add(skill10);
 
-        List<Hacker> result = hackersReducer.reduce(Arrays
-                .asList(hacker1, hacker2, hacker3, hacker4, hacker5));
+        Map<Integer, Hacker> hackers = Arrays.asList(hacker1, hacker2, hacker3, hacker4, hacker5, hacker6).stream()
+                .collect(groupingBy(Hacker::getId, reducing(null, hackersReducer.reduce())));
+
+        List<Hacker> result = new ArrayList<>(hackers.values());
 
         Hacker miika = result.stream()
                 .filter(hacker -> hacker.getFirstname().equals("Miika"))

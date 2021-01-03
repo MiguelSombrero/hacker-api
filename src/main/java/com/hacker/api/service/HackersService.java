@@ -2,8 +2,10 @@ package com.hacker.api.service;
 
 import com.hacker.api.client.GoogleSheetsClient;
 import com.hacker.api.domain.Hacker;
+import com.hacker.api.domain.projects.Skill;
 import com.hacker.api.reducers.HackersReducer;
 import com.hacker.api.parsers.SheetToHackerParser;
+import com.hacker.api.reducers.SkillsReducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +13,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
+
+import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.reducing;
 
 @Service
 public class HackersService {
@@ -31,18 +35,19 @@ public class HackersService {
     private HackersReducer hackersReducer;
 
     @Autowired
+    private SkillsReducer skillsReducer;
+
+    @Autowired
     private SheetToHackerParser sheetToHackerParser;
 
-    public List<Hacker> getEmployees() throws IOException {
+    public List<Hacker> getHackers() throws IOException {
         List<List<Object>> values = sheetsClient.getValuesFromSheet(spredsheetId, sheetId);
 
-        List<Hacker> hackers = values.stream()
+        Map<Integer, Hacker> hackers = values.stream()
                 .map(row -> (Hacker) sheetToHackerParser.parse(row))
-                .collect(Collectors.toList());
+                .collect(groupingBy(Hacker::getId, reducing(null, hackersReducer.reduce())));
 
-        hackers = hackersReducer.reduce(hackers);
-
-        return hackers;
+        return new ArrayList<>(hackers.values());
     }
 
 }

@@ -16,8 +16,8 @@ public class HackersController {
     private HackersService service;
 
     @GetMapping("")
-    public List<Hacker> getEmployees() throws IOException {
-        List<Hacker> result = service.getEmployees();
+    public List<Hacker> getHackers() throws IOException {
+        List<Hacker> result = service.getHackers();
         return result;
     }
 }
