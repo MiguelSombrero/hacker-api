@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/employees")
+@RequestMapping("/hackers")
 public class HackersController {
 
     @Autowired

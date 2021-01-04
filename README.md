@@ -1,8 +1,8 @@
 # Hacker API
 
 Hacker API serves `Book` (/api/books) and `Hacker` (/api/hackers) objects by API endpoints.
-It uses Google API Client for fetching data from Google Sheets corresponding to the requested object.
-Data is parsed to Java objects and send to caller as JSON response.  
+
+Hacker API uses Google API Client for fetching data from Google Sheets, parses this data to `Book` and `Hacker` objects and sends a JSON response to caller.  
 
 ## In production
 
@@ -13,7 +13,7 @@ Hacker API and Hacker UI is running in Heroku:
 
 ### Google Sheet for `Book` objects
 
-Books (both audio and reqular) is parsed from Google sheets that contains book reviews.
+Books (both audio and regular) is parsed from Google sheets that contains book reviews.
 Example spreadsheet can be found [here](https://docs.google.com/spreadsheets/d/1iken0UPCQ9jHCkJxeRzZRIA8T7PBVZ9Fo4FrclE0pVs/edit#gid=483319555)
 
 ### Example response
@@ -145,17 +145,13 @@ Example spreadsheet can be found [here](https://docs.google.com/spreadsheets/d/1
 
 ## Requirements
 
-Hacker API uses Google Sheets API via Google API Client which requires authentication.
+Hacker API uses Google Sheets API which requires authentication. To use Hacker API you need to do the following
 
-To use Hacker API you need to do the following
+### Create credentials
 
-### Create a project
+Create new project in [Google Developer Console](https://console.developers.google.com/) and enable Google Sheets API to that.
 
-Create new project in [Google Developer Console](https://console.developers.google.com/) and enable Google Sheets API.
-
-Add service account credentials to you project and new key. Upload credentials to you machine.
-
-### Save credentials
+Add service account credentials to you project and a new key. Upload credentials to you machine.
 
 Save your service account credentials in `/resources/secrets.json`.
 Class `GoogleAuthorizationUtil` reads credentials from that file and authenticates requests for Google Sheets API.
@@ -165,11 +161,11 @@ Class `GoogleAuthorizationUtil` reads credentials from that file and authenticat
 Create spreadsheets that corresponds to examples shown above.
 Give viewing rights to spreadsheets for your service account.
 
-### Update application.properties files
+### Update application-{environment}.properties files
 
 Update your application properties files to match your newly created spreadsheets.
 
-Properties `.spreadsheet` correspond to a spreadsheet id and properties `.sheet` to sheet name.
+Properties ending `.spreadsheet` correspond to a spreadsheet id and properties ending `.sheet` to sheet name and range.
 
 In development, you only have to update file `application-development.properties`.
 
@@ -183,7 +179,7 @@ To clone application
 
 ### Build project
 
-    mvn clean install
+    mvn install
     
 ### Run project in development mode
 
@@ -205,4 +201,4 @@ To run application in production mode
 
 ### Unit tests
 
-    mvn clean test
+    mvn test
