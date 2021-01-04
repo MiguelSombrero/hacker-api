@@ -40,7 +40,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = { SocketTimeoutException.class })
-    protected ResponseEntity<Object> handleTimeout(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<Object> handleTimeout(IOException ex, WebRequest request) {
         String body = "Request timeouted - try again later";
 
         logger.info(ex.getLocalizedMessage());
@@ -50,7 +50,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = { IOException.class })
-    protected ResponseEntity<Object> handleIOException(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<Object> handleIOException(IOException ex, WebRequest request) {
         String body = "IOException - try again later";
 
         logger.info(ex.getLocalizedMessage());

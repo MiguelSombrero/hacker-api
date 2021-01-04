@@ -12,12 +12,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.Arrays;
 
 import static org.hamcrest.Matchers.is;
@@ -25,7 +26,6 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@ActiveProfiles("test")
 @SpringBootTest
 public class HackersControllerTest {
     private Logger logger = LoggerFactory.getLogger(HackersControllerTest.class);
@@ -69,10 +69,10 @@ public class HackersControllerTest {
     }
 
     @Test
-    public void getEmployees() throws Exception {
+    public void getHackersWhenEverythingOK() throws Exception {
         Mockito.when(hackersService.getHackers()).thenReturn(Arrays.asList(hacker1, hacker2));
 
-        MvcResult result = mockMvc.perform(get("/employees"))
+        MvcResult result = mockMvc.perform(get("/hackers"))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", "application/json"))
                 .andExpect(jsonPath("$[0].firstname", is("Miika")))
@@ -82,6 +82,51 @@ public class HackersControllerTest {
         logger.info("resultti");
         logger.info(result.getResponse().getContentAsString());
 
+    }
+
+    @Test
+    public void getHackersWhenPathDoesNotExist() throws Exception {
+        Mockito.when(hackersService.getHackers()).thenReturn(Arrays.asList(hacker1, hacker2));
+
+        MvcResult result = mockMvc.perform(get("/hackers/notexists"))
+                .andExpect(status().isNotFound())
+                .andReturn();
+    }
+
+    @Test
+    public void getHackersWhenTimeOutException() throws Exception {
+        Mockito.when(hackersService.getHackers()).thenThrow(SocketTimeoutException.class);
+
+        MvcResult result = mockMvc.perform(get("/hackers"))
+                .andExpect(status().is5xxServerError())
+                .andReturn();
+    }
+
+    @Test
+    public void getHackersWhenIndexOutOfBoundsException() throws Exception {
+        Mockito.when(hackersService.getHackers()).thenThrow(IndexOutOfBoundsException.class);
+
+        MvcResult result = mockMvc.perform(get("/hackers"))
+                .andExpect(status().is5xxServerError())
+                .andReturn();
+    }
+
+    @Test
+    public void getHackersWhenIndexIllegalArgumentException() throws Exception {
+        Mockito.when(hackersService.getHackers()).thenThrow(IllegalArgumentException.class);
+
+        MvcResult result = mockMvc.perform(get("/hackers"))
+                .andExpect(status().isBadRequest())
+                .andReturn();
+    }
+
+    @Test
+    public void getHackersWhenIOException() throws Exception {
+        Mockito.when(hackersService.getHackers()).thenThrow(IOException.class);
+
+        MvcResult result = mockMvc.perform(get("/hackers"))
+                .andExpect(status().is5xxServerError())
+                .andReturn();
     }
 
 }
