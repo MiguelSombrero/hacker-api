@@ -153,7 +153,7 @@ Create new project in [Google Developer Console](https://console.developers.goog
 
 Add service account credentials to you project and a new key. Upload credentials to you machine.
 
-Save your service account credentials in `/resources/secrets.json`.
+Save your service account credentials in `/resources/google-credentials.json`.
 Class `GoogleAuthorizationUtil` reads credentials from that file and authenticates requests for Google Sheets API.
 
 ### Create spreadsheets

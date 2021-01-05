@@ -5,6 +5,7 @@ target/
 
 secrets*
 google-credentials*
+application-production.properties
 
 ### STS ###
 .apt_generated
