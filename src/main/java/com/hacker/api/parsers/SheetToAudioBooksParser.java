@@ -11,7 +11,7 @@ public class SheetToAudioBooksParser extends SheetToBooksParserTemplate {
 
     protected Book parseBook(List<Object> row) {
         AudioBook book = new AudioBook();
-        book.setDuration(getBookDurationInMM(row));
+        book.setDuration(parseBookDuration(row));
         book.setType(BookType.AUDIO);
 
         return book;
@@ -27,6 +27,10 @@ public class SheetToAudioBooksParser extends SheetToBooksParserTemplate {
 
     protected String getBookName(List<Object> row) { return parseStringValue(row, 5); }
 
+    private String getBookDurationInHHMM(List<Object> row) {
+        return parseStringValue(row, 6);
+    }
+
     protected String getBookAuthors(List<Object> row) {
         return parseStringValue(row, 7);
     }
@@ -39,7 +43,11 @@ public class SheetToAudioBooksParser extends SheetToBooksParserTemplate {
         return parseIntegerValue(row, 11);
     }
 
-    private int getBookDurationInMM(List<Object> row) {
-        return parseIntegerValue(row, 16);
+    private int parseBookDuration(List<Object> row) {
+        String[] parts = getBookDurationInHHMM(row).split(":");
+        int hours = Integer.parseInt(parts[0]);
+        int minutes = Integer.parseInt(parts[1]);
+
+        return hours * 60 + minutes;
     }
 }

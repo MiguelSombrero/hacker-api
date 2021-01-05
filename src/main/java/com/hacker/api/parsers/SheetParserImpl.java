@@ -16,7 +16,7 @@ public abstract class SheetParserImpl implements SheetParser {
 
     public String parseStringValue(List<Object> row, Integer index) {
         try {
-            String value = (String) row.get(index);
+            String value = getStringValue(row, index);
             return value.trim();
         } catch (IndexOutOfBoundsException e) {
             logger.info("Spreadsheet is missing value in index " + index);
@@ -62,6 +62,10 @@ public abstract class SheetParserImpl implements SheetParser {
         }
 
         return LocalDateTime.now();
+    }
+
+    private String getStringValue(List<Object> row, Integer index) {
+        return (row.size() >= index) ? "" : (String) row.get(index);
     }
 
     public abstract Object parse(List<Object> row);

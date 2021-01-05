@@ -28,26 +28,26 @@ public class SheetToVisualBooksParser extends SheetToBooksParserTemplate {
     }
 
     protected String getBookName(List<Object> row) {
-        return parseStringValue(row, 3);
+        return parseStringValue(row, 12);
     }
 
     private int getBookPageCount(List<Object> row) {
-        return parseIntegerValue(row, 4);
+        return parseIntegerValue(row, 13);
     }
 
     protected String getBookAuthors(List<Object> row) {
-        return parseStringValue(row, 5);
+        return parseStringValue(row, 14);
     }
 
     private String getBookType(List<Object> row) {
-        return parseStringValue(row, 6);
+        return parseStringValue(row, 15);
     }
 
     protected String getBookReview(List<Object> row) {
-        return parseStringValue(row, 7);
+        return parseStringValue(row, 16);
     }
 
     protected int getBookRating(List<Object> row) {
-        return parseIntegerValue(row, 9);
+        return parseIntegerValue(row, 18);
     }
 }

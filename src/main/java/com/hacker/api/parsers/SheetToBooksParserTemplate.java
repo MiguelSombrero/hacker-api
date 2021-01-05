@@ -9,7 +9,7 @@ import java.util.List;
 
 public abstract class SheetToBooksParserTemplate extends SheetParserImpl {
 
-    public Object parse(List<Object> row) {
+    public Book parse(List<Object> row) {
         Hacker reviewer = parseEmployee(row);
 
         Review review = parseReview(row);

@@ -2,6 +2,7 @@ package com.hacker.api.service;
 
 import com.google.api.services.sheets.v4.model.ValueRange;
 import com.hacker.api.client.GoogleSheetsClient;
+import com.hacker.api.domain.Hacker;
 import com.hacker.api.domain.books.Book;
 import com.hacker.api.parsers.SheetParserImpl;
 import com.hacker.api.parsers.SheetToAudioBooksParser;
@@ -64,6 +65,17 @@ public class BooksService {
         return new ArrayList<>(books.values());
     }
 
+    public List<Book> getDemoBooks() throws IOException {
+        List<List<Object>> values = sheetsClient.getValuesFromSheet(spreadsheetId, bookSheetId);
+
+        Map<Integer, Book> books = values.stream()
+                .filter(this::isBook)
+                .map(row -> (isVisualBook(row)) ? visualBooksParser.parse(row) : audioBooksParser.parse(row))
+                .collect(groupingBy(Book::getId, reducing(null, booksReducer.reduce())));
+
+        return new ArrayList<>(books.values());
+    }
+
     private List<Book> parseBooks(List<List<Object>> values, SheetParserImpl parser) {
         List<Book> books = values.stream()
                 .map(row -> (Book) parser.parse(row))
@@ -72,4 +84,31 @@ public class BooksService {
         return books;
     }
 
+    private boolean isBook(List<Object> row) {
+        if (isAudioBook(row) || isVisualBook(row)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean isAudioBook(List<Object> row) {
+        String value = (String) row.get(2);
+
+        if (value.equals("Äänikirjabonus")) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean isVisualBook(List<Object> row) {
+        String value = (String) row.get(2);
+
+        if (value.equals("Kirjabonus")) {
+            return true;
+        }
+
+        return false;
+    }
 }
