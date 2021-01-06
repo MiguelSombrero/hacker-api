@@ -1,7 +1,6 @@
 package com.hacker.api.parsers;
 
 import org.assertj.core.util.Arrays;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -45,6 +43,18 @@ public class SheetParserImplTest {
 
         String value = sheetToVisualBooksParser.parseStringValue(row, 5);
         assertEquals("Tunne Lukkosi", value);
+    }
+
+    @Test
+    public void parseStringValueWhenStringContainsBlankRows() {
+        String review =
+                "Hyvä kirja. \n\nVoisi olla parempi.";
+
+        List<Object> row = Arrays.asList(new String[] {
+                "6/17/2019 20:11:56", "miika.somero@testi.fi", "Äänikirjabonus", "", "", "  Tunne Lukkosi  ", "10:08", "Takanen, Kimmo", "", review, "", "3"});
+
+        String value = sheetToVisualBooksParser.parseStringValue(row, 9);
+        assertEquals(review, value);
     }
 
     @Test

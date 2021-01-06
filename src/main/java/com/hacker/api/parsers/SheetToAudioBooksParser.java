@@ -37,14 +37,6 @@ public class SheetToAudioBooksParser extends SheetToBooksParserTemplate {
         return hours * 60 + minutes;
     }
 
-    protected LocalDateTime getTimestamp(List<Object> row) {
-        return parseDateTimeValue(row, 0);
-    }
-
-    protected String getEmail(List<Object> row) {
-        return parseStringValue(row, 1);
-    }
-
     protected String getBookName(List<Object> row) { return parseStringValue(row, 5); }
 
     private String getBookDurationInHHMM(List<Object> row) {

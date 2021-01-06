@@ -19,14 +19,6 @@ public class SheetToVisualBooksParser extends SheetToBooksParserTemplate {
         return book;
     }
 
-    protected LocalDateTime getTimestamp(List<Object> row) {
-        return parseDateTimeValue(row, 0);
-    }
-
-    protected String getEmail(List<Object> row) {
-        return parseStringValue(row, 1);
-    }
-
     protected String getBookName(List<Object> row) {
         return parseStringValue(row, 12);
     }

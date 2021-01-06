@@ -17,6 +17,7 @@ public abstract class SheetToBooksParserTemplate extends SheetParserImpl {
         review.setId(review.hashCode());
 
         Book book = parseBook(row);
+
         book.setName(WordUtils.capitalizeFully(getBookName(row)));
         book.setAuthors(getBookAuthors(row));
         book.setId(book.hashCode());
@@ -58,8 +59,14 @@ public abstract class SheetToBooksParserTemplate extends SheetParserImpl {
         return review;
     }
 
-    protected abstract String getEmail(List<Object> row);
-    protected abstract LocalDateTime getTimestamp(List<Object> row);
+    private LocalDateTime getTimestamp(List<Object> row) {
+        return parseDateTimeValue(row, 0);
+    }
+
+    private String getEmail(List<Object> row) {
+        return parseStringValue(row, 1);
+    }
+
     protected abstract String getBookReview(List<Object> row);
     protected abstract int getBookRating(List<Object> row);
     protected abstract Book parseBook(List<Object> row);
