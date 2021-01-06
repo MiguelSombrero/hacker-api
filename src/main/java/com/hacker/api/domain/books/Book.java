@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public abstract class Book {
+public abstract class Book implements Comparable<Book> {
     private int id;
 
     @EqualsAndHashCode.Include
@@ -33,5 +33,18 @@ public abstract class Book {
                 .orElse(Double.NaN);
 
         return (double) Math.round(value * 10) / 10;
+    }
+
+    @Override
+    public int compareTo(Book book) {
+        double value = this.rating - book.getRating();
+
+        if (value < 0) {
+            return 1;
+        } else if (value > 0) {
+            return -1;
+        }
+
+        return 0;
     }
 }

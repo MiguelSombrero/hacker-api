@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.reducing;
@@ -49,9 +50,15 @@ public class BooksService {
                 .map(row -> (isVisualBook(row)) ? visualBooksParser.parse(row) : audioBooksParser.parse(row))
                 .collect(groupingBy(Book::getId, reducing(null, booksReducer.reduce())));
 
-        books.values().stream().forEach(book -> book.setRating(book.calculateRating()));
+        List<Book> sortedBooks = books.values().stream()
+                .map(book -> {
+                    book.setRating(book.calculateRating());
+                    return book;
+                })
+                .sorted()
+                .collect(Collectors.toList());
 
-        return new ArrayList<>(books.values());
+        return sortedBooks;
     }
 
     private boolean isBook(List<Object> row) {
