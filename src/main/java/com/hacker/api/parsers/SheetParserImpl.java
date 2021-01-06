@@ -29,6 +29,10 @@ public abstract class SheetParserImpl implements SheetParser {
     public int parseIntegerValue(List<Object> row, Integer index) {
         try {
             String value = parseStringValue(row, index);
+
+            logger.info("Integer for parse is: ");
+            logger.info(value);
+
             return Integer.valueOf(value);
         } catch (NumberFormatException e) {
             logger.info("Cannot parse value to integer");
@@ -41,31 +45,45 @@ public abstract class SheetParserImpl implements SheetParser {
     public LocalDate parseDateValue(List<Object> row, Integer index) {
         try {
             String value = parseStringValue(row, index);
+
+            logger.info("Date to parse is: ");
+            logger.info(value);
+
             return LocalDate.parse(value, dateFormatter);
         } catch (DateTimeParseException e) {
             logger.info("Cannot parse value to LocalDate");
             logger.info("Value: " + row.get(index));
-            logger.info("Returning current date");
         }
 
+        logger.info("Returning current date");
         return LocalDate.now();
     }
 
     public LocalDateTime parseDateTimeValue(List<Object> row, Integer index) {
         try {
             String value = parseStringValue(row, index);
+
+            logger.info("DateTime to parse is: ");
+            logger.info(value);
+
             return LocalDateTime.parse(value, dateTimeFormatter);
         } catch (DateTimeParseException e) {
             logger.info("Cannot parse value to LocalDateTime");
             logger.info("Value: " + row.get(index));
-            logger.info("Returning current date");
         }
 
+        logger.info("Returning current datetime");
         return LocalDateTime.now();
     }
 
     private String getStringValue(List<Object> row, Integer index) {
-        return (row.size() >= index) ? "" : (String) row.get(index);
+        String value = "";
+
+        if (row.size() >= index) {
+            value = (String) row.get(index);
+        }
+
+        return value;
     }
 
     public abstract Object parse(List<Object> row);

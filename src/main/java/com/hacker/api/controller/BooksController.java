@@ -20,10 +20,4 @@ public class BooksController {
         List<Book> result = booksService.getBooks();
         return result;
     }
-
-    @GetMapping("/demo")
-    public List<Book> getDemoBooks() throws IOException {
-        List<Book> result = booksService.getDemoBooks();
-        return result;
-    }
 }
