@@ -49,6 +49,8 @@ public class BooksService {
                 .map(row -> (isVisualBook(row)) ? visualBooksParser.parse(row) : audioBooksParser.parse(row))
                 .collect(groupingBy(Book::getId, reducing(null, booksReducer.reduce())));
 
+        books.values().stream().forEach(book -> book.setRating(book.calculateRating()));
+
         return new ArrayList<>(books.values());
     }
 
@@ -61,9 +63,9 @@ public class BooksService {
     }
 
     private boolean isAudioBook(List<Object> row) {
-        String value = (String) row.get(2);
+        String value = audioBooksParser.parseStringValue(row, 2);
 
-        if (value.equals("Äänikirjabonus")) {
+        if (!value.isEmpty() && value.equals("Äänikirjabonus")) {
             return true;
         }
 
@@ -71,9 +73,9 @@ public class BooksService {
     }
 
     private boolean isVisualBook(List<Object> row) {
-        String value = (String) row.get(2);
+        String value = visualBooksParser.parseStringValue(row, 2);
 
-        if (value.equals("Kirjabonus")) {
+        if (!value.isEmpty() && value.equals("Kirjabonus")) {
             return true;
         }
 

@@ -30,14 +30,7 @@ Example spreadsheet can be found [here](https://docs.google.com/spreadsheets/d/1
             "reviews": [
                 {
                     "id": 915924271,
-                    "created": [
-                        2019,
-                        6,
-                        25,
-                        7,
-                        37,
-                        17
-                    ],
+                    "created": "2019-09-12T08:46:07",
                     "review": "Very goog book",
                     "rating": 5,
                     "reviewer": {
@@ -50,14 +43,7 @@ Example spreadsheet can be found [here](https://docs.google.com/spreadsheets/d/1
                 },
                 {
                     "id": 2024246544,
-                    "created": [
-                        2019,
-                        8,
-                        12,
-                        8,
-                        56,
-                        22
-                    ],
+                    "created": "2019-09-12T08:46:07",
                     "review": "Awesome book!",
                     "rating": 4,
                     "reviewer": {

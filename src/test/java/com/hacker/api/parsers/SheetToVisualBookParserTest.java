@@ -20,7 +20,7 @@ public class SheetToVisualBookParserTest {
 
     @Test
     public void parseBooksWhenAllFieldsAreCorrect() {
-        List<Object> row = Stream.of("6/18/2019 14:04:36", "miika.somero@gmail.com", "Kirjabonus", "Yksikkötestaus", "30", "Manninen, Olli-Pekka", "eBook", "Ihan hyvä kirja", "Suosittelen kaikille", "4", "2019", "6", "2019")
+        List<Object> row = Stream.of("6/17/2019 20:11:56", "miika.somero@testi.fi", "", "", "", "", "", "", "", "", "", "",  "Yksikkötestaus", "30", "Manninen, Olli-Pekka", "eBook", "Ihan hyvä kirja", "Suosittelen kaikille", "4")
                 .collect(Collectors.toList());
 
         VisualBook book = (VisualBook) visualBooksParser.parse(row);
@@ -37,22 +37,17 @@ public class SheetToVisualBookParserTest {
 
     @Test
     public void parseBookNameIsCaseInsensitive() {
-        List<Object> row1 = Stream.of("6/18/2019 14:04:36", "miika.somero@gmail.com", "Kirjabonus", "Yksikkötestaus", "30", "Manninen, Olli-Pekka", "eBook", "Ihan hyvä kirja", "Suosittelen kaikille", "4", "2019", "6", "2019")
-                .collect(Collectors.toList());
-        List<Object> row2 = Stream.of("6/18/2019 14:04:36", "miika.somero@gmail.com", "Kirjabonus", "yksikköTestaus", "30", "Manninen, Olli-Pekka", "eBook", "Ihan hyvä kirja", "Suosittelen kaikille", "4", "2019", "6", "2019")
+        List<Object> row = Stream.of("6/17/2019 20:11:56", "miika.somero@testi.fi", "", "", "", "", "", "", "", "", "", "",  "yksikkötestaus", "30", "Manninen, Olli-Pekka", "eBook", "Ihan hyvä kirja", "Suosittelen kaikille", "4")
                 .collect(Collectors.toList());
 
-        VisualBook book1 = (VisualBook) visualBooksParser.parse(row1);
-        VisualBook book2 = (VisualBook) visualBooksParser.parse(row2);
+        VisualBook book = (VisualBook) visualBooksParser.parse(row);
 
-        assertEquals("Yksikkötestaus", book1.getName());
-        assertEquals("Yksikkötestaus", book2.getName());
-        assertTrue(book1.equals(book2));
+        assertEquals("Yksikkötestaus", book.getName());
     }
 
     @Test
     public void parseBooksWhenThereIsTextInNumberFields() {
-        List<Object> row = Stream.of("6/18/2019 14:04:36", "miika.somero@gmail.com", "Kirjabonus", "Yksikkötestaus", "kolmekymmentä", "Manninen, Olli-Pekka", "eBook", "Ihan hyvä kirja", "Suosittelen kaikille", "neljä", "2019", "6", "2019")
+        List<Object> row = Stream.of("6/17/2019 20:11:56", "miika.somero@testi.fi", "", "", "", "", "", "", "", "", "", "",  "Yksikkötestaus", "kolkyt", "Manninen, Olli-Pekka", "eBook", "Ihan hyvä kirja", "Suosittelen kaikille", "neljä")
                 .collect(Collectors.toList());
 
         VisualBook book = (VisualBook) visualBooksParser.parse(row);
@@ -69,7 +64,7 @@ public class SheetToVisualBookParserTest {
 
     @Test
     public void parseBooksWhenBookTypeNotFound() {
-        List<Object> row = Stream.of("6/18/2019 14:04:36", "miika.somero@gmail.com", "Kirjabonus", "Yksikkötestaus", "30", "Manninen, Olli-Pekka", "ei ole tällaista tyyppiä", "Ihan hyvä kirja", "Suosittelen kaikille", "4", "2019", "6", "2019")
+        List<Object> row = Stream.of("6/17/2019 20:11:56", "miika.somero@testi.fi", "", "", "", "", "", "", "", "", "", "",  "Yksikkötestaus", "30", "Manninen, Olli-Pekka", "", "Ihan hyvä kirja", "Suosittelen kaikille", "4")
                 .collect(Collectors.toList());
 
         VisualBook book = (VisualBook) visualBooksParser.parse(row);
@@ -86,7 +81,7 @@ public class SheetToVisualBookParserTest {
 
     @Test
     public void parseBooksWhenReviewAndRatingIsMissing() {
-        List<Object> row = Stream.of("6/18/2019 14:04:36", "miika.somero@gmail.com", "Kirjabonus", "Yksikkötestaus", "30", "Manninen, Olli-Pekka", "eBook", "", "Suosittelen kaikille", "", "2019", "6", "2019")
+        List<Object> row = Stream.of("6/17/2019 20:11:56", "miika.somero@testi.fi", "", "", "", "", "", "", "", "", "", "",  "Yksikkötestaus", "30", "Manninen, Olli-Pekka", "eBook", "", "Suosittelen kaikille", "")
                 .collect(Collectors.toList());
 
         VisualBook book = (VisualBook) visualBooksParser.parse(row);
@@ -103,7 +98,7 @@ public class SheetToVisualBookParserTest {
 
     @Test
     public void parseBooksWhenEmailIsNotFirstnameDotLastname() {
-        List<Object> row = Stream.of("6/18/2019 14:04:36", "miikasomero@gmail.com", "Kirjabonus", "Yksikkötestaus", "30", "Manninen, Olli-Pekka", "eBook", "Ihan hyvä kirja", "Suosittelen kaikille", "4", "2019", "6", "2019")
+        List<Object> row = Stream.of("6/17/2019 20:11:56", "miikasomero@testi.fi", "", "", "", "", "", "", "", "", "", "",  "Yksikkötestaus", "30", "Manninen, Olli-Pekka", "eBook", "Ihan hyvä kirja", "Suosittelen kaikille", "4")
                 .collect(Collectors.toList());
 
         VisualBook book = (VisualBook) visualBooksParser.parse(row);

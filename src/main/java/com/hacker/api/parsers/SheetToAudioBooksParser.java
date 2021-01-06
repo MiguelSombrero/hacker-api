@@ -17,6 +17,26 @@ public class SheetToAudioBooksParser extends SheetToBooksParserTemplate {
         return book;
     }
 
+    private int parseBookDuration(List<Object> row) {
+        int hours = 0;
+        int minutes = 0;
+
+        try {
+            String duration = getBookDurationInHHMM(row);
+            String[] parts = duration.split(":");
+
+            hours = Integer.parseInt(parts[0]);
+            minutes = Integer.parseInt(parts[1]);
+
+        } catch (ArrayIndexOutOfBoundsException e) {
+            logger.info(String.format("Could not parse duration for row %s", row));
+        } catch (NumberFormatException e) {
+            logger.info(String.format("Could not parse duration for row %s", row));
+        }
+
+        return hours * 60 + minutes;
+    }
+
     protected LocalDateTime getTimestamp(List<Object> row) {
         return parseDateTimeValue(row, 0);
     }
@@ -41,13 +61,5 @@ public class SheetToAudioBooksParser extends SheetToBooksParserTemplate {
 
     protected int getBookRating(List<Object> row) {
         return parseIntegerValue(row, 11);
-    }
-
-    private int parseBookDuration(List<Object> row) {
-        String[] parts = getBookDurationInHHMM(row).split(":");
-        int hours = Integer.parseInt(parts[0]);
-        int minutes = Integer.parseInt(parts[1]);
-
-        return hours * 60 + minutes;
     }
 }

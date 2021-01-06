@@ -20,15 +20,15 @@ public class SheetToAudioBookParserTest {
 
     @Test
     public void parseBooksWhenAllFieldsAreCorrect() {
-        List<Object> row = Stream.of("6/18/2019 14:04:36", "miika.somero@gmail.com", "Äänikirjabonus", "", "", "Tunne Lukkosi", "10:08", "Takanen, Kimmo", "Audible", "Ihan hyvä kirja", "Suosittelen kaikille", "4", "2019", "6", "10", "8", "608")
+        List<Object> row = Stream.of("6/17/2019 20:11:56", "miika.somero@testi.fi", "Äänikirjabonus", "", "", "Tunne Lukkosi", "10:08", "Takanen, Kimmo", "", "Hyvä kirja", "", "3")
                 .collect(Collectors.toList());
 
         AudioBook book = (AudioBook) audioBooksParser.parse(row);
 
         assertEquals("Tunne Lukkosi", book.getName());
         assertEquals("Takanen, Kimmo", book.getAuthors());
-        assertEquals(4, book.getReviews().get(0).getRating());
-        assertEquals("Ihan hyvä kirja", book.getReviews().get(0).getReview());
+        assertEquals(3, book.getReviews().get(0).getRating());
+        assertEquals("Hyvä kirja", book.getReviews().get(0).getReview());
         assertEquals("Miika", book.getReviews().get(0).getReviewer().getFirstname());
         assertEquals("Somero", book.getReviews().get(0).getReviewer().getLastname());
         assertEquals("AUDIO", book.getType().toString());
@@ -37,7 +37,7 @@ public class SheetToAudioBookParserTest {
 
     @Test
     public void parseBooksWhenThereIsTextInNumberFields() {
-        List<Object> row = Stream.of("6/18/2019 14:04:36", "miika.somero@gmail.com", "Äänikirjabonus", "", "", "Tunne Lukkosi", "10:08", "Takanen, Kimmo", "Audible", "Ihan hyvä kirja", "Suosittelen kaikille", "neljä", "2019", "6", "10", "8", "kuusisataa")
+        List<Object> row = Stream.of("6/17/2019 20:11:56", "miika.somero@testi.fi", "Äänikirjabonus", "", "", "Tunne Lukkosi", "kuussataa", "Takanen, Kimmo", "", "Hyvä kirja", "", "kolme")
                 .collect(Collectors.toList());
 
         AudioBook book = (AudioBook) audioBooksParser.parse(row);
@@ -45,7 +45,7 @@ public class SheetToAudioBookParserTest {
         assertEquals("Tunne Lukkosi", book.getName());
         assertEquals("Takanen, Kimmo", book.getAuthors());
         assertEquals(0, book.getReviews().get(0).getRating());
-        assertEquals("Ihan hyvä kirja", book.getReviews().get(0).getReview());
+        assertEquals("Hyvä kirja", book.getReviews().get(0).getReview());
         assertEquals("Miika", book.getReviews().get(0).getReviewer().getFirstname());
         assertEquals("Somero", book.getReviews().get(0).getReviewer().getLastname());
         assertEquals("AUDIO", book.getType().toString());
@@ -54,15 +54,32 @@ public class SheetToAudioBookParserTest {
 
     @Test
     public void parseBooksWhenBookDurationIsMissing() {
-        List<Object> row = Stream.of("6/18/2019 14:04:36", "miika.somero@gmail.com", "Äänikirjabonus", "", "", "Tunne Lukkosi", "10:08", "Takanen, Kimmo", "Audible", "Ihan hyvä kirja", "Suosittelen kaikille", "4", "2019", "6", "10", "8", "")
+        List<Object> row = Stream.of("6/17/2019 20:11:56", "miika.somero@testi.fi", "Äänikirjabonus", "", "", "Tunne Lukkosi", "", "Takanen, Kimmo", "", "Hyvä kirja", "", "3")
                 .collect(Collectors.toList());
 
         AudioBook book = (AudioBook) audioBooksParser.parse(row);
 
         assertEquals("Tunne Lukkosi", book.getName());
         assertEquals("Takanen, Kimmo", book.getAuthors());
-        assertEquals(4, book.getReviews().get(0).getRating());
-        assertEquals("Ihan hyvä kirja", book.getReviews().get(0).getReview());
+        assertEquals(3, book.getReviews().get(0).getRating());
+        assertEquals("Hyvä kirja", book.getReviews().get(0).getReview());
+        assertEquals("Miika", book.getReviews().get(0).getReviewer().getFirstname());
+        assertEquals("Somero", book.getReviews().get(0).getReviewer().getLastname());
+        assertEquals("AUDIO", book.getType().toString());
+        assertEquals(0, book.getDuration());
+    }
+
+    @Test
+    public void parseBooksWhenBookDurationIsWrongFormat() {
+        List<Object> row = Stream.of("6/17/2019 20:11:56", "miika.somero@testi.fi", "Äänikirjabonus", "", "", "Tunne Lukkosi", "10.08", "Takanen, Kimmo", "", "Hyvä kirja", "", "3")
+                .collect(Collectors.toList());
+
+        AudioBook book = (AudioBook) audioBooksParser.parse(row);
+
+        assertEquals("Tunne Lukkosi", book.getName());
+        assertEquals("Takanen, Kimmo", book.getAuthors());
+        assertEquals(3, book.getReviews().get(0).getRating());
+        assertEquals("Hyvä kirja", book.getReviews().get(0).getReview());
         assertEquals("Miika", book.getReviews().get(0).getReviewer().getFirstname());
         assertEquals("Somero", book.getReviews().get(0).getReviewer().getLastname());
         assertEquals("AUDIO", book.getType().toString());
@@ -71,7 +88,7 @@ public class SheetToAudioBookParserTest {
 
     @Test
     public void parseBooksWhenReviewAndRatingIsMissing() {
-        List<Object> row = Stream.of("6/18/2019 14:04:36", "miika.somero@gmail.com", "Äänikirjabonus", "", "", "Tunne Lukkosi", "10:08", "Takanen, Kimmo", "Audible", "", "Suosittelen kaikille", "", "2019", "6", "10", "8", "608")
+        List<Object> row = Stream.of("6/17/2019 20:11:56", "miika.somero@testi.fi", "Äänikirjabonus", "", "", "Tunne Lukkosi", "10:08", "Takanen, Kimmo", "", "", "", "")
                 .collect(Collectors.toList());
 
         AudioBook book = (AudioBook) audioBooksParser.parse(row);
@@ -88,15 +105,15 @@ public class SheetToAudioBookParserTest {
 
     @Test
     public void parseBooksAllFieldsAreMissingNotRelevantToAudioBook() {
-        List<Object> row = Stream.of("6/18/2019 14:04:36", "miika.somero@gmail.com", "", "", "", "Tunne Lukkosi", "", "Takanen, Kimmo", "", "Ihan hyvä kirja", "", "4", "", "", "", "", "608")
+        List<Object> row = Stream.of("6/17/2019 20:11:56", "miika.somero@testi.fi", "", "", "", "Tunne Lukkosi", "10:08", "Takanen, Kimmo", "", "Hyvä kirja", "", "3")
                 .collect(Collectors.toList());
 
         AudioBook book = (AudioBook) audioBooksParser.parse(row);
 
         assertEquals("Tunne Lukkosi", book.getName());
         assertEquals("Takanen, Kimmo", book.getAuthors());
-        assertEquals(4, book.getReviews().get(0).getRating());
-        assertEquals("Ihan hyvä kirja", book.getReviews().get(0).getReview());
+        assertEquals(3, book.getReviews().get(0).getRating());
+        assertEquals("Hyvä kirja", book.getReviews().get(0).getReview());
         assertEquals("Miika", book.getReviews().get(0).getReviewer().getFirstname());
         assertEquals("Somero", book.getReviews().get(0).getReviewer().getLastname());
         assertEquals("AUDIO", book.getType().toString());

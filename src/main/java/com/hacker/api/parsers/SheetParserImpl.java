@@ -20,9 +20,9 @@ public abstract class SheetParserImpl implements SheetParser {
             return value.trim();
         } catch (IndexOutOfBoundsException e) {
             logger.info("Spreadsheet is missing value in index " + index);
-            logger.info("Row: " + row.toString());
         }
 
+        logger.info("Returning empty string");
         return "";
     }
 
@@ -36,9 +36,9 @@ public abstract class SheetParserImpl implements SheetParser {
             return Integer.valueOf(value);
         } catch (NumberFormatException e) {
             logger.info("Cannot parse value to integer");
-            logger.info("Value: " + row.get(index));
         }
 
+        logger.info("Returning 0");
         return 0;
     }
 
@@ -52,7 +52,6 @@ public abstract class SheetParserImpl implements SheetParser {
             return LocalDate.parse(value, dateFormatter);
         } catch (DateTimeParseException e) {
             logger.info("Cannot parse value to LocalDate");
-            logger.info("Value: " + row.get(index));
         }
 
         logger.info("Returning current date");
@@ -69,7 +68,6 @@ public abstract class SheetParserImpl implements SheetParser {
             return LocalDateTime.parse(value, dateTimeFormatter);
         } catch (DateTimeParseException e) {
             logger.info("Cannot parse value to LocalDateTime");
-            logger.info("Value: " + row.get(index));
         }
 
         logger.info("Returning current datetime");
