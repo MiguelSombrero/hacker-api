@@ -16,43 +16,57 @@ import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 
+
+
 @SpringBootTest
 public class ProjectsSheetParserTest {
+
+    private final static int expectedSkillListSize = 3;
 
     @Autowired
     private ProjectsSheetParser projectsSheetParser;
 
     @Test
     public void parseHackerWhenAllFieldsAreCorrect() {
-        List<Object> row = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", "Toteutus", "8/1/2020", "11/1/2020", "Alfame", "Java, Ansible, React", "Verkkokaupan toteutus")
-                .collect(Collectors.toList());
+        Hacker hacker = createDefaultHacker();
+        assertHacker(hacker);
+    }
 
+
+    private Hacker createDefaultHacker(){
+        List<Object> row = createDefaultObjectList("Alfame", "Toteutus");
         Hacker hacker = projectsSheetParser.parseProjectHacker(row);
+        return hacker;
+    }
 
+    private void assertHacker(Hacker hacker){
         assertEquals("Miika", hacker.getFirstname());
         assertEquals("Somero", hacker.getLastname());
     }
 
     @Test
     public void parseSkillsWhenAllFieldsAreCorrect() {
-        List<Object> row = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", "Toteutus", "8/1/2020", "11/1/2020", "Alfame", "Java, Ansible, React", "Verkkokaupan toteutus")
-                .collect(Collectors.toList());
-
-        List<Skill> skills = projectsSheetParser.parseSkills(row);
-
-        assertEquals(3, skills.size());
-        assertEquals(4, skills.get(0).getKnowHowMonths());
-        assertEquals(4, skills.get(1).getKnowHowMonths());
-        assertEquals(4, skills.get(2).getKnowHowMonths());
+        List<Skill> skills = createDefaultSkills();
+        int experienceMonths = 4;
+        assertSkills(skills, experienceMonths);
     }
+
+    private List<Skill> createDefaultSkills(){
+        List<Object> row = createDefaultObjectList("Alfame", "Toteutus");
+        List<Skill> skills = projectsSheetParser.parseSkills(row);
+        return skills;
+    }
+
+
 
     @Test
     public void parseProjectWhenAllFieldsAreCorrect() {
-        List<Object> row = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", "Toteutus", "8/1/2020", "11/1/2020", "Kela", "Java, Ansible, React", "Verkkokaupan toteutus")
-                .collect(Collectors.toList());
-
+        List<Object> row = createDefaultObjectList("Kela", "Toteutus");
         Project project = projectsSheetParser.parseProject(row);
+        assertProject(project, row);
+    }
 
+    private void assertProject(Project project, List<Object> row){
         assertEquals("Verkkokauppa", project.getName());
         assertEquals("Kela", project.getClient());
         assertEquals("Verkkokaupan toteutus", project.getDescription());
@@ -63,104 +77,99 @@ public class ProjectsSheetParserTest {
 
     @Test
     public void parseRoleWhenAllFieldsAreCorrect() {
-        List<Object> row = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", "Toteutus, määrittely", "8/1/2020", "11/1/2020", "Kela", "Java, Ansible, React", "Verkkokaupan toteutus")
-                .collect(Collectors.toList());
+        List<Object> row = createDefaultObjectList("Kela", "Toteutus, Määrittely");
 
         Role role = projectsSheetParser.parseRole(row);
+        assertRole(role);
+    }
 
+    private void assertRole(Role role){
         assertEquals("Sovelluskehittäjä", role.getName());
         assertEquals(2, role.getTasks().size());
         assertEquals("Toteutus", role.getTasks().get(0));
         assertEquals("Määrittely", role.getTasks().get(1));
     }
 
+    private List<Object> createDefaultObjectList(String company, String task){
+        List<Object> hackerProjectDescriptionRows = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", task, "8/1/2020", "11/1/2020", company, "Java, Ansible, React", "Verkkokaupan toteutus")
+                .collect(Collectors.toList());
+        return hackerProjectDescriptionRows;
+    }
+
     @Test
     public void calculatesProjectDurationRightWhenOneMonthProject() {
-        List<Object> row = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", "Toteutus", "8/1/2020", "8/1/2020", "Alfame", "Java, Ansible, React", "Verkkokaupan toteutus")
-                .collect(Collectors.toList());
+        List<Object> hackerProjectDescriptionRows = createObjectListForTimePeriod("8/1/2020", "8/1/2020");
+        List<Skill> skills = projectsSheetParser.parseSkills(hackerProjectDescriptionRows);
 
-        List<Skill> skills = projectsSheetParser.parseSkills(row);
-
-        assertEquals(1, skills.get(0).getKnowHowMonths());
-        assertEquals(1, skills.get(1).getKnowHowMonths());
-        assertEquals(1, skills.get(2).getKnowHowMonths());
+        int experienceInMonths=1;
+        assertSkills(skills,experienceInMonths);
     }
 
     @Test
     public void calculatesProjectDurationRightWhenTwoMonthProject() {
-        List<Object> row = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", "Toteutus", "8/1/2020", "9/1/2020", "Alfame", "Java, Ansible, React", "Verkkokaupan toteutus")
-                .collect(Collectors.toList());
+        List<Object> hackerProjectDescriptionRows = createObjectListForTimePeriod("8/1/2020", "9/1/2020");
+        List<Skill> skills = projectsSheetParser.parseSkills(hackerProjectDescriptionRows);
 
-        List<Skill> skills = projectsSheetParser.parseSkills(row);
-
-        assertEquals(2, skills.get(0).getKnowHowMonths());
-        assertEquals(2, skills.get(1).getKnowHowMonths());
-        assertEquals(2, skills.get(2).getKnowHowMonths());
+        int experienceInMonths= 2;
+        assertSkills(skills,experienceInMonths);
     }
 
     @Test
     public void calculatesProjectDurationRightWhenEndsLastDayOfMonth() {
-        List<Object> row = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", "Toteutus", "8/1/2020", "10/31/2020", "Alfame", "Java, Ansible, React", "Verkkokaupan toteutus")
-                .collect(Collectors.toList());
+        List<Object> hackerProjectDescriptionRows = createObjectListForTimePeriod("8/1/2020", "10/31/2020");
+        List<Skill> skills = projectsSheetParser.parseSkills(hackerProjectDescriptionRows);
 
-        List<Skill> skills = projectsSheetParser.parseSkills(row);
-
-        assertEquals(3, skills.get(0).getKnowHowMonths());
-        assertEquals(3, skills.get(1).getKnowHowMonths());
-        assertEquals(3, skills.get(2).getKnowHowMonths());
+        int experienceInMonths= 3;
+        assertSkills(skills,experienceInMonths);
     }
 
     @Test
     public void calculatesProjectDurationRightWhenStartsAndEndsMiddleOfMonth() {
-        List<Object> row = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", "Toteutus", "8/19/2020", "11/04/2020", "Alfame", "Java, Ansible, React", "Verkkokaupan toteutus")
-                .collect(Collectors.toList());
+        List<Object> hackerProjectDescriptionRows = createObjectListForTimePeriod("8/19/2020", "11/04/2020");
+        List<Skill> skills = projectsSheetParser.parseSkills(hackerProjectDescriptionRows);
 
-        List<Skill> skills = projectsSheetParser.parseSkills(row);
-
-        assertEquals(4, skills.get(0).getKnowHowMonths());
-        assertEquals(4, skills.get(1).getKnowHowMonths());
-        assertEquals(4, skills.get(2).getKnowHowMonths());
+        assertSkills(skills,4);
     }
 
     @Test
     public void calculatesProjectDurationRightWhenOverYearProject() {
-        List<Object> row = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", "Toteutus", "8/1/2018", "12/1/2020", "Alfame", "Java, Ansible, React", "Verkkokaupan toteutus")
-                .collect(Collectors.toList());
+        List<Object> hackerProjectDescriptionRows = createObjectListForTimePeriod("8/1/2018", "12/1/2020");
+        List<Skill> skills = projectsSheetParser.parseSkills(hackerProjectDescriptionRows);
 
-        List<Skill> skills = projectsSheetParser.parseSkills(row);
-
-        assertEquals(29, skills.get(0).getKnowHowMonths());
-        assertEquals(29, skills.get(1).getKnowHowMonths());
-        assertEquals(29, skills.get(2).getKnowHowMonths());
+        assertSkills(skills, 29);
     }
 
     @Test
     public void parseWhenStartDateIsMissing() {
-        List<Object> row = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", "Toteutus", "", "11/1/2020", "Alfame", "Java, Ansible, React", "Verkkokaupan toteutus")
-                .collect(Collectors.toList());
+        List<Object> hackerProjectDescriptionRows = createObjectListForTimePeriod("", "11/1/2020");
+        List<Skill> skills = projectsSheetParser.parseSkills(hackerProjectDescriptionRows);
 
-        List<Skill> skills = projectsSheetParser.parseSkills(row);
-
-        assertEquals(3, skills.size());
-        assertEquals(0, skills.get(0).getKnowHowMonths());
-        assertEquals(0, skills.get(1).getKnowHowMonths());
-        assertEquals(0, skills.get(2).getKnowHowMonths());
+        int experienceInMonths=0;
+        assertSkills(skills, experienceInMonths);
     }
 
     @Test
     public void parseWhenEndDateIsMissing() {
-        List<Object> row = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", "Toteutus", "8/1/2020", "", "Alfame", "Java,Ansible,React", "Verkkokaupan toteutus")
-                .collect(Collectors.toList());
+        List<Object> hackerProjectDescriptionRows = createObjectListForTimePeriod("8/1/2020", "");
+        List<Skill> skills = projectsSheetParser.parseSkills(hackerProjectDescriptionRows);
 
-        List<Skill> skills = projectsSheetParser.parseSkills(row);
-
-        int knowHow = Period.between(LocalDate.of(2020, 8, 1), LocalDate.now())
+        int experienceInMonths = Period.between(LocalDate.of(2020, 8, 1), LocalDate.now())
                 .plusMonths(1)
                 .getMonths();
 
-        assertEquals(3, skills.size());
-        assertEquals(knowHow, skills.get(0).getKnowHowMonths());
-        assertEquals(knowHow, skills.get(1).getKnowHowMonths());
-        assertEquals(knowHow, skills.get(2).getKnowHowMonths());
+        assertSkills(skills, experienceInMonths);
+    }
+
+    private List<Object> createObjectListForTimePeriod(String startDate, String endDate){
+        List<Object> hackerProjectDescriptionRows = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", "Toteutus", startDate, endDate, "Alfame", "Java, Ansible, React", "Verkkokaupan toteutus")
+                .collect(Collectors.toList());
+        return hackerProjectDescriptionRows;
+    }
+
+    private void assertSkills(List<Skill> skills, int knowHow){
+        assertEquals(expectedSkillListSize, skills.size());
+        for (Skill skill : skills){
+            assertEquals(knowHow, skill.getKnowHowMonths());
+        }
     }
 }
