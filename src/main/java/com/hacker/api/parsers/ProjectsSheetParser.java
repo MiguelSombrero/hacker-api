@@ -19,8 +19,8 @@ public class ProjectsSheetParser extends SheetParserImpl {
 
     public Hacker parseProjectHacker(List<Object> row) {
         Hacker hacker = new Hacker();
-        hacker.setFirstname(WordUtils.capitalizeFully(getEmployeeFirstname(row)));
-        hacker.setLastname(WordUtils.capitalizeFully(getEmployeeLastname(row)));
+        hacker.setFirstname(WordUtils.capitalizeFully(getEmployeeFirstName(row)));
+        hacker.setLastname(WordUtils.capitalizeFully(getEmployeeLastName(row)));
         hacker.setId(hacker.hashCode());
 
         return hacker;
@@ -49,11 +49,11 @@ public class ProjectsSheetParser extends SheetParserImpl {
     }
 
     private  Role createRole(List<Object> row, List<String> tasks){
-    Role role = new Role();
-    role.setName(WordUtils.capitalizeFully(getRoleName(row)));
-    addTasksToRole(role, tasks);
+        Role role = new Role();
+        role.setName(WordUtils.capitalizeFully(getRoleName(row)));
+        addTasksToRole(role, tasks);
 
-    return role;
+        return role;
     }
 
     private void addTasksToRole(Role role, List<String> tasks) {
@@ -103,11 +103,11 @@ public class ProjectsSheetParser extends SheetParserImpl {
         return period.isNegative() ? 0 : period.getYears() * 12 + period.getMonths();
     }
 
-    private String getEmployeeFirstname(List<Object> row) {
+    private String getEmployeeFirstName(List<Object> row) {
         return parseStringValue(row, 0);
     }
 
-    private String getEmployeeLastname(List<Object> row) {
+    private String getEmployeeLastName(List<Object> row) {
         return parseStringValue(row, 1);
     }
 

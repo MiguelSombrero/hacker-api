@@ -101,7 +101,7 @@ public class ProjectsSheetParserTest {
         List<Object> hackerProjectDescriptionRows = createObjectListForTimePeriod("8/1/2020", "8/1/2020");
         List<Skill> skills = projectsSheetParser.parseSkills(hackerProjectDescriptionRows);
 
-        int experienceInMonths=1;
+        int experienceInMonths = 1;
         assertSkills(skills,experienceInMonths);
     }
 
@@ -110,7 +110,7 @@ public class ProjectsSheetParserTest {
         List<Object> hackerProjectDescriptionRows = createObjectListForTimePeriod("8/1/2020", "9/1/2020");
         List<Skill> skills = projectsSheetParser.parseSkills(hackerProjectDescriptionRows);
 
-        int experienceInMonths= 2;
+        int experienceInMonths = 2;
         assertSkills(skills,experienceInMonths);
     }
 
@@ -119,7 +119,7 @@ public class ProjectsSheetParserTest {
         List<Object> hackerProjectDescriptionRows = createObjectListForTimePeriod("8/1/2020", "10/31/2020");
         List<Skill> skills = projectsSheetParser.parseSkills(hackerProjectDescriptionRows);
 
-        int experienceInMonths= 3;
+        int experienceInMonths = 3;
         assertSkills(skills,experienceInMonths);
     }
 
@@ -128,7 +128,8 @@ public class ProjectsSheetParserTest {
         List<Object> hackerProjectDescriptionRows = createObjectListForTimePeriod("8/19/2020", "11/04/2020");
         List<Skill> skills = projectsSheetParser.parseSkills(hackerProjectDescriptionRows);
 
-        assertSkills(skills,4);
+        int experienceInMonths = 4;
+        assertSkills(skills,experienceInMonths);
     }
 
     @Test
