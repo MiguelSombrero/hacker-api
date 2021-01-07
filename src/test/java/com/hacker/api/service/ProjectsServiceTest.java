@@ -20,14 +20,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 
 @SpringBootTest
-public class HackersServiceTest {
-    protected static Logger logger = LoggerFactory.getLogger(HackersServiceTest.class);
+public class ProjectsServiceTest {
+    protected static Logger logger = LoggerFactory.getLogger(ProjectsServiceTest.class);
 
     @MockBean
     private GoogleSheetsClient sheetsClient;
 
     @Autowired
-    private HackersService hackersService;
+    private ProjectsService projectsService;
 
     @Test
     public void testGetHackers() throws IOException {
@@ -51,7 +51,7 @@ public class HackersServiceTest {
         Mockito.when(sheetsClient.getValuesFromSheet(anyString(), anyString()))
                 .thenReturn(values);
 
-        List<Hacker> hackers = hackersService.getHackers();
+        List<Hacker> hackers = projectsService.getHackers();
 
         Hacker miika = hackers.stream()
                 .filter(hacker -> hacker.getFirstname().equals("Miika"))

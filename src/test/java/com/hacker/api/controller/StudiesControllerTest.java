@@ -1,7 +1,7 @@
 package com.hacker.api.controller;
 
 import com.hacker.api.domain.books.Book;
-import com.hacker.api.service.BooksService;
+import com.hacker.api.service.StudiesService;
 import com.hacker.api.utils.DomainObjectFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,13 +25,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
-public class BooksControllerTest {
+public class StudiesControllerTest {
 
     private Book book1;
     private Book book2;
 
     @MockBean
-    private BooksService booksService;
+    private StudiesService studiesService;
 
     @Autowired
     private WebApplicationContext webAppContext;
@@ -53,9 +53,9 @@ public class BooksControllerTest {
 
     @Test
     public void getBooksWhenEverythingOK() throws Exception {
-        Mockito.when(booksService.getBooks()).thenReturn(Arrays.asList(book1, book2));
+        Mockito.when(studiesService.getBooks()).thenReturn(Arrays.asList(book1, book2));
 
-        MvcResult result = mockMvc.perform(get("/books"))
+        MvcResult result = mockMvc.perform(get("/studies/books"))
             .andExpect(status().isOk())
             .andExpect(header().string("Content-Type", "application/json"))
             .andExpect(jsonPath("$[0].name", is("Apocalypse Now")))
@@ -65,45 +65,45 @@ public class BooksControllerTest {
 
     @Test
     public void getBooksWhenPathDoesNotExist() throws Exception {
-        Mockito.when(booksService.getBooks()).thenReturn(Arrays.asList(book1, book2));
+        Mockito.when(studiesService.getBooks()).thenReturn(Arrays.asList(book1, book2));
 
-        MvcResult result = mockMvc.perform(get("/books/notexists"))
+        MvcResult result = mockMvc.perform(get("/studies/books/notexists"))
                 .andExpect(status().isNotFound())
                 .andReturn();
     }
 
     @Test
     public void getBooksWhenTimeOutException() throws Exception {
-        Mockito.when(booksService.getBooks()).thenThrow(SocketTimeoutException.class);
+        Mockito.when(studiesService.getBooks()).thenThrow(SocketTimeoutException.class);
 
-        MvcResult result = mockMvc.perform(get("/books"))
+        MvcResult result = mockMvc.perform(get("/studies/books"))
                 .andExpect(status().is5xxServerError())
                 .andReturn();
     }
 
     @Test
     public void getBooksWhenIndexOutOfBoundsException() throws Exception {
-        Mockito.when(booksService.getBooks()).thenThrow(IndexOutOfBoundsException.class);
+        Mockito.when(studiesService.getBooks()).thenThrow(IndexOutOfBoundsException.class);
 
-        MvcResult result = mockMvc.perform(get("/books"))
+        MvcResult result = mockMvc.perform(get("/studies/books"))
                 .andExpect(status().is5xxServerError())
                 .andReturn();
     }
 
     @Test
     public void getBooksWhenIndexIllegalArgumentException() throws Exception {
-        Mockito.when(booksService.getBooks()).thenThrow(IllegalArgumentException.class);
+        Mockito.when(studiesService.getBooks()).thenThrow(IllegalArgumentException.class);
 
-        MvcResult result = mockMvc.perform(get("/books"))
+        MvcResult result = mockMvc.perform(get("/studies/books"))
                 .andExpect(status().isBadRequest())
                 .andReturn();
     }
 
     @Test
     public void getBooksWhenIOException() throws Exception {
-        Mockito.when(booksService.getBooks()).thenThrow(IOException.class);
+        Mockito.when(studiesService.getBooks()).thenThrow(IOException.class);
 
-        MvcResult result = mockMvc.perform(get("/books"))
+        MvcResult result = mockMvc.perform(get("/studies/books"))
                 .andExpect(status().is5xxServerError())
                 .andReturn();
     }

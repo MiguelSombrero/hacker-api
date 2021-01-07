@@ -2,6 +2,7 @@ package com.hacker.api.parsers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -9,7 +10,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
-public abstract class SheetParserImpl implements SheetParser {
+@Component
+public class SheetParserImpl implements SheetParser {
     protected static Logger logger = LoggerFactory.getLogger(SheetParserImpl.class);
     private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("M/d/yyyy");
     private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("M/d/yyyy H:mm:ss");
@@ -84,5 +86,4 @@ public abstract class SheetParserImpl implements SheetParser {
         return value;
     }
 
-    public abstract Object parse(List<Object> row);
 }

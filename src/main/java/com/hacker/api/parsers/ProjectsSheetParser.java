@@ -14,23 +14,44 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class SheetToHackerParser extends SheetParserImpl {
+public class ProjectsSheetParser extends SheetParserImpl {
 
-    public Object parse(List<Object> row) {
-        List<Skill> skills = parseSkills(row);
-        Project project = parseProject(row);
-
+    public Hacker parseProjectHacker(List<Object> row) {
         Hacker hacker = new Hacker();
         hacker.setFirstname(WordUtils.capitalizeFully(getEmployeeFirstname(row)));
         hacker.setLastname(WordUtils.capitalizeFully(getEmployeeLastname(row)));
         hacker.setId(hacker.hashCode());
-        hacker.getSkills().addAll(skills);
-        hacker.getProjects().add(project);
 
         return hacker;
     }
 
-    private List<Skill> parseSkills(List<Object> row) {
+    public Project parseProject(List<Object> row) {
+        Project project = new Project();
+        project.setName(WordUtils.capitalizeFully(getProjectName(row)));
+        project.setClient(getClientName(row));
+        project.setDescription(getProjectDescription(row));
+        project.setEmployer(getEmployerName(row));
+        project.setStart(getStartDate(row));
+        project.setEnd(getEndDate(row));
+        project.setId(project.hashCode());
+
+        return project;
+    }
+
+    public Role parseRole(List<Object> row) {
+        List<String> tasks = Arrays.asList(getRoleTasks(row).split(",")).stream()
+                .map(task -> WordUtils.capitalizeFully(task.trim()))
+                .collect(Collectors.toList());
+
+        Role role = new Role();
+        role.setName(WordUtils.capitalizeFully(getRoleName(row)));
+        role.getTasks().addAll(tasks);
+        role.setId(role.hashCode());
+
+        return role;
+    }
+
+    public List<Skill> parseSkills(List<Object> row) {
         int knowHow = getProjectDuration(row);
 
         String[] parts = getSkills(row).split(",");
@@ -49,31 +70,13 @@ public class SheetToHackerParser extends SheetParserImpl {
         return skills;
     }
 
-    private Project parseProject(List<Object> row) {
-        Project project = new Project();
-        project.setName(WordUtils.capitalizeFully(getProjectName(row)));
-        project.setClient(getClientName(row));
-        project.setDescription(getProjectDescription(row));
-        project.setEmployer(getEmployerName(row));
-        project.setStart(getStartDate(row));
-        project.setEnd(getEndDate(row));
-        project.setRole(parseRole(row));
-        project.setId(project.hashCode());
+    private int getProjectDuration(List<Object> row) {
+        LocalDate start = getStartDate(row).withDayOfMonth(1);
+        LocalDate end = getEndDate(row).plusMonths(1).withDayOfMonth(1);
 
-        return project;
-    }
+        Period period = Period.between(start, end);
 
-    private Role parseRole(List<Object> row) {
-        List<String> tasks = Arrays.asList(getRoleTasks(row).split(",")).stream()
-                .map(task -> task.trim())
-                .collect(Collectors.toList());
-
-        Role role = new Role();
-        role.setName(WordUtils.capitalizeFully(getRoleName(row)));
-        role.getTasks().addAll(tasks);
-        role.setId(role.hashCode());
-
-        return role;
+        return period.isNegative() ? 0 : period.getYears() * 12 + period.getMonths();
     }
 
     private String getEmployeeFirstname(List<Object> row) {
@@ -118,14 +121,5 @@ public class SheetToHackerParser extends SheetParserImpl {
 
     private String getProjectDescription(List<Object> row) {
         return parseStringValue(row, 10);
-    }
-
-    private int getProjectDuration(List<Object> row) {
-        LocalDate start = getStartDate(row).withDayOfMonth(1);
-        LocalDate end = getEndDate(row).plusMonths(1).withDayOfMonth(1);
-
-        Period period = Period.between(start, end);
-
-        return period.isNegative() ? 0 : period.getYears() * 12 + period.getMonths();
     }
 }

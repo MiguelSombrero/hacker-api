@@ -2,7 +2,7 @@ package com.hacker.api.controller;
 
 import com.hacker.api.domain.Hacker;
 import com.hacker.api.domain.projects.Skill;
-import com.hacker.api.service.HackersService;
+import com.hacker.api.service.ProjectsService;
 import com.hacker.api.utils.DomainObjectFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,14 +27,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
-public class HackersControllerTest {
-    private Logger logger = LoggerFactory.getLogger(HackersControllerTest.class);
+public class ProjectsControllerTest {
+    private Logger logger = LoggerFactory.getLogger(ProjectsControllerTest.class);
 
     Hacker hacker1;
     Hacker hacker2;
 
     @MockBean
-    private HackersService hackersService;
+    private ProjectsService projectsService;
 
     @Autowired
     private WebApplicationContext webAppContext;
@@ -70,9 +70,9 @@ public class HackersControllerTest {
 
     @Test
     public void getHackersWhenEverythingOK() throws Exception {
-        Mockito.when(hackersService.getHackers()).thenReturn(Arrays.asList(hacker1, hacker2));
+        Mockito.when(projectsService.getHackers()).thenReturn(Arrays.asList(hacker1, hacker2));
 
-        MvcResult result = mockMvc.perform(get("/hackers"))
+        MvcResult result = mockMvc.perform(get("/projects/hackers"))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", "application/json"))
                 .andExpect(jsonPath("$[0].firstname", is("Miika")))
@@ -86,45 +86,45 @@ public class HackersControllerTest {
 
     @Test
     public void getHackersWhenPathDoesNotExist() throws Exception {
-        Mockito.when(hackersService.getHackers()).thenReturn(Arrays.asList(hacker1, hacker2));
+        Mockito.when(projectsService.getHackers()).thenReturn(Arrays.asList(hacker1, hacker2));
 
-        MvcResult result = mockMvc.perform(get("/hackers/notexists"))
+        MvcResult result = mockMvc.perform(get("/projects/hackers/notexists"))
                 .andExpect(status().isNotFound())
                 .andReturn();
     }
 
     @Test
     public void getHackersWhenTimeOutException() throws Exception {
-        Mockito.when(hackersService.getHackers()).thenThrow(SocketTimeoutException.class);
+        Mockito.when(projectsService.getHackers()).thenThrow(SocketTimeoutException.class);
 
-        MvcResult result = mockMvc.perform(get("/hackers"))
+        MvcResult result = mockMvc.perform(get("/projects/hackers"))
                 .andExpect(status().is5xxServerError())
                 .andReturn();
     }
 
     @Test
     public void getHackersWhenIndexOutOfBoundsException() throws Exception {
-        Mockito.when(hackersService.getHackers()).thenThrow(IndexOutOfBoundsException.class);
+        Mockito.when(projectsService.getHackers()).thenThrow(IndexOutOfBoundsException.class);
 
-        MvcResult result = mockMvc.perform(get("/hackers"))
+        MvcResult result = mockMvc.perform(get("/projects/hackers"))
                 .andExpect(status().is5xxServerError())
                 .andReturn();
     }
 
     @Test
     public void getHackersWhenIndexIllegalArgumentException() throws Exception {
-        Mockito.when(hackersService.getHackers()).thenThrow(IllegalArgumentException.class);
+        Mockito.when(projectsService.getHackers()).thenThrow(IllegalArgumentException.class);
 
-        MvcResult result = mockMvc.perform(get("/hackers"))
+        MvcResult result = mockMvc.perform(get("/projects/hackers"))
                 .andExpect(status().isBadRequest())
                 .andReturn();
     }
 
     @Test
     public void getHackersWhenIOException() throws Exception {
-        Mockito.when(hackersService.getHackers()).thenThrow(IOException.class);
+        Mockito.when(projectsService.getHackers()).thenThrow(IOException.class);
 
-        MvcResult result = mockMvc.perform(get("/hackers"))
+        MvcResult result = mockMvc.perform(get("/projects/hackers"))
                 .andExpect(status().is5xxServerError())
                 .andReturn();
     }

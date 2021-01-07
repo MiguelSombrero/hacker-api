@@ -16,14 +16,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class SheetParserImplTest {
 
     @Autowired
-    private SheetToVisualBooksParser sheetToVisualBooksParser;
+    private SheetParserImpl sheetParserImpl;
 
     @Test
     public void parseStringValueWhenStringIsNotEmpty() {
         List<Object> row = Arrays.asList(new String[] {
                 "6/17/2019 20:11:56", "miika.somero@testi.fi", "Äänikirjabonus", "", "", "Tunne Lukkosi", "10:08", "Takanen, Kimmo", "", "Hyvä kirja", "", "3"});
 
-        String value = sheetToVisualBooksParser.parseStringValue(row, 2);
+        String value = sheetParserImpl.parseStringValue(row, 2);
         assertEquals("Äänikirjabonus", value);
     }
 
@@ -32,7 +32,7 @@ public class SheetParserImplTest {
         List<Object> row = Arrays.asList(new String[] {
                 "6/17/2019 20:11:56", "miika.somero@testi.fi", "Äänikirjabonus", "", "", "Tunne Lukkosi", "10:08", "Takanen, Kimmo", "", "Hyvä kirja", "", "3"});
 
-        String value = sheetToVisualBooksParser.parseStringValue(row, 3);
+        String value = sheetParserImpl.parseStringValue(row, 3);
         assertEquals("", value);
     }
 
@@ -41,7 +41,7 @@ public class SheetParserImplTest {
         List<Object> row = Arrays.asList(new String[] {
                 "6/17/2019 20:11:56", "miika.somero@testi.fi", "Äänikirjabonus", "", "", "  Tunne Lukkosi  ", "10:08", "Takanen, Kimmo", "", "Hyvä kirja", "", "3"});
 
-        String value = sheetToVisualBooksParser.parseStringValue(row, 5);
+        String value = sheetParserImpl.parseStringValue(row, 5);
         assertEquals("Tunne Lukkosi", value);
     }
 
@@ -53,7 +53,7 @@ public class SheetParserImplTest {
         List<Object> row = Arrays.asList(new String[] {
                 "6/17/2019 20:11:56", "miika.somero@testi.fi", "Äänikirjabonus", "", "", "  Tunne Lukkosi  ", "10:08", "Takanen, Kimmo", "", review, "", "3"});
 
-        String value = sheetToVisualBooksParser.parseStringValue(row, 9);
+        String value = sheetParserImpl.parseStringValue(row, 9);
         assertEquals(review, value);
     }
 
@@ -62,7 +62,7 @@ public class SheetParserImplTest {
         List<Object> row = Arrays.asList(new String[] {
                 "6/17/2019 20:11:56", "miika.somero@testi.fi", "Äänikirjabonus", "", "", "Tunne Lukkosi", "10:08", "Takanen, Kimmo", "", "Hyvä kirja", "", "3"});
 
-        int value = sheetToVisualBooksParser.parseIntegerValue(row, 11);
+        int value = sheetParserImpl.parseIntegerValue(row, 11);
         assertEquals(3, value);
     }
 
@@ -71,7 +71,7 @@ public class SheetParserImplTest {
         List<Object> row = Arrays.asList(new String[] {
                 "6/17/2019 20:11:56", "miika.somero@testi.fi", "Äänikirjabonus", "", "", "Tunne Lukkosi", "10:08", "Takanen, Kimmo", "", "Hyvä kirja", "", "3"});
 
-        int value = sheetToVisualBooksParser.parseIntegerValue(row, 3);
+        int value = sheetParserImpl.parseIntegerValue(row, 3);
         assertEquals(0, value);
     }
 
@@ -80,7 +80,7 @@ public class SheetParserImplTest {
         List<Object> row = Arrays.asList(new String[] {
                 "6/17/2019 20:11:56", "miika.somero@testi.fi", "Äänikirjabonus", "", "", "Tunne Lukkosi", "10:08", "Takanen, Kimmo", "", "Hyvä kirja", "", " 3 "});
 
-        int value = sheetToVisualBooksParser.parseIntegerValue(row, 3);
+        int value = sheetParserImpl.parseIntegerValue(row, 3);
         assertEquals(0, value);
     }
 
@@ -89,7 +89,7 @@ public class SheetParserImplTest {
         List<Object> row = Arrays.asList(new String[] {
                 "6/17/2019 20:11:56", "miika.somero@testi.fi", "Äänikirjabonus", "6/17/2019", "", "Tunne Lukkosi", "10:08", "Takanen, Kimmo", "", "Hyvä kirja", "", "3"});
 
-        LocalDate value = sheetToVisualBooksParser.parseDateValue(row, 3);
+        LocalDate value = sheetParserImpl.parseDateValue(row, 3);
         assertEquals("2019-06-17", value.toString());
     }
 
@@ -100,7 +100,7 @@ public class SheetParserImplTest {
 
         LocalDate now = LocalDate.now();
 
-        LocalDate value = sheetToVisualBooksParser.parseDateValue(row, 4);
+        LocalDate value = sheetParserImpl.parseDateValue(row, 4);
         assertEquals(now.toString(), value.toString());
     }
 
@@ -109,7 +109,7 @@ public class SheetParserImplTest {
         List<Object> row = Arrays.asList(new String[] {
                 "6/17/2019 20:11:56", "miika.somero@testi.fi", "Äänikirjabonus", "6/17/2019", "", "Tunne Lukkosi", "10:08", "Takanen, Kimmo", "", "Hyvä kirja", "", "3"});
 
-        LocalDateTime value = sheetToVisualBooksParser.parseDateTimeValue(row, 0);
+        LocalDateTime value = sheetParserImpl.parseDateTimeValue(row, 0);
         assertEquals("2019-06-17T20:11:56", value.truncatedTo(ChronoUnit.SECONDS).toString());
     }
 
@@ -120,7 +120,7 @@ public class SheetParserImplTest {
 
         LocalDateTime now = LocalDateTime.now();
 
-        LocalDateTime value = sheetToVisualBooksParser.parseDateTimeValue(row, 4);
+        LocalDateTime value = sheetParserImpl.parseDateTimeValue(row, 4);
         assertEquals(now.truncatedTo(ChronoUnit.SECONDS).toString(), value.truncatedTo(ChronoUnit.SECONDS).toString());
     }
 }

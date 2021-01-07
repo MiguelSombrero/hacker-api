@@ -1,6 +1,5 @@
 package com.hacker.api.conf;
 
-import com.hacker.api.parsers.SheetToBooksParserTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -16,7 +15,7 @@ import java.net.SocketTimeoutException;
 
 @RestControllerAdvice
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
-    protected static Logger logger = LoggerFactory.getLogger(SheetToBooksParserTemplate.class);
+    protected static Logger logger = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
     @ExceptionHandler(value = { IllegalArgumentException.class })
     protected ResponseEntity<Object> handleIllegalArgument(RuntimeException ex, WebRequest request) {

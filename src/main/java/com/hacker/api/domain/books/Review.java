@@ -16,4 +16,5 @@ public class Review {
     private String review;
     private int rating;
     private Hacker reviewer;
+    private Book book;
 }
