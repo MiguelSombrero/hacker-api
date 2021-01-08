@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,8 +19,8 @@ public class ProjectsSheetParser extends SheetParserImpl {
 
     public Hacker parseProjectHacker(List<Object> row) {
         Hacker hacker = new Hacker();
-        hacker.setFirstname(WordUtils.capitalizeFully(getEmployeeFirstname(row)));
-        hacker.setLastname(WordUtils.capitalizeFully(getEmployeeLastname(row)));
+        hacker.setFirstname(WordUtils.capitalizeFully(getEmployeeFirstName(row)));
+        hacker.setLastname(WordUtils.capitalizeFully(getEmployeeLastName(row)));
         hacker.setId(hacker.hashCode());
 
         return hacker;
@@ -39,51 +40,74 @@ public class ProjectsSheetParser extends SheetParserImpl {
     }
 
     public Role parseRole(List<Object> row) {
-        List<String> tasks = Arrays.asList(getRoleTasks(row).split(",")).stream()
-                .map(task -> WordUtils.capitalizeFully(task.trim()))
-                .collect(Collectors.toList());
 
-        Role role = new Role();
-        role.setName(WordUtils.capitalizeFully(getRoleName(row)));
-        role.getTasks().addAll(tasks);
+        List<String> tasks = createTasks(row);
+        Role role=createRole(row, tasks);
         role.setId(role.hashCode());
 
         return role;
     }
 
+    private  Role createRole(List<Object> row, List<String> tasks){
+        Role role = new Role();
+        role.setName(WordUtils.capitalizeFully(getRoleName(row)));
+        addTasksToRole(role, tasks);
+
+        return role;
+    }
+
+    private void addTasksToRole(Role role, List<String> tasks) {
+        List<String> taskList = role.getTasks();
+        taskList.addAll(tasks);
+    }
+
+    private List<String> createTasks(List<Object> row){
+        List<String> tasks = Arrays.asList(getRoleTasks(row).split(",")).stream()
+                .map(task -> WordUtils.capitalizeFully(task.trim()))
+                .collect(Collectors.toList());
+        return tasks;
+    }
+
     public List<Skill> parseSkills(List<Object> row) {
         int knowHow = getProjectDuration(row);
-
         String[] parts = getSkills(row).split(",");
-
-        List<Skill> skills = Arrays.stream(parts)
-                .map(name -> {
-                    Skill skill = new Skill();
-                    skill.setName(WordUtils.capitalizeFully(name.trim()));
-                    skill.setId(skill.hashCode());
-                    skill.setKnowHowMonths(knowHow);
-
-                    return skill;
-                })
-                .collect(Collectors.toList());
+        List<Skill> skills= mapSkills(parts, knowHow);
 
         return skills;
     }
 
-    private int getProjectDuration(List<Object> row) {
-        LocalDate start = getStartDate(row).withDayOfMonth(1);
-        LocalDate end = getEndDate(row).plusMonths(1).withDayOfMonth(1);
+    private List<Skill> mapSkills(String[] skillArray, int projectDuration ){
+        List<Skill> skills;
+        skills = Arrays.stream(skillArray)
+                .map(name -> {
+                    Skill skill = new Skill();
+                    skill.setName(WordUtils.capitalizeFully(name.trim()));
+                    skill.setId(skill.hashCode());
+                    skill.setKnowHowMonths(projectDuration);
 
-        Period period = Period.between(start, end);
+                    return skill;
+                })
+                .collect(Collectors.toList());
+        return skills;
+    }
+
+    private int getProjectDuration(List<Object> row) {
+        LocalDate projectStartDate =getStartDate(row);
+        LocalDate firstDayOfStartDate = projectStartDate.withDayOfMonth(1);
+        LocalDate projectEndDate= getEndDate(row);
+        LocalDate nextMonthFromEndDate = projectEndDate.plusMonths(1);
+        LocalDate firstDayOfNextMonth = nextMonthFromEndDate.withDayOfMonth(1);
+
+        Period period = Period.between(firstDayOfStartDate, firstDayOfNextMonth);
 
         return period.isNegative() ? 0 : period.getYears() * 12 + period.getMonths();
     }
 
-    private String getEmployeeFirstname(List<Object> row) {
+    private String getEmployeeFirstName(List<Object> row) {
         return parseStringValue(row, 0);
     }
 
-    private String getEmployeeLastname(List<Object> row) {
+    private String getEmployeeLastName(List<Object> row) {
         return parseStringValue(row, 1);
     }
 
