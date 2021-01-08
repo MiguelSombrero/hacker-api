@@ -37,7 +37,7 @@ public class StudiesService {
 
         Map<Integer, Book> books = values.stream()
                 .filter(this::isBook)
-                .map(row -> parseBookFromRow(row))
+                .map(this::parseBookFromRow)
                 .collect(groupingBy(Book::getId, reducing(null, booksReducer.reduce())));
 
         List<Book> sortedBooks = books.values().stream()
@@ -56,23 +56,32 @@ public class StudiesService {
 
         List<Review> reviews = values.stream()
                 .filter(this::isBook)
-                .map(row -> parseReviewFromRow(row))
+                .map(this::parseReviewFromRow)
+                .sorted()
                 .collect(Collectors.toList());
 
         return reviews;
     }
 
+    public List<Course> getCourses() throws IOException {
+        List<List<Object>> values = studiesSheetClient.getStudies();
+
+        List<Course> courses = values.stream()
+                .filter(this::isWebCourse)
+                .map(this::parseCourseFromRow)
+                .collect(Collectors.toList());
+
+        return courses;
+    }
+
     private Book parseBookFromRow(List<Object> row) {
         Hacker reviewer = studiesSheetParser.parseStudiesHacker(row);
 
-        Review review = studiesSheetParser.parseReview(row);
+        Review review = isAudioBook(row) ? studiesSheetParser.parseAudioBookReview(row) : studiesSheetParser.parseVisualBookReview(row);
         review.setReviewer(reviewer);
         review.setId(review.hashCode());
 
-        Book book = (studiesSheetParser.getStudyType(row).equals("Äänikirjabonus"))
-                ? studiesSheetParser.parseAudioBook(row)
-                : studiesSheetParser.parseVisualBook(row);
-
+        Book book = isAudioBook(row) ? studiesSheetParser.parseAudioBook(row) : studiesSheetParser.parseVisualBook(row);
         book.getReviews().add(review);
 
         return book;
@@ -101,19 +110,21 @@ public class StudiesService {
     }
 
     private boolean isAudioBook(List<Object> row) {
-        String value = studiesSheetParser.parseStringValue(row, 2);
-
-        if (!value.isEmpty() && value.equals("Äänikirjabonus")) {
-            return true;
-        }
-
-        return false;
+        return isOfType(row, "Äänikirjabonus");
     }
 
     private boolean isVisualBook(List<Object> row) {
+        return isOfType(row, "Kirjabonus");
+    }
+
+    private boolean isWebCourse(List<Object> row) {
+        return isOfType(row, "Verkkokurssibonus");
+    }
+
+    private boolean isOfType(List<Object> row, String type) {
         String value = studiesSheetParser.parseStringValue(row, 2);
 
-        if (!value.isEmpty() && value.equals("Kirjabonus")) {
+        if (!value.isEmpty() && value.equals(type)) {
             return true;
         }
 

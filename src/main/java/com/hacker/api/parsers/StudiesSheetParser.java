@@ -57,14 +57,32 @@ public class StudiesSheetParser extends SheetParserImpl {
         return book;
     }
 
-    public Review parseReview(List<Object> row) {
+    public Review parseAudioBookReview(List<Object> row) {
         Review review = new Review();
         review.setCreated(getTimestamp(row));
-        review.setReview(getBookReview(row));
-        review.setRating(getBookRating(row));
+        review.setReview(getAudioBookReview(row));
+        review.setRating(getAudioBookRating(row));
         review.setId(review.hashCode());
 
         return review;
+    }
+
+    public Review parseVisualBookReview(List<Object> row) {
+        Review review = new Review();
+        review.setCreated(getTimestamp(row));
+        review.setReview(getVisualBookReview(row));
+        review.setRating(getVisualBookRating(row));
+        review.setId(review.hashCode());
+
+        return review;
+    }
+
+    public Course parseWebCourse(List<Object> row) {
+        Course course = new Course();
+        course.setName(getWebCourseName(row));
+        course.setRating(getWebCourseRating(row));
+
+        return course;
     }
 
     private int parseBookDuration(List<Object> row) {
@@ -107,11 +125,11 @@ public class StudiesSheetParser extends SheetParserImpl {
         return parseStringValue(row, 7);
     }
 
-    private String getBookReview(List<Object> row) {
+    private String getAudioBookReview(List<Object> row) {
         return parseStringValue(row, 9);
     }
 
-    private int getBookRating(List<Object> row) {
+    private int getAudioBookRating(List<Object> row) {
         return parseIntegerValue(row, 11);
     }
 
@@ -129,6 +147,30 @@ public class StudiesSheetParser extends SheetParserImpl {
 
     private String getBookType(List<Object> row) {
         return parseStringValue(row, 15);
+    }
+
+    private String getVisualBookReview(List<Object> row) {
+        return parseStringValue(row, 16);
+    }
+
+    private int getVisualBookRating(List<Object> row) {
+        return parseIntegerValue(row, 18);
+    }
+
+    private String getWebCourseName(List<Object> row) {
+        return parseStringValue(row, 22);
+    }
+
+    private String getWebCourseDurationInHHMM(List<Object> row) {
+        return parseStringValue(row, 23);
+    }
+
+    private String getWebCourseReview(List<Object> row) {
+        return parseStringValue(row, 25);
+    }
+
+    private int getWebCourseRating(List<Object> row) {
+        return parseIntegerValue(row, 27);
     }
 
 }
