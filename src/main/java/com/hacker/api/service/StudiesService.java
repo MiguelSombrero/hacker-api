@@ -90,12 +90,8 @@ public class StudiesService {
 
     private Review parseReviewFromRow(List<Object> row) {
         Hacker reviewer = studiesSheetParser.parseStudiesHacker(row);
-
-        Book book = (studiesSheetParser.getStudyType(row).equals("Äänikirjabonus"))
-                ? studiesSheetParser.parseAudioBook(row)
-                : studiesSheetParser.parseVisualBook(row);
-
-        Review review = studiesSheetParser.parseReview(row);
+        Book book = isAudioBook(row) ? studiesSheetParser.parseAudioBook(row) : studiesSheetParser.parseVisualBook(row);
+        Review review = isAudioBook(row) ? studiesSheetParser.parseAudioBookReview(row) : studiesSheetParser.parseVisualBookReview(row);
         review.setBook(book);
         review.setReviewer(reviewer);
 
@@ -106,11 +102,9 @@ public class StudiesService {
         Hacker reviewer = studiesSheetParser.parseStudiesHacker(row);
         Course course = studiesSheetParser.parseWebCourse(row);
 
-        Review review = studiesSheetParser.parseReview(row);
-        review.setBook(book);
-        review.setReviewer(reviewer);
+        // here parsing for web course review
 
-        return review;
+        return course;
     }
 
     private boolean isBook(List<Object> row) {

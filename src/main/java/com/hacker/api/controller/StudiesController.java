@@ -1,5 +1,6 @@
 package com.hacker.api.controller;
 
+import com.hacker.api.domain.Course;
 import com.hacker.api.domain.books.Book;
 import com.hacker.api.domain.books.Review;
 import com.hacker.api.service.StudiesService;
@@ -29,8 +30,8 @@ public class StudiesController {
     }
 
     @GetMapping("/courses")
-    public List<Review> getCourses() throws IOException {
-        List<Review> result = studiesService.getCourses();
+    public List<Course> getCourses() throws IOException {
+        List<Course> result = studiesService.getCourses();
         return result;
     }
 }

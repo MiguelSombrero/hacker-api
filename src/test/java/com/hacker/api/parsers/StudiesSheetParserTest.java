@@ -148,7 +148,7 @@ public class StudiesSheetParserTest {
         List<Object> row = Stream.of("6/17/2019 20:11:56", "miika.somero@testi.fi", "Äänikirjabonus", "", "", "Tunne Lukkosi", "10:08", "Takanen, Kimmo", "", "Hyvä kirja", "", "3")
                 .collect(Collectors.toList());
 
-        Review review = studiesSheetParser.parseReview(row);
+        Review review = studiesSheetParser.parseAudioBookReview(row);
 
         assertEquals("Hyvä kirja", review.getReview());
         assertEquals(3, review.getRating());
@@ -161,7 +161,7 @@ public class StudiesSheetParserTest {
         List<Object> row = Stream.of("6/17/2019 20:11:56", "miika.somero@testi.fi", "", "", "", "", "", "", "", "", "", "",  "Yksikkötestaus", "30", "Manninen, Olli-Pekka", "eBook", "", "Suosittelen kaikille", "")
                 .collect(Collectors.toList());
 
-        Review review = studiesSheetParser.parseReview(row);
+        Review review = studiesSheetParser.parseVisualBookReview(row);
 
         assertEquals("", review.getReview());
         assertEquals(0, review.getRating());
