@@ -37,11 +37,13 @@ public class StudiesSheetParser extends SheetParserImpl {
     }
 
     public Book parseAudioBook(List<Object> row) {
+        String duration = getBookDurationInHHMM(row);
+
         AudioBook book = new AudioBook();
         book.setType(BookType.AUDIO);
         book.setName(WordUtils.capitalizeFully(getAudioBookName(row)));
         book.setAuthors(getAudioBookAuthors(row));
-        book.setDuration(parseBookDuration(row));
+        book.setDuration(parseDuration(duration));
         book.setId(book.hashCode());
 
         return book;
@@ -56,6 +58,17 @@ public class StudiesSheetParser extends SheetParserImpl {
         book.setId(book.hashCode());
 
         return book;
+    }
+
+    public Course parseWebCourse(List<Object> row) {
+        String duration = getWebCourseDurationInHHMM(row);
+
+        Course course = new Course();
+        course.setName(getWebCourseName(row));
+        course.setDuration(parseDuration(duration));
+        course.setId(course.hashCode());
+
+        return course;
     }
 
     public Review parseAudioBookReview(List<Object> row) {
@@ -78,29 +91,29 @@ public class StudiesSheetParser extends SheetParserImpl {
         return review;
     }
 
-    public Course parseWebCourse(List<Object> row) {
-        Course course = new Course();
-        course.setName(getWebCourseName(row));
-        course.setRating(getWebCourseRating(row));
+    public Review parseWebCourseReview(List<Object> row) {
+        Review review = new Review();
+        review.setCreated(getTimestamp(row));
+        review.setReview(getWebCourseReview(row));
+        review.setRating(getWebCourseRating(row));
+        review.setId(review.hashCode());
 
-        return course;
+        return review;
     }
 
-    private int parseBookDuration(List<Object> row) {
+    private int parseDuration(String duration) {
         int hours = 0;
         int minutes = 0;
 
         try {
-            String duration = getBookDurationInHHMM(row);
             String[] parts = duration.split(":");
-
             hours = Integer.parseInt(parts[0]);
             minutes = Integer.parseInt(parts[1]);
 
         } catch (ArrayIndexOutOfBoundsException e) {
-            logger.info(String.format("Could not parse duration for row %s", row));
+            logger.info(String.format("Could not parse duration"));
         } catch (NumberFormatException e) {
-            logger.info(String.format("Could not parse duration for row %s", row));
+            logger.info(String.format("Could not parse duration"));
         }
 
         return hours * 60 + minutes;

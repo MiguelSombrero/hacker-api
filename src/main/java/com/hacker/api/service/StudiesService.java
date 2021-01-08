@@ -7,6 +7,7 @@ import com.hacker.api.domain.books.Book;
 import com.hacker.api.domain.books.Review;
 import com.hacker.api.parsers.StudiesSheetParser;
 import com.hacker.api.reducers.BooksReducer;
+import com.hacker.api.reducers.CourseReducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ public class StudiesService {
 
     @Autowired
     private BooksReducer booksReducer;
+
+    @Autowired
+    private CourseReducer courseReducer;
 
     @Autowired
     private StudiesSheetParser studiesSheetParser;
@@ -67,12 +71,20 @@ public class StudiesService {
     public List<Course> getCourses() throws IOException {
         List<List<Object>> values = studiesSheetClient.getStudies();
 
-        List<Course> courses = values.stream()
+        Map<Integer, Course> courses = values.stream()
                 .filter(this::isWebCourse)
                 .map(this::parseCourseFromRow)
+                .collect(groupingBy(Course::getId, reducing(null, courseReducer.reduce())));
+
+        List<Course> sortedCourses = courses.values().stream()
+                .map(course -> {
+                    course.setRating(course.calculateRating());
+                    return course;
+                })
+                .sorted()
                 .collect(Collectors.toList());
 
-        return courses;
+        return sortedCourses;
     }
 
     private Book parseBookFromRow(List<Object> row) {
@@ -100,9 +112,12 @@ public class StudiesService {
 
     private Course parseCourseFromRow(List<Object> row) {
         Hacker reviewer = studiesSheetParser.parseStudiesHacker(row);
-        Course course = studiesSheetParser.parseWebCourse(row);
 
-        // here parsing for web course review
+        Review review = studiesSheetParser.parseWebCourseReview(row);
+        review.setReviewer(reviewer);
+
+        Course course = studiesSheetParser.parseWebCourse(row);
+        course.getReviews().add(review);
 
         return course;
     }
@@ -128,7 +143,7 @@ public class StudiesService {
     }
 
     private boolean isOfType(List<Object> row, String type) {
-        String value = studiesSheetParser.parseStringValue(row, 2);
+        String value = studiesSheetParser.getStudyType(row);
 
         if (!value.isEmpty() && value.equals(type)) {
             return true;

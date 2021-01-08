@@ -1,5 +1,6 @@
 package com.hacker.api.parsers;
 
+import com.hacker.api.domain.Course;
 import com.hacker.api.domain.Hacker;
 import com.hacker.api.domain.books.AudioBook;
 import com.hacker.api.domain.books.Review;
@@ -16,16 +17,15 @@ import static org.junit.Assert.assertEquals;
 
 @SpringBootTest
 public class StudiesSheetParserTest {
+    private static List<Object> dataRow = Stream.of("6/17/2019 20:11:56", "miika.somero@testi.fi", "", "", "", "Tunne Lukkosi", "10:08", "Takanen, Kimmo", "", "Hyvä kirja", "", "3", "Yksikkötestaus", "30", "Manninen, Olli-Pekka", "eBook", "Ihan hyvä kirja", "Suosittelen kaikille", "4", "", "", "", "Modern React", "20:10", "10:05", "Hieno kurssi", "Kaikille", "5")
+            .collect(Collectors.toList());
 
     @Autowired
     private StudiesSheetParser studiesSheetParser;
 
     @Test
     public void parseStudiesHackerWhenAllFieldsAreCorrect() {
-        List<Object> row = Stream.of("6/17/2019 20:11:56", "miika.somero@testi.fi", "Äänikirjabonus", "", "", "Tunne Lukkosi", "10:08", "Takanen, Kimmo", "", "Hyvä kirja", "", "3")
-                .collect(Collectors.toList());
-
-        Hacker hacker = studiesSheetParser.parseStudiesHacker(row);
+        Hacker hacker = studiesSheetParser.parseStudiesHacker(dataRow);
 
         assertEquals("Miika", hacker.getFirstname());
         assertEquals("Somero", hacker.getLastname());
@@ -45,10 +45,7 @@ public class StudiesSheetParserTest {
 
     @Test
     public void parseAudioBookWhenAllFieldsAreCorrect() {
-        List<Object> row = Stream.of("6/17/2019 20:11:56", "miika.somero@testi.fi", "Äänikirjabonus", "", "", "Tunne Lukkosi", "10:08", "Takanen, Kimmo", "", "Hyvä kirja", "", "3")
-                .collect(Collectors.toList());
-
-        AudioBook book = (AudioBook) studiesSheetParser.parseAudioBook(row);
+        AudioBook book = (AudioBook) studiesSheetParser.parseAudioBook(dataRow);
 
         assertEquals("Tunne Lukkosi", book.getName());
         assertEquals("Takanen, Kimmo", book.getAuthors());
@@ -58,10 +55,7 @@ public class StudiesSheetParserTest {
 
     @Test
     public void parseVisualBookWhenAllFieldsAreCorrect() {
-        List<Object> row = Stream.of("6/17/2019 20:11:56", "miika.somero@testi.fi", "", "", "", "", "", "", "", "", "", "",  "Yksikkötestaus", "30", "Manninen, Olli-Pekka", "eBook", "Ihan hyvä kirja", "Suosittelen kaikille", "4")
-                .collect(Collectors.toList());
-
-        VisualBook book = (VisualBook) studiesSheetParser.parseVisualBook(row);
+        VisualBook book = (VisualBook) studiesSheetParser.parseVisualBook(dataRow);
 
         assertEquals("Yksikkötestaus", book.getName());
         assertEquals("Manninen, Olli-Pekka", book.getAuthors());
@@ -144,16 +138,39 @@ public class StudiesSheetParserTest {
     }
 
     @Test
-    public void parseReviewWhenAllFieldsAreCorrect() {
-        List<Object> row = Stream.of("6/17/2019 20:11:56", "miika.somero@testi.fi", "Äänikirjabonus", "", "", "Tunne Lukkosi", "10:08", "Takanen, Kimmo", "", "Hyvä kirja", "", "3")
-                .collect(Collectors.toList());
+    public void parseWebCourseWhenAllFieldsAreCorrect() {
+        Course course = studiesSheetParser.parseWebCourse(dataRow);
 
-        Review review = studiesSheetParser.parseAudioBookReview(row);
+        assertEquals("Modern React", course.getName());
+        assertEquals(1210, course.getDuration());
+    }
+
+    @Test
+    public void parseAudioBookReviewWhenAllFieldsAreCorrect() {
+        Review review = studiesSheetParser.parseAudioBookReview(dataRow);
 
         assertEquals("Hyvä kirja", review.getReview());
         assertEquals(3, review.getRating());
         assertEquals("2019-06-17T20:11:56", review.getCreated().toString());
 
+    }
+
+    @Test
+    public void parseVisualBookReviewWhenAllFieldsAreCorrect() {
+        Review review = studiesSheetParser.parseVisualBookReview(dataRow);
+
+        assertEquals("Ihan hyvä kirja", review.getReview());
+        assertEquals(4, review.getRating());
+        assertEquals("2019-06-17T20:11:56", review.getCreated().toString());
+    }
+
+    @Test
+    public void parseWebCourseReviewWhenAllFieldsAreCorrect() {
+        Review review = studiesSheetParser.parseWebCourseReview(dataRow);
+
+        assertEquals("Hieno kurssi", review.getReview());
+        assertEquals(5, review.getRating());
+        assertEquals("2019-06-17T20:11:56", review.getCreated().toString());
     }
 
     @Test
