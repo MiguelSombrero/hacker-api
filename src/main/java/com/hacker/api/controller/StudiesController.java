@@ -27,4 +27,10 @@ public class StudiesController {
         List<Review> result = studiesService.getReviews();
         return result;
     }
+
+    @GetMapping("/courses")
+    public List<Review> getCourses() throws IOException {
+        List<Review> result = studiesService.getCourses();
+        return result;
+    }
 }

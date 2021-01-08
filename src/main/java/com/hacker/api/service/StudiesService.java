@@ -1,6 +1,7 @@
 package com.hacker.api.service;
 
 import com.hacker.api.client.StudiesSheetClient;
+import com.hacker.api.domain.Course;
 import com.hacker.api.domain.Hacker;
 import com.hacker.api.domain.books.Book;
 import com.hacker.api.domain.books.Review;
@@ -93,6 +94,17 @@ public class StudiesService {
         Book book = (studiesSheetParser.getStudyType(row).equals("Äänikirjabonus"))
                 ? studiesSheetParser.parseAudioBook(row)
                 : studiesSheetParser.parseVisualBook(row);
+
+        Review review = studiesSheetParser.parseReview(row);
+        review.setBook(book);
+        review.setReviewer(reviewer);
+
+        return review;
+    }
+
+    private Course parseCourseFromRow(List<Object> row) {
+        Hacker reviewer = studiesSheetParser.parseStudiesHacker(row);
+        Course course = studiesSheetParser.parseWebCourse(row);
 
         Review review = studiesSheetParser.parseReview(row);
         review.setBook(book);

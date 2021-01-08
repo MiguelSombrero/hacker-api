@@ -1,5 +1,6 @@
 package com.hacker.api.parsers;
 
+import com.hacker.api.domain.Course;
 import com.hacker.api.domain.Hacker;
 import com.hacker.api.domain.books.*;
 import org.apache.commons.text.WordUtils;
