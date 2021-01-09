@@ -43,7 +43,7 @@ public class StudiesService {
                 .map(this::parseBookFromRow)
                 .collect(groupingBy(Book::getId, reducing(null, rateableReducer.reduce())));
 
-        List<Rateable> sortedBooks = calculateRatingAndReturnSorted(books.values());
+        List<Rateable> sortedBooks = Rateable.calculateRatingAndReturnSorted(books.values());
 
         return sortedBooks;
     }
@@ -68,21 +68,9 @@ public class StudiesService {
                 .map(this::parseCourseFromRow)
                 .collect(groupingBy(Course::getId, reducing(null, rateableReducer.reduce())));
 
-        List<Rateable> sortedCourses = calculateRatingAndReturnSorted(courses.values());
+        List<Rateable> sortedCourses = Rateable.calculateRatingAndReturnSorted(courses.values());
 
         return sortedCourses;
-    }
-
-    private List<Rateable> calculateRatingAndReturnSorted(Collection<Rateable> reviewable) {
-        List<Rateable> sorted = reviewable.stream()
-                .map(item -> {
-                    item.setRating(item.calculateRating());
-                    return item;
-                })
-                .sorted()
-                .collect(Collectors.toList());
-
-        return sorted;
     }
 
     private Book parseBookFromRow(List<Object> row) {

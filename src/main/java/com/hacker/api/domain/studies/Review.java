@@ -20,8 +20,6 @@ public class Review implements Comparable<Review> {
 
     @Override
     public int compareTo(Review review) {
-        double value = this.rating - book.getRating();
-
         if (this.created.isBefore(review.created)) {
             return 1;
         } else if (this.created.isAfter(review.created)) {
