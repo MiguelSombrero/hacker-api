@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -39,7 +38,7 @@ public class StudiesService {
         List<List<Object>> values = studiesSheetClient.getStudies();
 
         Map<Integer, Rateable> books = values.stream()
-                .filter(this::isBook)
+                .filter(row -> studiesSheetParser.isBook(row))
                 .map(this::parseBookFromRow)
                 .collect(groupingBy(Book::getId, reducing(null, rateableReducer.reduce())));
 
@@ -48,23 +47,11 @@ public class StudiesService {
         return sortedBooks;
     }
 
-    public List<Review> getReviews() throws IOException {
-        List<List<Object>> values = studiesSheetClient.getStudies();
-
-        List<Review> reviews = values.stream()
-                .filter(this::isBook)
-                .map(this::parseReviewFromRow)
-                .sorted()
-                .collect(Collectors.toList());
-
-        return reviews;
-    }
-
     public List<Rateable> getCourses() throws IOException {
         List<List<Object>> values = studiesSheetClient.getStudies();
 
         Map<Integer, Rateable> courses = values.stream()
-                .filter(this::isWebCourse)
+                .filter(row -> studiesSheetParser.isWebCourse(row))
                 .map(this::parseCourseFromRow)
                 .collect(groupingBy(Course::getId, reducing(null, rateableReducer.reduce())));
 
@@ -73,14 +60,24 @@ public class StudiesService {
         return sortedCourses;
     }
 
+    public List<Review> getReviews() throws IOException {
+        List<List<Object>> values = studiesSheetClient.getStudies();
+
+        List<Review> reviews = values.stream()
+                .filter(row -> studiesSheetParser.isBook(row))
+                .map(this::parseReviewFromRow)
+                .sorted()
+                .collect(Collectors.toList());
+
+        return reviews;
+    }
+
     private Book parseBookFromRow(List<Object> row) {
         Hacker reviewer = studiesSheetParser.parseStudiesHacker(row);
-
-        Review review = isAudioBook(row) ? studiesSheetParser.parseAudioBookReview(row) : studiesSheetParser.parseVisualBookReview(row);
+        Review review = studiesSheetParser.parseReview(row);
         review.setReviewer(reviewer);
         review.setId(review.hashCode());
-
-        Book book = isAudioBook(row) ? studiesSheetParser.parseAudioBook(row) : studiesSheetParser.parseVisualBook(row);
+        Book book = studiesSheetParser.parseBook(row);
         book.getReviews().add(review);
 
         return book;
@@ -88,8 +85,8 @@ public class StudiesService {
 
     private Review parseReviewFromRow(List<Object> row) {
         Hacker reviewer = studiesSheetParser.parseStudiesHacker(row);
-        Book book = isAudioBook(row) ? studiesSheetParser.parseAudioBook(row) : studiesSheetParser.parseVisualBook(row);
-        Review review = isAudioBook(row) ? studiesSheetParser.parseAudioBookReview(row) : studiesSheetParser.parseVisualBookReview(row);
+        Book book = studiesSheetParser.parseBook(row);
+        Review review = studiesSheetParser.parseReview(row);
         review.setBook(book);
         review.setReviewer(reviewer);
 
@@ -98,43 +95,11 @@ public class StudiesService {
 
     private Course parseCourseFromRow(List<Object> row) {
         Hacker reviewer = studiesSheetParser.parseStudiesHacker(row);
-
-        Review review = studiesSheetParser.parseWebCourseReview(row);
+        Review review = studiesSheetParser.parseReview(row);
         review.setReviewer(reviewer);
-
         Course course = studiesSheetParser.parseWebCourse(row);
         course.getReviews().add(review);
 
         return course;
-    }
-
-    private boolean isBook(List<Object> row) {
-        if (isAudioBook(row) || isVisualBook(row)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private boolean isAudioBook(List<Object> row) {
-        return isOfType(row, "Äänikirjabonus");
-    }
-
-    private boolean isVisualBook(List<Object> row) {
-        return isOfType(row, "Kirjabonus");
-    }
-
-    private boolean isWebCourse(List<Object> row) {
-        return isOfType(row, "Verkkokurssibonus");
-    }
-
-    private boolean isOfType(List<Object> row, String type) {
-        String value = studiesSheetParser.getStudyType(row);
-
-        if (!value.isEmpty() && value.equals(type)) {
-            return true;
-        }
-
-        return false;
     }
 }

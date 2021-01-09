@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public enum BookType {
     AUDIO("Äänikirja"),
     PAPER("Paperiversio"),
-    EBOOK("eBook"),
+    EBOOK("eBook / sähköinen"),
     UNDEFINED("undefined");
 
     private String name;
@@ -21,7 +21,7 @@ public enum BookType {
 
     public static BookType getBookTypeByTextValue(String text) {
         for (BookType type : BookType.values()) {
-            if (type.name.equals(text)) {
+            if (type.name.toLowerCase().equals(text.toLowerCase())) {
                 return type;
             }
         }

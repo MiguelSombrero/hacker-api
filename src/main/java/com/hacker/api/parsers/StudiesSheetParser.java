@@ -36,6 +36,13 @@ public class StudiesSheetParser extends SheetParserImpl {
         return hacker;
     }
 
+    public Book parseBook(List<Object> row) {
+        Book book = (isAudioBook(row) ? parseAudioBook(row) : parseVisualBook(row));
+        book.setId(book.hashCode());
+
+        return book;
+    }
+
     public Book parseAudioBook(List<Object> row) {
         String duration = getBookDurationInHHMM(row);
 
@@ -44,7 +51,6 @@ public class StudiesSheetParser extends SheetParserImpl {
         book.setName(WordUtils.capitalizeFully(getAudioBookName(row)));
         book.setAuthors(getAudioBookAuthors(row));
         book.setDuration(parseDuration(duration));
-        book.setId(book.hashCode());
 
         return book;
     }
@@ -55,7 +61,6 @@ public class StudiesSheetParser extends SheetParserImpl {
         book.setName(WordUtils.capitalizeFully(getVisualBookName(row)));
         book.setAuthors(getVisualBookAuthors(row));
         book.setPages(getBookPageCount(row));
-        book.setId(book.hashCode());
 
         return book;
     }
@@ -71,12 +76,28 @@ public class StudiesSheetParser extends SheetParserImpl {
         return course;
     }
 
+    public Review parseReview(List<Object> row) {
+        Review review = null;
+
+        if (isAudioBook(row)) {
+            review = parseAudioBookReview(row);
+        } else if (isVisualBook(row)) {
+            review = parseVisualBookReview(row);
+        } else if (isWebCourse(row)) {
+            review = parseWebCourseReview(row);
+        }
+
+        review.setCreated(getTimestamp(row));
+        review.setId(review.hashCode());
+
+        return review;
+    }
+
     public Review parseAudioBookReview(List<Object> row) {
         Review review = new Review();
         review.setCreated(getTimestamp(row));
         review.setReview(getAudioBookReview(row));
         review.setRating(getAudioBookRating(row));
-        review.setId(review.hashCode());
 
         return review;
     }
@@ -86,7 +107,6 @@ public class StudiesSheetParser extends SheetParserImpl {
         review.setCreated(getTimestamp(row));
         review.setReview(getVisualBookReview(row));
         review.setRating(getVisualBookRating(row));
-        review.setId(review.hashCode());
 
         return review;
     }
@@ -96,7 +116,6 @@ public class StudiesSheetParser extends SheetParserImpl {
         review.setCreated(getTimestamp(row));
         review.setReview(getWebCourseReview(row));
         review.setRating(getWebCourseRating(row));
-        review.setId(review.hashCode());
 
         return review;
     }
@@ -117,6 +136,36 @@ public class StudiesSheetParser extends SheetParserImpl {
         }
 
         return hours * 60 + minutes;
+    }
+
+    public boolean isBook(List<Object> row) {
+        if (isAudioBook(row) || isVisualBook(row)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean isAudioBook(List<Object> row) {
+        return isOfType(row, "Äänikirjabonus");
+    }
+
+    public boolean isVisualBook(List<Object> row) {
+        return isOfType(row, "Kirjabonus");
+    }
+
+    public boolean isWebCourse(List<Object> row) {
+        return isOfType(row, "Verkkokurssibonus");
+    }
+
+    private boolean isOfType(List<Object> row, String type) {
+        String value = getStudyType(row);
+
+        if (!value.isEmpty() && value.equals(type)) {
+            return true;
+        }
+
+        return false;
     }
 
     private LocalDateTime getTimestamp(List<Object> row) { return parseDateTimeValue(row, 0); }
