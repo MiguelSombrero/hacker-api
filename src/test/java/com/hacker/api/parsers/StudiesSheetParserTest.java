@@ -1,10 +1,10 @@
 package com.hacker.api.parsers;
 
-import com.hacker.api.domain.Course;
+import com.hacker.api.domain.studies.Course;
 import com.hacker.api.domain.Hacker;
-import com.hacker.api.domain.books.AudioBook;
-import com.hacker.api.domain.books.Review;
-import com.hacker.api.domain.books.VisualBook;
+import com.hacker.api.domain.studies.AudioBook;
+import com.hacker.api.domain.studies.Review;
+import com.hacker.api.domain.studies.VisualBook;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

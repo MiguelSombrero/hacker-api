@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
@@ -13,7 +14,8 @@ import java.util.List;
 @Component
 public class SheetParserImpl implements SheetParser {
     protected static Logger logger = LoggerFactory.getLogger(SheetParserImpl.class);
-    private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("M/d/yyyy");
+    private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("M/yyyy");
+    private static DateTimeFormatter dateWithDayFormatter = DateTimeFormatter.ofPattern("M/d/yyyy");
     private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("M/d/yyyy H:mm:ss");
 
     public String parseStringValue(List<Object> row, Integer index) {
@@ -45,15 +47,26 @@ public class SheetParserImpl implements SheetParser {
     }
 
     public LocalDate parseDateValue(List<Object> row, Integer index) {
+        String value = "";
+
         try {
-            String value = parseStringValue(row, index);
+            value = parseStringValue(row, index);
 
             logger.info("Date to parse is: ");
             logger.info(value);
 
-            return LocalDate.parse(value, dateFormatter);
+            YearMonth ym = YearMonth.parse(value, dateFormatter);
+            return ym.atDay(1);
         } catch (DateTimeParseException e) {
-            logger.info("Cannot parse value to LocalDate");
+            logger.info("Cannot parse value to LocalDate with yearmonth formatter");
+            logger.info("Trying to parse date with yearmonthday formatter");
+
+            try {
+                return LocalDate.parse(value, dateWithDayFormatter);
+
+            } catch (DateTimeParseException ex) {
+                logger.info("Cannot parse value to LocalDate with yearmonthday formatter");
+            }
         }
 
         logger.info("Returning current date");

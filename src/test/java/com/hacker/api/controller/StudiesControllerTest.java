@@ -1,6 +1,6 @@
 package com.hacker.api.controller;
 
-import com.hacker.api.domain.books.Book;
+import com.hacker.api.domain.studies.Book;
 import com.hacker.api.service.StudiesService;
 import com.hacker.api.utils.DomainObjectFactory;
 import org.junit.jupiter.api.BeforeEach;

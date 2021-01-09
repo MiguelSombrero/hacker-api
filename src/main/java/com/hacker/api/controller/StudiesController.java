@@ -1,8 +1,9 @@
 package com.hacker.api.controller;
 
-import com.hacker.api.domain.Course;
-import com.hacker.api.domain.books.Book;
-import com.hacker.api.domain.books.Review;
+import com.hacker.api.domain.studies.Course;
+import com.hacker.api.domain.studies.Book;
+import com.hacker.api.domain.studies.Rateable;
+import com.hacker.api.domain.studies.Review;
 import com.hacker.api.service.StudiesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +19,8 @@ public class StudiesController {
     private StudiesService studiesService;
 
     @GetMapping("/books")
-    public List<Book> getBooks() throws IOException {
-        List<Book> result = studiesService.getBooks();
+    public List<Rateable> getBooks() throws IOException {
+        List<Rateable> result = studiesService.getBooks();
         return result;
     }
 
@@ -30,8 +31,8 @@ public class StudiesController {
     }
 
     @GetMapping("/courses")
-    public List<Course> getCourses() throws IOException {
-        List<Course> result = studiesService.getCourses();
+    public List<Rateable> getCourses() throws IOException {
+        List<Rateable> result = studiesService.getCourses();
         return result;
     }
 }

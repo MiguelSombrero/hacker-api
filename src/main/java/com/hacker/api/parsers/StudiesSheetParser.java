@@ -1,8 +1,8 @@
 package com.hacker.api.parsers;
 
-import com.hacker.api.domain.Course;
+import com.hacker.api.domain.studies.Course;
 import com.hacker.api.domain.Hacker;
-import com.hacker.api.domain.books.*;
+import com.hacker.api.domain.studies.*;
 import org.apache.commons.text.WordUtils;
 import org.springframework.stereotype.Component;
 

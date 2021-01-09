@@ -1,10 +1,7 @@
-package com.hacker.api.domain;
+package com.hacker.api.domain.studies;
 
-import com.hacker.api.domain.books.Book;
-import com.hacker.api.domain.books.Review;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
@@ -13,14 +10,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Course implements Comparable<Course> {
+public abstract class Rateable implements Comparable<Rateable> {
     private int id;
-
-    @EqualsAndHashCode.Include
-    private String name;
-
-    private int duration;
     private double rating;
     private List<Review> reviews = new ArrayList<>();
 
@@ -35,8 +26,8 @@ public class Course implements Comparable<Course> {
     }
 
     @Override
-    public int compareTo(Course course) {
-        double value = this.rating - course.getRating();
+    public int compareTo(Rateable rateable) {
+        double value = this.rating - rateable.getRating();
 
         if (value < 0) {
             return 1;

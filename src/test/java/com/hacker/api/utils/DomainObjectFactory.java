@@ -1,10 +1,10 @@
 package com.hacker.api.utils;
 
 import com.hacker.api.domain.Hacker;
-import com.hacker.api.domain.books.AudioBook;
-import com.hacker.api.domain.books.BookType;
-import com.hacker.api.domain.books.VisualBook;
-import com.hacker.api.domain.books.Review;
+import com.hacker.api.domain.studies.AudioBook;
+import com.hacker.api.domain.studies.BookType;
+import com.hacker.api.domain.studies.VisualBook;
+import com.hacker.api.domain.studies.Review;
 import com.hacker.api.domain.projects.Project;
 import com.hacker.api.domain.projects.Skill;
 

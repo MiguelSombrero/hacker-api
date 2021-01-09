@@ -16,8 +16,6 @@ import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 
-
-
 @SpringBootTest
 public class ProjectsSheetParserTest {
 
@@ -31,7 +29,6 @@ public class ProjectsSheetParserTest {
         Hacker hacker = createDefaultHacker();
         assertHacker(hacker);
     }
-
 
     private Hacker createDefaultHacker(){
         List<Object> row = createDefaultObjectList("Alfame", "Toteutus");
@@ -56,8 +53,6 @@ public class ProjectsSheetParserTest {
         List<Skill> skills = projectsSheetParser.parseSkills(row);
         return skills;
     }
-
-
 
     @Test
     public void parseProjectWhenAllFieldsAreCorrect() {
@@ -91,14 +86,14 @@ public class ProjectsSheetParserTest {
     }
 
     private List<Object> createDefaultObjectList(String company, String task){
-        List<Object> hackerProjectDescriptionRows = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", task, "8/1/2020", "11/1/2020", company, "Java, Ansible, React", "Verkkokaupan toteutus")
+        List<Object> hackerProjectDescriptionRows = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", task, "8/2020", "11/2020", company, "Java, Ansible, React", "Verkkokaupan toteutus")
                 .collect(Collectors.toList());
         return hackerProjectDescriptionRows;
     }
 
     @Test
     public void calculatesProjectDurationRightWhenOneMonthProject() {
-        List<Object> hackerProjectDescriptionRows = createObjectListForTimePeriod("8/1/2020", "8/1/2020");
+        List<Object> hackerProjectDescriptionRows = createObjectListForTimePeriod("8/2020", "8/2020");
         List<Skill> skills = projectsSheetParser.parseSkills(hackerProjectDescriptionRows);
 
         int experienceInMonths = 1;
@@ -107,7 +102,7 @@ public class ProjectsSheetParserTest {
 
     @Test
     public void calculatesProjectDurationRightWhenTwoMonthProject() {
-        List<Object> hackerProjectDescriptionRows = createObjectListForTimePeriod("8/1/2020", "9/1/2020");
+        List<Object> hackerProjectDescriptionRows = createObjectListForTimePeriod("8/2020", "9/2020");
         List<Skill> skills = projectsSheetParser.parseSkills(hackerProjectDescriptionRows);
 
         int experienceInMonths = 2;
@@ -134,7 +129,7 @@ public class ProjectsSheetParserTest {
 
     @Test
     public void calculatesProjectDurationRightWhenOverYearProject() {
-        List<Object> hackerProjectDescriptionRows = createObjectListForTimePeriod("8/1/2018", "12/1/2020");
+        List<Object> hackerProjectDescriptionRows = createObjectListForTimePeriod("8/2018", "12/2020");
         List<Skill> skills = projectsSheetParser.parseSkills(hackerProjectDescriptionRows);
 
         assertSkills(skills, 29);
@@ -142,7 +137,7 @@ public class ProjectsSheetParserTest {
 
     @Test
     public void parseWhenStartDateIsMissing() {
-        List<Object> hackerProjectDescriptionRows = createObjectListForTimePeriod("", "11/1/2020");
+        List<Object> hackerProjectDescriptionRows = createObjectListForTimePeriod("", "11/2020");
         List<Skill> skills = projectsSheetParser.parseSkills(hackerProjectDescriptionRows);
 
         int experienceInMonths=0;
@@ -151,7 +146,7 @@ public class ProjectsSheetParserTest {
 
     @Test
     public void parseWhenEndDateIsMissing() {
-        List<Object> hackerProjectDescriptionRows = createObjectListForTimePeriod("8/1/2020", "");
+        List<Object> hackerProjectDescriptionRows = createObjectListForTimePeriod("8/2020", "");
         List<Skill> skills = projectsSheetParser.parseSkills(hackerProjectDescriptionRows);
 
         int experienceInMonths = Period.between(LocalDate.of(2020, 8, 1), LocalDate.now())

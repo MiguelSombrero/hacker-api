@@ -1,8 +1,6 @@
 package com.hacker.api.domain.projects;
 
 import com.hacker.api.domain.BaseDomainTest;
-import com.hacker.api.domain.books.AudioBook;
-import com.hacker.api.domain.books.VisualBook;
 import com.hacker.api.utils.DomainObjectFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

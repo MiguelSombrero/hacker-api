@@ -1,8 +1,9 @@
 package com.hacker.api.reducers;
 
-import com.hacker.api.domain.books.Book;
-import com.hacker.api.domain.books.VisualBook;
-import com.hacker.api.domain.books.Review;
+import com.hacker.api.domain.studies.Book;
+import com.hacker.api.domain.studies.Rateable;
+import com.hacker.api.domain.studies.VisualBook;
+import com.hacker.api.domain.studies.Review;
 import com.hacker.api.utils.DomainObjectFactory;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -10,10 +11,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.reducing;
@@ -24,7 +25,7 @@ public class BooksReducerTest {
     protected static Logger logger = LoggerFactory.getLogger(BooksReducerTest.class);
 
     @Autowired
-    private BooksReducer booksReducer;
+    private RateableReducer rateableReducer;
 
     @Test
     public void testMerge() {
@@ -39,7 +40,7 @@ public class BooksReducerTest {
         VisualBook book2 = DomainObjectFactory.getPaperBook("Apocalypse Now");
         book2.getReviews().add(review3);
 
-        Book book3 = booksReducer.merge(book1, book2);
+        Book book3 = (Book) rateableReducer.merge(book1, book2);
 
         assertEquals("Apocalypse Now", book3.getName());
         assertEquals(3, book3.getReviews().size());
@@ -66,10 +67,12 @@ public class BooksReducerTest {
         Book book4 = DomainObjectFactory.getPaperBook("Apocalypse Now");
         book4.getReviews().add(review5);
 
-        Map<Integer, Book> booksMap = Arrays.asList(book1, book2, book3, book4).stream()
-                .collect(groupingBy(Book::getId, reducing(null, booksReducer.reduce())));
+        Map<Integer, Rateable> booksMap = Arrays.asList(book1, book2, book3, book4).stream()
+                .collect(groupingBy(Book::getId, reducing(null, rateableReducer.reduce())));
 
-        List<Book> books = new ArrayList<>(booksMap.values());
+        List<Book> books = booksMap.values().stream()
+                .map(rateable -> (Book) rateable)
+                .collect(Collectors.toList());
 
         Book apocalypse = books.stream()
                 .filter(book -> book.getName().equals("Apocalypse Now"))
@@ -101,10 +104,12 @@ public class BooksReducerTest {
         book2.setPages(434);
         book2.setId(book2.hashCode());
 
-        Map<Integer, Book> booksMap = Arrays.asList(book1, book2).stream()
-                .collect(groupingBy(Book::getId, reducing(null, booksReducer.reduce())));
+        Map<Integer, Rateable> booksMap = Arrays.asList(book1, book2).stream()
+                .collect(groupingBy(Book::getId, reducing(null, rateableReducer.reduce())));
 
-        List<Book> books = new ArrayList<>(booksMap.values());
+        List<Book> books = booksMap.values().stream()
+                .map(rateable -> (Book) rateable)
+                .collect(Collectors.toList());
 
         assertEquals(1, books.size());
         assertEquals("Clean Code", books.get(0).getName());

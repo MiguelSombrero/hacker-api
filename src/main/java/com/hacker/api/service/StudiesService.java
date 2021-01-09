@@ -1,19 +1,20 @@
 package com.hacker.api.service;
 
 import com.hacker.api.client.StudiesSheetClient;
-import com.hacker.api.domain.Course;
+import com.hacker.api.domain.studies.Course;
 import com.hacker.api.domain.Hacker;
-import com.hacker.api.domain.books.Book;
-import com.hacker.api.domain.books.Review;
+import com.hacker.api.domain.studies.Book;
+import com.hacker.api.domain.studies.Review;
+import com.hacker.api.domain.studies.Rateable;
 import com.hacker.api.parsers.StudiesSheetParser;
-import com.hacker.api.reducers.BooksReducer;
-import com.hacker.api.reducers.CourseReducer;
+import com.hacker.api.reducers.RateableReducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,29 +30,20 @@ public class StudiesService {
     private StudiesSheetClient studiesSheetClient;
 
     @Autowired
-    private BooksReducer booksReducer;
-
-    @Autowired
-    private CourseReducer courseReducer;
+    private RateableReducer rateableReducer;
 
     @Autowired
     private StudiesSheetParser studiesSheetParser;
 
-    public List<Book> getBooks() throws IOException {
+    public List<Rateable> getBooks() throws IOException {
         List<List<Object>> values = studiesSheetClient.getStudies();
 
-        Map<Integer, Book> books = values.stream()
+        Map<Integer, Rateable> books = values.stream()
                 .filter(this::isBook)
                 .map(this::parseBookFromRow)
-                .collect(groupingBy(Book::getId, reducing(null, booksReducer.reduce())));
+                .collect(groupingBy(Book::getId, reducing(null, rateableReducer.reduce())));
 
-        List<Book> sortedBooks = books.values().stream()
-                .map(book -> {
-                    book.setRating(book.calculateRating());
-                    return book;
-                })
-                .sorted()
-                .collect(Collectors.toList());
+        List<Rateable> sortedBooks = calculateRatingAndReturnSorted(books.values());
 
         return sortedBooks;
     }
@@ -68,23 +60,29 @@ public class StudiesService {
         return reviews;
     }
 
-    public List<Course> getCourses() throws IOException {
+    public List<Rateable> getCourses() throws IOException {
         List<List<Object>> values = studiesSheetClient.getStudies();
 
-        Map<Integer, Course> courses = values.stream()
+        Map<Integer, Rateable> courses = values.stream()
                 .filter(this::isWebCourse)
                 .map(this::parseCourseFromRow)
-                .collect(groupingBy(Course::getId, reducing(null, courseReducer.reduce())));
+                .collect(groupingBy(Course::getId, reducing(null, rateableReducer.reduce())));
 
-        List<Course> sortedCourses = courses.values().stream()
-                .map(course -> {
-                    course.setRating(course.calculateRating());
-                    return course;
+        List<Rateable> sortedCourses = calculateRatingAndReturnSorted(courses.values());
+
+        return sortedCourses;
+    }
+
+    private List<Rateable> calculateRatingAndReturnSorted(Collection<Rateable> reviewable) {
+        List<Rateable> sorted = reviewable.stream()
+                .map(item -> {
+                    item.setRating(item.calculateRating());
+                    return item;
                 })
                 .sorted()
                 .collect(Collectors.toList());
 
-        return sortedCourses;
+        return sorted;
     }
 
     private Book parseBookFromRow(List<Object> row) {

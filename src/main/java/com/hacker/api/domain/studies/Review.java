@@ -1,4 +1,4 @@
-package com.hacker.api.domain.books;
+package com.hacker.api.domain.studies;
 
 import com.hacker.api.domain.Hacker;
 import lombok.AllArgsConstructor;
