@@ -69,7 +69,7 @@ public class StudiesSheetParser extends SheetParserImpl {
         String duration = getWebCourseDurationInHHMM(row);
 
         Course course = new Course();
-        course.setName(getWebCourseName(row));
+        course.setName(WordUtils.capitalizeFully(getWebCourseName(row)));
         course.setDuration(parseDuration(duration));
         course.setId(course.hashCode());
 
