@@ -36,7 +36,7 @@ public class RateableTest extends BaseDomainTest {
 
         Rateable.calculateRatingAndReturn(book);
 
-        assertEquals(4.0, book.getRating(), 0.01);
+        assertEquals(6.0, book.getRating(), 0.01);
     }
 
     @Test
