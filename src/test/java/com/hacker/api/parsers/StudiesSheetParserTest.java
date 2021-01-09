@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 public class StudiesSheetParserTest {
@@ -183,5 +184,44 @@ public class StudiesSheetParserTest {
         assertEquals("", review.getReview());
         assertEquals(0, review.getRating());
         assertEquals("2019-06-17T20:11:56", review.getCreated().toString());
+    }
+
+    @Test
+    public void recognizesCorrectlyVisualBook() {
+        List<Object> row1 = Stream.of("6/17/2019 20:11:56", "miika.somero@testi.fi", "Kirjabonus", "", "", "Tunne Lukkosi", "10:08", "Takanen, Kimmo", "", "Hyvä kirja", "", "3", "Yksikkötestaus", "30", "Manninen, Olli-Pekka", "Paperiversio", "Ihan hyvä kirja", "Suosittelen kaikille", "4", "", "", "", "Modern React", "20:10", "10:05", "Hieno kurssi", "Kaikille", "5")
+                .collect(Collectors.toList());
+        List<Object> row2 = Stream.of("6/17/2019 20:11:56", "miika.somero@testi.fi", "kirjabonus", "", "", "Tunne Lukkosi", "10:08", "Takanen, Kimmo", "", "Hyvä kirja", "", "3", "Yksikkötestaus", "30", "Manninen, Olli-Pekka", "Paperiversio", "Ihan hyvä kirja", "Suosittelen kaikille", "4", "", "", "", "Modern React", "20:10", "10:05", "Hieno kurssi", "Kaikille", "5")
+                .collect(Collectors.toList());
+
+        assertTrue(studiesSheetParser.isVisualBook(row1));
+        assertTrue(studiesSheetParser.isBook(row1));
+        assertTrue(studiesSheetParser.isVisualBook(row2));
+        assertTrue(studiesSheetParser.isBook(row2));
+    }
+
+    @Test
+    public void recognizesCorrectlyAudioBook() {
+        List<Object> row1 = Stream.of("6/17/2019 20:11:56", "miika.somero@testi.fi", "Äänikirjabonus", "", "", "Tunne Lukkosi", "10:08", "Takanen, Kimmo", "", "Hyvä kirja", "", "3", "Yksikkötestaus", "30", "Manninen, Olli-Pekka", "Paperiversio", "Ihan hyvä kirja", "Suosittelen kaikille", "4", "", "", "", "Modern React", "20:10", "10:05", "Hieno kurssi", "Kaikille", "5")
+                .collect(Collectors.toList());
+        List<Object> row2 = Stream.of("6/17/2019 20:11:56", "miika.somero@testi.fi", "äänikirjabonus", "", "", "Tunne Lukkosi", "10:08", "Takanen, Kimmo", "", "Hyvä kirja", "", "3", "Yksikkötestaus", "30", "Manninen, Olli-Pekka", "Paperiversio", "Ihan hyvä kirja", "Suosittelen kaikille", "4", "", "", "", "Modern React", "20:10", "10:05", "Hieno kurssi", "Kaikille", "5")
+                .collect(Collectors.toList());
+
+        assertTrue(studiesSheetParser.isAudioBook(row1));
+        assertTrue(studiesSheetParser.isBook(row1));
+        assertTrue(studiesSheetParser.isAudioBook(row2));
+        assertTrue(studiesSheetParser.isBook(row2));
+    }
+
+    @Test
+    public void recognizesCorrectlyWebCourse() {
+        List<Object> row1 = Stream.of("6/17/2019 20:11:56", "miika.somero@testi.fi", "Verkkokurssibonus", "", "", "Tunne Lukkosi", "10:08", "Takanen, Kimmo", "", "Hyvä kirja", "", "3", "Yksikkötestaus", "30", "Manninen, Olli-Pekka", "Paperiversio", "Ihan hyvä kirja", "Suosittelen kaikille", "4", "", "", "", "Modern React", "20:10", "10:05", "Hieno kurssi", "Kaikille", "5")
+                .collect(Collectors.toList());
+        List<Object> row2 = Stream.of("6/17/2019 20:11:56", "miika.somero@testi.fi", "Verkkokurssibonus", "", "", "Tunne Lukkosi", "10:08", "Takanen, Kimmo", "", "Hyvä kirja", "", "3", "Yksikkötestaus", "30", "Manninen, Olli-Pekka", "Paperiversio", "Ihan hyvä kirja", "Suosittelen kaikille", "4", "", "", "", "Modern React", "20:10", "10:05", "Hieno kurssi", "Kaikille", "5")
+                .collect(Collectors.toList());
+
+        assertTrue(studiesSheetParser.isWebCourse(row1));
+        assertTrue(!studiesSheetParser.isBook(row1));
+        assertTrue(studiesSheetParser.isWebCourse(row2));
+        assertTrue(!studiesSheetParser.isBook(row2));
     }
 }

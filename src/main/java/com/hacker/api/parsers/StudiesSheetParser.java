@@ -139,11 +139,7 @@ public class StudiesSheetParser extends SheetParserImpl {
     }
 
     public boolean isBook(List<Object> row) {
-        if (isAudioBook(row) || isVisualBook(row)) {
-            return true;
-        }
-
-        return false;
+        return isAudioBook(row) || isVisualBook(row);
     }
 
     public boolean isAudioBook(List<Object> row) {
@@ -159,9 +155,9 @@ public class StudiesSheetParser extends SheetParserImpl {
     }
 
     private boolean isOfType(List<Object> row, String type) {
-        String value = getStudyType(row);
+        String value = getStudyType(row).toLowerCase();
 
-        if (!value.isEmpty() && value.equals(type)) {
+        if (!value.isEmpty() && value.equals(type.toLowerCase())) {
             return true;
         }
 
