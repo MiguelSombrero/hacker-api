@@ -22,7 +22,7 @@ public class GoogleAuthorizationUtil {
                     .createScoped(Collections.singleton(SheetsScopes.SPREADSHEETS_READONLY));
 
             return credential;
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.info("Could not parse Google Credentials");
         }
 
