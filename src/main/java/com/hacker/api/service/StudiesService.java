@@ -64,7 +64,7 @@ public class StudiesService {
         List<List<Object>> values = studiesSheetClient.getStudies();
 
         List<Review> reviews = values.stream()
-                .filter(row -> studiesSheetParser.isBook(row))
+                .filter(row -> studiesSheetParser.isBookOrWebCourse(row))
                 .map(this::parseReviewFromRow)
                 .sorted()
                 .collect(Collectors.toList());
@@ -85,9 +85,7 @@ public class StudiesService {
 
     private Review parseReviewFromRow(List<Object> row) {
         Hacker reviewer = studiesSheetParser.parseStudiesHacker(row);
-        Book book = studiesSheetParser.parseBook(row);
         Review review = studiesSheetParser.parseReview(row);
-        review.setBook(book);
         review.setReviewer(reviewer);
 
         return review;

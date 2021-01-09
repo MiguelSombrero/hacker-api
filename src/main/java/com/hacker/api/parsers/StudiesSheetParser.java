@@ -81,10 +81,13 @@ public class StudiesSheetParser extends SheetParserImpl {
 
         if (isAudioBook(row)) {
             review = parseAudioBookReview(row);
+            review.setBook(parseBook(row));
         } else if (isVisualBook(row)) {
             review = parseVisualBookReview(row);
+            review.setBook(parseBook(row));
         } else if (isWebCourse(row)) {
             review = parseWebCourseReview(row);
+            review.setCourse(parseWebCourse(row));
         }
 
         review.setCreated(getTimestamp(row));
@@ -136,6 +139,10 @@ public class StudiesSheetParser extends SheetParserImpl {
         }
 
         return hours * 60 + minutes;
+    }
+
+    public boolean isBookOrWebCourse(List<Object> row) {
+        return isAudioBook(row) || isVisualBook(row) || isWebCourse(row);
     }
 
     public boolean isBook(List<Object> row) {
