@@ -81,13 +81,10 @@ public class StudiesSheetParser extends SheetParserImpl {
 
         if (isAudioBook(row)) {
             review = parseAudioBookReview(row);
-            review.setBook(parseBook(row));
         } else if (isVisualBook(row)) {
             review = parseVisualBookReview(row);
-            review.setBook(parseBook(row));
         } else if (isWebCourse(row)) {
             review = parseWebCourseReview(row);
-            review.setCourse(parseWebCourse(row));
         }
 
         review.setCreated(getTimestamp(row));
@@ -98,7 +95,6 @@ public class StudiesSheetParser extends SheetParserImpl {
 
     public Review parseAudioBookReview(List<Object> row) {
         Review review = new Review();
-        review.setCreated(getTimestamp(row));
         review.setReview(getAudioBookReview(row));
         review.setRating(getAudioBookRating(row));
 
@@ -107,7 +103,6 @@ public class StudiesSheetParser extends SheetParserImpl {
 
     public Review parseVisualBookReview(List<Object> row) {
         Review review = new Review();
-        review.setCreated(getTimestamp(row));
         review.setReview(getVisualBookReview(row));
         review.setRating(getVisualBookRating(row));
 
@@ -116,7 +111,6 @@ public class StudiesSheetParser extends SheetParserImpl {
 
     public Review parseWebCourseReview(List<Object> row) {
         Review review = new Review();
-        review.setCreated(getTimestamp(row));
         review.setReview(getWebCourseReview(row));
         review.setRating(getWebCourseRating(row));
 
