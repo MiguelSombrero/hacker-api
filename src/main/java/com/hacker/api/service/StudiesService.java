@@ -60,12 +60,24 @@ public class StudiesService {
         return sortedCourses;
     }
 
-    public List<Review> getReviews() throws IOException {
+    public List<Review> getBookReviews() throws IOException {
         List<List<Object>> values = studiesSheetClient.getStudies();
 
         List<Review> reviews = values.stream()
                 .filter(row -> studiesSheetParser.isBook(row))
-                .map(this::parseReviewFromRow)
+                .map(this::parseBookReviewFromRow)
+                .sorted()
+                .collect(Collectors.toList());
+
+        return reviews;
+    }
+
+    public List<Review> getCourseReviews() throws IOException {
+        List<List<Object>> values = studiesSheetClient.getStudies();
+
+        List<Review> reviews = values.stream()
+                .filter(row -> studiesSheetParser.isWebCourse(row))
+                .map(this::parseCourseReviewFromRow)
                 .sorted()
                 .collect(Collectors.toList());
 
@@ -83,16 +95,6 @@ public class StudiesService {
         return book;
     }
 
-    private Review parseReviewFromRow(List<Object> row) {
-        Hacker reviewer = studiesSheetParser.parseStudiesHacker(row);
-        Book book = studiesSheetParser.parseBook(row);
-        Review review = studiesSheetParser.parseReview(row);
-        review.setBook(book);
-        review.setReviewer(reviewer);
-
-        return review;
-    }
-
     private Course parseCourseFromRow(List<Object> row) {
         Hacker reviewer = studiesSheetParser.parseStudiesHacker(row);
         Review review = studiesSheetParser.parseReview(row);
@@ -101,5 +103,27 @@ public class StudiesService {
         course.getReviews().add(review);
 
         return course;
+    }
+
+    private Review parseBookReviewFromRow(List<Object> row) {
+        Hacker reviewer = studiesSheetParser.parseStudiesHacker(row);
+        Book book = studiesSheetParser.parseBook(row);
+
+        Review review = studiesSheetParser.parseReview(row);
+        review.setReviewer(reviewer);
+        review.setBook(book);
+
+        return review;
+    }
+
+    private Review parseCourseReviewFromRow(List<Object> row) {
+        Hacker reviewer = studiesSheetParser.parseStudiesHacker(row);
+        Course course = studiesSheetParser.parseWebCourse(row);
+
+        Review review = studiesSheetParser.parseReview(row);
+        review.setReviewer(reviewer);
+        review.setCourse(course);
+
+        return review;
     }
 }

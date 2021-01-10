@@ -17,6 +17,7 @@ public class Review implements Comparable<Review> {
     private int rating;
     private Hacker reviewer;
     private Book book;
+    private Course course;
 
     @Override
     public int compareTo(Review review) {
