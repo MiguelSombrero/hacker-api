@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,7 +39,6 @@ public class ProjectsSheetParser extends SheetParserImpl {
     }
 
     public Role parseRole(List<Object> row) {
-
         List<String> tasks = createTasks(row);
         Role role=createRole(row, tasks);
         role.setId(role.hashCode());
@@ -76,19 +74,21 @@ public class ProjectsSheetParser extends SheetParserImpl {
         return skills;
     }
 
-    private List<Skill> mapSkills(String[] skillArray, int projectDuration ){
-        List<Skill> skills;
-        skills = Arrays.stream(skillArray)
-                .map(name -> {
-                    Skill skill = new Skill();
-                    skill.setName(WordUtils.capitalizeFully(name.trim()));
-                    skill.setId(skill.hashCode());
-                    skill.setKnowHowMonths(projectDuration);
-
-                    return skill;
-                })
+    private List<Skill> mapSkills(String[] skillArray, int projectDuration){
+        List<Skill> skills = Arrays.stream(skillArray)
+                .filter(name -> !name.isEmpty())
+                .map(name -> parseSkill(name, projectDuration))
                 .collect(Collectors.toList());
         return skills;
+    }
+
+    private Skill parseSkill(String name, int projectDuration){
+        Skill skill = new Skill();
+        skill.setName(WordUtils.capitalizeFully(name.trim()));
+        skill.setId(skill.hashCode());
+        skill.setKnowHowMonths(projectDuration);
+
+        return skill;
     }
 
     private int getProjectDuration(List<Object> row) {

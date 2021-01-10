@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 public class ProjectsSheetParserTest {
@@ -46,6 +47,15 @@ public class ProjectsSheetParserTest {
         List<Skill> skills = createDefaultSkills();
         int experienceMonths = 4;
         assertSkills(skills, experienceMonths);
+    }
+
+    @Test
+    public void parseSkillsWhenSkillsEmpty() {
+        List<Object> row = Stream.of("Miika", "Somero", "Alfame", "Verkkokauppa", "Sovelluskehittäjä", "Koodaus", "8/2020", "11/2020", "Alfame", "", "Verkkokaupan toteutus")
+                .collect(Collectors.toList());
+
+        List<Skill> skills = projectsSheetParser.parseSkills(row);
+        assertTrue(skills.isEmpty());
     }
 
     private List<Skill> createDefaultSkills(){
