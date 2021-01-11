@@ -1,5 +1,7 @@
 # Hacker API
 
+![GitHub Actions](https://github.com/MiguelSombrero/hacker-api/workflows/Java%20CI%20with%20Maven/badge.svg)
+
 Hacker API serves `Book` (/api/books) and `Hacker` (/api/hackers) objects by API endpoints.
 
 Hacker API uses Google API Client for fetching data from Google Sheets, parses this data to `Book` and `Hacker` objects and sends a JSON response to caller.  
