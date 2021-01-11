@@ -4,6 +4,7 @@ import com.hacker.api.domain.Hacker;
 import com.hacker.api.domain.projects.Project;
 import com.hacker.api.domain.projects.Role;
 import com.hacker.api.domain.projects.Skill;
+import com.hacker.api.utils.StringUtils;
 import org.apache.commons.text.WordUtils;
 import org.springframework.stereotype.Component;
 
@@ -17,9 +18,12 @@ import java.util.stream.Collectors;
 public class ProjectsSheetParser extends SheetParserImpl {
 
     public Hacker parseProjectHacker(List<Object> row) {
+        String firstName = StringUtils.normalize(getEmployeeFirstName(row));
+        String lastName = StringUtils.normalize(getEmployeeLastName(row));
+
         Hacker hacker = new Hacker();
-        hacker.setFirstname(WordUtils.capitalizeFully(getEmployeeFirstName(row)));
-        hacker.setLastname(WordUtils.capitalizeFully(getEmployeeLastName(row)));
+        hacker.setFirstname(WordUtils.capitalizeFully(firstName));
+        hacker.setLastname(WordUtils.capitalizeFully(lastName));
         hacker.setId(hacker.hashCode());
 
         return hacker;
