@@ -42,14 +42,14 @@ public class ProjectsService {
 
     }
 
-    private Hacker parseHackers(List<Object> row) {
-        List<Skill> skills = projectsSheetParser.parseSkills(row);
-        Role role = projectsSheetParser.parseRole(row);
+    private Hacker parseHackers(List<Object> projectsSheet) {
+        List<Skill> skills = projectsSheetParser.parseSkills(projectsSheet);
+        Role role = projectsSheetParser.parseRole(projectsSheet);
 
-        Project project = projectsSheetParser.parseProject(row);
+        Project project = projectsSheetParser.parseProject(projectsSheet);
         project.setRole(role);
 
-        Hacker hacker = projectsSheetParser.parseProjectHacker(row);
+        Hacker hacker = projectsSheetParser.parseProjectHacker(projectsSheet);
         hacker.getSkills().addAll(skills);
         hacker.getProjects().add(project);
 

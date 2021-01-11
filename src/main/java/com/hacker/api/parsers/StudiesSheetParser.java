@@ -12,107 +12,122 @@ import java.util.List;
 @Component
 public class StudiesSheetParser extends SheetParserImpl {
 
-    public Hacker parseStudiesHacker(List<Object> row) {
-        Hacker hacker = new Hacker();
+    private static final int first=0;
+    private static final int last=1;
+
+    public Hacker parseStudiesHacker(List<Object> studiesSheet) {
+        Hacker hacker;
         String firstname = "";
         String lastName = "";
 
         try {
-            String email = getEmail(row);
-            String[] parts = email.split("@");
-            String[] names = parts[0].split("\\.");
-
-            firstname = WordUtils.capitalizeFully(names[0]);
-            lastName = WordUtils.capitalizeFully(names[1]);
+            firstname = parseNamesFromList(studiesSheet, first);
+            lastName = parseNamesFromList(studiesSheet, last);
 
         } catch (ArrayIndexOutOfBoundsException e) {
-            logger.info(String.format("Could not parse names from row %s", row));
+            logger.info(String.format("Could not parse names from row %s", studiesSheet));
         }
 
-        hacker.setFirstname(firstname);
-        hacker.setLastname(lastName);
-        hacker.setId(hacker.hashCode());
-
+        hacker=createHackerWithName(firstname, lastName);
         return hacker;
     }
 
-    public Book parseBook(List<Object> row) {
-        Book book = (isAudioBook(row) ? parseAudioBook(row) : parseVisualBook(row));
+        private String parseNamesFromList(List<Object> studiesSheet, int whichName){
+            String email = getEmail(studiesSheet);
+            String[] parts = email.split("@");
+            String[] names = parts[0].split("\\.");
+
+            String name = WordUtils.capitalizeFully(names[whichName]);
+
+        return name;
+        }
+
+        private Hacker createHackerWithName(String firstName, String lastName){
+            Hacker hacker = new Hacker();
+            hacker.setFirstname(firstName);
+            hacker.setLastname(lastName);
+            hacker.setId(hacker.hashCode());
+            return hacker;
+        }
+
+    public Book parseBook(List<Object> studiesSheet) {
+        Book book = (isAudioBook(studiesSheet) ? 
+                    parseAudioBook(studiesSheet) : parseVisualBook(studiesSheet));
         book.setId(book.hashCode());
 
         return book;
     }
 
-    public Book parseAudioBook(List<Object> row) {
-        String duration = getBookDurationInHHMM(row);
+    public Book parseAudioBook(List<Object> studiesSheet) {
+        String duration = getBookDurationInHHMM(studiesSheet);
 
         AudioBook book = new AudioBook();
         book.setType(BookType.AUDIO);
-        book.setName(WordUtils.capitalizeFully(getAudioBookName(row)));
-        book.setAuthors(getAudioBookAuthors(row));
+        book.setName(WordUtils.capitalizeFully(getAudioBookName(studiesSheet)));
+        book.setAuthors(getAudioBookAuthors(studiesSheet));
         book.setDuration(parseDuration(duration));
 
         return book;
     }
 
-    public Book parseVisualBook(List<Object> row) {
+    public Book parseVisualBook(List<Object> studiesSheet) {
         VisualBook book = new VisualBook();
-        book.setType(BookType.getBookTypeByTextValue(getBookType(row)));
-        book.setName(WordUtils.capitalizeFully(getVisualBookName(row)));
-        book.setAuthors(getVisualBookAuthors(row));
-        book.setPages(getBookPageCount(row));
+        book.setType(BookType.getBookTypeByTextValue(getBookType(studiesSheet)));
+        book.setName(WordUtils.capitalizeFully(getVisualBookName(studiesSheet)));
+        book.setAuthors(getVisualBookAuthors(studiesSheet));
+        book.setPages(getBookPageCount(studiesSheet));
 
         return book;
     }
 
-    public Course parseWebCourse(List<Object> row) {
-        String duration = getWebCourseDurationInHHMM(row);
+    public Course parseWebCourse(List<Object> studiesSheet) {
+        String duration = getWebCourseDurationInHHMM(studiesSheet);
 
         Course course = new Course();
-        course.setName(WordUtils.capitalizeFully(getWebCourseName(row)));
+        course.setName(WordUtils.capitalizeFully(getWebCourseName(studiesSheet)));
         course.setDuration(parseDuration(duration));
         course.setId(course.hashCode());
 
         return course;
     }
 
-    public Review parseReview(List<Object> row) {
+    public Review parseReview(List<Object> studiesSheet) {
         Review review = null;
 
-        if (isAudioBook(row)) {
-            review = parseAudioBookReview(row);
-        } else if (isVisualBook(row)) {
-            review = parseVisualBookReview(row);
-        } else if (isWebCourse(row)) {
-            review = parseWebCourseReview(row);
+        if (isAudioBook(studiesSheet)) {
+            review = parseAudioBookReview(studiesSheet);
+        } else if (isVisualBook(studiesSheet)) {
+            review = parseVisualBookReview(studiesSheet);
+        } else if (isWebCourse(studiesSheet)) {
+            review = parseWebCourseReview(studiesSheet);
         }
 
-        review.setCreated(getTimestamp(row));
+        review.setCreated(getTimestamp(studiesSheet));
         review.setId(review.hashCode());
 
         return review;
     }
 
-    public Review parseAudioBookReview(List<Object> row) {
+    public Review parseAudioBookReview(List<Object> studiesSheet) {
         Review review = new Review();
-        review.setReview(getAudioBookReview(row));
-        review.setRating(getAudioBookRating(row));
+        review.setReview(getAudioBookReview(studiesSheet));
+        review.setRating(getAudioBookRating(studiesSheet));
 
         return review;
     }
 
-    public Review parseVisualBookReview(List<Object> row) {
+    public Review parseVisualBookReview(List<Object> studiesSheet) {
         Review review = new Review();
-        review.setReview(getVisualBookReview(row));
-        review.setRating(getVisualBookRating(row));
+        review.setReview(getVisualBookReview(studiesSheet));
+        review.setRating(getVisualBookRating(studiesSheet));
 
         return review;
     }
 
-    public Review parseWebCourseReview(List<Object> row) {
+    public Review parseWebCourseReview(List<Object> studiesSheet) {
         Review review = new Review();
-        review.setReview(getWebCourseReview(row));
-        review.setRating(getWebCourseRating(row));
+        review.setReview(getWebCourseReview(studiesSheet));
+        review.setRating(getWebCourseRating(studiesSheet));
 
         return review;
     }
@@ -135,28 +150,28 @@ public class StudiesSheetParser extends SheetParserImpl {
         return hours * 60 + minutes;
     }
 
-    public boolean isBookOrWebCourse(List<Object> row) {
-        return isAudioBook(row) || isVisualBook(row) || isWebCourse(row);
+    public boolean isBookOrWebCourse(List<Object> studiesSheet) {
+        return isAudioBook(studiesSheet) || isVisualBook(studiesSheet) || isWebCourse(studiesSheet);
     }
 
-    public boolean isBook(List<Object> row) {
-        return isAudioBook(row) || isVisualBook(row);
+    public boolean isBook(List<Object> studiesSheet) {
+        return isAudioBook(studiesSheet) || isVisualBook(studiesSheet);
     }
 
-    public boolean isAudioBook(List<Object> row) {
-        return isOfType(row, "Äänikirjabonus");
+    public boolean isAudioBook(List<Object> studiesSheet) {
+        return isOfType(studiesSheet, "Äänikirjabonus");
     }
 
-    public boolean isVisualBook(List<Object> row) {
-        return isOfType(row, "Kirjabonus");
+    public boolean isVisualBook(List<Object> studiesSheet) {
+        return isOfType(studiesSheet, "Kirjabonus");
     }
 
-    public boolean isWebCourse(List<Object> row) {
-        return isOfType(row, "Verkkokurssibonus");
+    public boolean isWebCourse(List<Object> studiesSheet) {
+        return isOfType(studiesSheet, "Verkkokurssibonus");
     }
 
-    private boolean isOfType(List<Object> row, String type) {
-        String value = getStudyType(row).toLowerCase();
+    private boolean isOfType(List<Object> studiesSheet, String type) {
+        String value = getStudyType(studiesSheet).toLowerCase();
 
         if (!value.isEmpty() && value.equals(type.toLowerCase())) {
             return true;
@@ -165,72 +180,72 @@ public class StudiesSheetParser extends SheetParserImpl {
         return false;
     }
 
-    private LocalDateTime getTimestamp(List<Object> row) { return parseDateTimeValue(row, 0); }
+    private LocalDateTime getTimestamp(List<Object> studiesSheet) { return parseDateTimeValue(studiesSheet, 0); }
 
-    private String getEmail(List<Object> row) {
-        return parseStringValue(row, 1);
+    private String getEmail(List<Object> studiesSheet) {
+        return parseStringValue(studiesSheet, 1);
     }
 
-    public String getStudyType(List<Object> row) {
-        return parseStringValue(row, 2);
+    public String getStudyType(List<Object> studiesSheet) {
+        return parseStringValue(studiesSheet, 2);
     }
 
-    private String getAudioBookName(List<Object> row) { return parseStringValue(row, 5); }
+    private String getAudioBookName(List<Object> studiesSheet) { return parseStringValue(studiesSheet, 5); }
 
-    private String getBookDurationInHHMM(List<Object> row) {
-        return parseStringValue(row, 6);
+    private String getBookDurationInHHMM(List<Object> studiesSheet) {
+        return parseStringValue(studiesSheet, 6);
     }
 
-    private String getAudioBookAuthors(List<Object> row) {
-        return parseStringValue(row, 7);
+    private String getAudioBookAuthors(List<Object> studiesSheet) {
+        return parseStringValue(studiesSheet, 7);
     }
 
-    private String getAudioBookReview(List<Object> row) {
-        return parseStringValue(row, 9);
+    private String getAudioBookReview(List<Object> studiesSheet) {
+        return parseStringValue(studiesSheet, 9);
     }
 
-    private int getAudioBookRating(List<Object> row) {
-        return parseIntegerValue(row, 11);
+    private int getAudioBookRating(List<Object> studiesSheet) {
+        return parseIntegerValue(studiesSheet, 11);
     }
 
-    private String getVisualBookName(List<Object> row) {
-        return parseStringValue(row, 12);
+    private String getVisualBookName(List<Object> studiesSheet) {
+        return parseStringValue(studiesSheet, 12);
     }
 
-    private int getBookPageCount(List<Object> row) {
-        return parseIntegerValue(row, 13);
+    private int getBookPageCount(List<Object> studiesSheet) {
+        return parseIntegerValue(studiesSheet, 13);
     }
 
-    private String getVisualBookAuthors(List<Object> row) {
-        return parseStringValue(row, 14);
+    private String getVisualBookAuthors(List<Object> studiesSheet) {
+        return parseStringValue(studiesSheet, 14);
     }
 
-    private String getBookType(List<Object> row) {
-        return parseStringValue(row, 15);
+    private String getBookType(List<Object> studiesSheet) {
+        return parseStringValue(studiesSheet, 15);
     }
 
-    private String getVisualBookReview(List<Object> row) {
-        return parseStringValue(row, 16);
+    private String getVisualBookReview(List<Object> studiesSheet) {
+        return parseStringValue(studiesSheet, 16);
     }
 
-    private int getVisualBookRating(List<Object> row) {
-        return parseIntegerValue(row, 18);
+    private int getVisualBookRating(List<Object> studiesSheet) {
+        return parseIntegerValue(studiesSheet, 18);
     }
 
-    private String getWebCourseName(List<Object> row) {
-        return parseStringValue(row, 22);
+    private String getWebCourseName(List<Object> studiesSheet) {
+        return parseStringValue(studiesSheet, 22);
     }
 
-    private String getWebCourseDurationInHHMM(List<Object> row) {
-        return parseStringValue(row, 23);
+    private String getWebCourseDurationInHHMM(List<Object> studiesSheet) {
+        return parseStringValue(studiesSheet, 23);
     }
 
-    private String getWebCourseReview(List<Object> row) {
-        return parseStringValue(row, 25);
+    private String getWebCourseReview(List<Object> studiesSheet) {
+        return parseStringValue(studiesSheet, 25);
     }
 
-    private int getWebCourseRating(List<Object> row) {
-        return parseIntegerValue(row, 27);
+    private int getWebCourseRating(List<Object> studiesSheet) {
+        return parseIntegerValue(studiesSheet, 27);
     }
 
 }
