@@ -17,18 +17,18 @@ public class StudiesSheetParser extends SheetParserImpl {
 
     public Hacker parseStudiesHacker(List<Object> studiesSheet) {
         Hacker hacker;
-        String firstname = "";
+        String firstName = "";
         String lastName = "";
 
         try {
-            firstname = parseNamesFromList(studiesSheet, first);
+            firstName = parseNamesFromList(studiesSheet, first);
             lastName = parseNamesFromList(studiesSheet, last);
 
         } catch (ArrayIndexOutOfBoundsException e) {
             logger.info(String.format("Could not parse names from row %s", studiesSheet));
         }
 
-        hacker=createHackerWithName(firstname, lastName);
+        hacker=createHackerWithName(firstName, lastName);
         return hacker;
     }
 
@@ -44,8 +44,8 @@ public class StudiesSheetParser extends SheetParserImpl {
 
         private Hacker createHackerWithName(String firstName, String lastName){
             Hacker hacker = new Hacker();
-            hacker.setFirstname(firstName);
-            hacker.setLastname(lastName);
+            hacker.setFirstName(firstName);
+            hacker.setLastName(lastName);
             hacker.setId(hacker.hashCode());
             return hacker;
         }

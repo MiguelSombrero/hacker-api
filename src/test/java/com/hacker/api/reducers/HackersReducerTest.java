@@ -47,8 +47,8 @@ public class HackersReducerTest {
 
         Hacker result = hackersReducer.merge(hacker1, hacker2);
 
-        assertEquals("Miika", result.getFirstname());
-        assertEquals("Somero", result.getLastname());
+        assertEquals("Miika", result.getFirstName());
+        assertEquals("Somero", result.getLastName());
         assertEquals(3, result.getSkills().size());
         assertEquals(18, result.getSkills().stream().filter(skill -> skill.getName().equals("Java")).findFirst().get().getKnowHowMonths());
         assertEquals(5, result.getSkills().stream().filter(skill -> skill.getName().equals("React")).findFirst().get().getKnowHowMonths());
@@ -110,36 +110,36 @@ public class HackersReducerTest {
         List<Hacker> result = new ArrayList<>(hackers.values());
 
         Hacker miika = result.stream()
-                .filter(hacker -> hacker.getFirstname().equals("Miika"))
+                .filter(hacker -> hacker.getFirstName().equals("Miika"))
                 .findFirst().get();
 
         Hacker siiri = result.stream()
-                .filter(hacker -> hacker.getFirstname().equals("Siiri"))
+                .filter(hacker -> hacker.getFirstName().equals("Siiri"))
                 .findFirst().get();
 
         Hacker jussi = result.stream()
-                .filter(hacker -> hacker.getFirstname().equals("Jussi"))
+                .filter(hacker -> hacker.getFirstName().equals("Jussi"))
                 .findFirst().get();
 
         assertEquals(3, result.size());
 
-        assertEquals("Miika", miika.getFirstname());
-        assertEquals("Somero", miika.getLastname());
+        assertEquals("Miika", miika.getFirstName());
+        assertEquals("Somero", miika.getLastName());
         assertEquals(3, miika.getSkills().size());
         assertEquals(3, miika.getProjects().size());
         assertEquals(18, miika.getSkills().stream().filter(skill -> skill.getName().equals("Java")).findFirst().get().getKnowHowMonths());
         assertEquals(5, miika.getSkills().stream().filter(skill -> skill.getName().equals("React")).findFirst().get().getKnowHowMonths());
         assertEquals(10, miika.getSkills().stream().filter(skill -> skill.getName().equals("XML")).findFirst().get().getKnowHowMonths());
 
-        assertEquals("Siiri", siiri.getFirstname());
-        assertEquals("Siirinen", siiri.getLastname());
+        assertEquals("Siiri", siiri.getFirstName());
+        assertEquals("Siirinen", siiri.getLastName());
         assertEquals(2, siiri.getSkills().size());
         assertEquals(2, siiri.getProjects().size());
         assertEquals(11, siiri.getSkills().stream().filter(skill -> skill.getName().equals("Java")).findFirst().get().getKnowHowMonths());
         assertEquals(10, siiri.getSkills().stream().filter(skill -> skill.getName().equals("XML")).findFirst().get().getKnowHowMonths());
 
-        assertEquals("Jussi", jussi.getFirstname());
-        assertEquals("Jussinen", jussi.getLastname());
+        assertEquals("Jussi", jussi.getFirstName());
+        assertEquals("Jussinen", jussi.getLastName());
         assertEquals(1, jussi.getSkills().size());
         assertEquals(1, jussi.getProjects().size());
         assertEquals(8, jussi.getSkills().stream().filter(skill -> skill.getName().equals("XML")).findFirst().get().getKnowHowMonths());

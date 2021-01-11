@@ -38,8 +38,8 @@ public class ProjectsSheetParserTest {
     }
 
     private void assertHacker(Hacker hacker){
-        assertEquals("Miika", hacker.getFirstname());
-        assertEquals("Somero", hacker.getLastname());
+        assertEquals("Miika", hacker.getFirstName());
+        assertEquals("Somero", hacker.getLastName());
     }
 
     @Test

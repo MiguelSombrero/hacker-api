@@ -104,8 +104,8 @@ public class StudiesServiceTest {
 
         assertEquals("2020-06-17T20:11:56", review.getCreated().toString());
         assertEquals("Ihan hyvä kirja", review.getReview());
-        assertEquals("Miika", review.getReviewer().getFirstname());
-        assertEquals("Somero", review.getReviewer().getLastname());
+        assertEquals("Miika", review.getReviewer().getFirstName());
+        assertEquals("Somero", review.getReviewer().getLastName());
         assertEquals(null, review.getBook());
         assertEquals(null, review.getCourse());
     }
@@ -148,8 +148,8 @@ public class StudiesServiceTest {
 
         assertEquals("2019-06-20T11:11:56", review.getCreated().toString());
         assertEquals("Hieno kurssi", review.getReview());
-        assertEquals("Miika", review.getReviewer().getFirstname());
-        assertEquals("Somero", review.getReviewer().getLastname());
+        assertEquals("Miika", review.getReviewer().getFirstName());
+        assertEquals("Somero", review.getReviewer().getLastName());
         assertEquals(null, review.getBook());
         assertEquals(null, review.getCourse());
     }
@@ -204,8 +204,8 @@ public class StudiesServiceTest {
                 .findFirst().get();
 
         assertEquals("Klassikko!", review.getReview());
-        assertEquals("Jukka", review.getReviewer().getFirstname());
-        assertEquals("Jukkanen", review.getReviewer().getLastname());
+        assertEquals("Jukka", review.getReviewer().getFirstName());
+        assertEquals("Jukkanen", review.getReviewer().getLastName());
         assertEquals(null, review.getCourse());
     }
 
@@ -218,8 +218,8 @@ public class StudiesServiceTest {
                 .findFirst().get();
 
         assertEquals("No joo", review.getReview());
-        assertEquals("Miika", review.getReviewer().getFirstname());
-        assertEquals("Somero", review.getReviewer().getLastname());
+        assertEquals("Miika", review.getReviewer().getFirstName());
+        assertEquals("Somero", review.getReviewer().getLastName());
         assertEquals(null, review.getBook());
     }
 

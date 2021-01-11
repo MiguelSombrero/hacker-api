@@ -12,8 +12,8 @@ public class DomainObjectFactory {
 
     public static Hacker getEmployee(String firstname, String lastname) {
         Hacker hacker = new Hacker();
-        hacker.setFirstname(firstname);
-        hacker.setLastname(lastname);
+        hacker.setFirstName(firstname);
+        hacker.setLastName(lastname);
         hacker.setId(hacker.hashCode());
 
         return hacker;
