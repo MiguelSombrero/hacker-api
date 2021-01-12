@@ -28,8 +28,8 @@ public class StudiesSheetParserTest {
     public void parseStudiesHackerWhenAllFieldsAreCorrect() {
         Hacker hacker = studiesSheetParser.parseStudiesHacker(dataRow);
 
-        assertEquals("Miika", hacker.getFirstname());
-        assertEquals("Somero", hacker.getLastname());
+        assertEquals("Miika", hacker.getFirstName());
+        assertEquals("Somero", hacker.getLastName());
     }
 
     @Test
@@ -39,8 +39,8 @@ public class StudiesSheetParserTest {
 
         Hacker hacker = studiesSheetParser.parseStudiesHacker(row);
 
-        assertEquals("Miikasomero", hacker.getFirstname());
-        assertEquals("", hacker.getLastname());
+        assertEquals("Miikasomero", hacker.getFirstName());
+        assertEquals("", hacker.getLastName());
     }
 
 

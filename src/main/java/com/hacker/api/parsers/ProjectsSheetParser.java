@@ -17,42 +17,59 @@ import java.util.stream.Collectors;
 @Component
 public class ProjectsSheetParser extends SheetParserImpl {
 
-    public Hacker parseProjectHacker(List<Object> row) {
-        String firstName = StringUtils.normalize(getEmployeeFirstName(row));
-        String lastName = StringUtils.normalize(getEmployeeLastName(row));
 
+    public Hacker parseProjectHacker(List<Object> projectsSheet) {
         Hacker hacker = new Hacker();
-        hacker.setFirstname(WordUtils.capitalizeFully(firstName));
-        hacker.setLastname(WordUtils.capitalizeFully(lastName));
-        hacker.setId(hacker.hashCode());
+        String firstName = getNormalizedAndCapitalizedFirstName(projectsSheet);
+        hacker.setFirstName(firstName);
 
+        String lastName = getNormalizedAndCapitalizedLastName(projectsSheet);
+        hacker.setLastName(lastName);
+
+        hacker.setId(hacker.hashCode());
         return hacker;
     }
 
-    public Project parseProject(List<Object> row) {
+    private String getNormalizedAndCapitalizedFirstName(List<Object> projectsSheet){
+        String firstName = getEmployeeFirstName(projectsSheet);
+        String normalizedFirstName = StringUtils.normalize(firstName);
+        String capitalizedFirstName = WordUtils.capitalizeFully(normalizedFirstName);
+        return capitalizedFirstName;
+    }
+
+    private String getNormalizedAndCapitalizedLastName(List<Object> projectsSheet){
+        String lastName = getEmployeeLastName(projectsSheet);
+        String normalizedLastName = StringUtils.normalize(lastName);
+        String capitalizedLastName = WordUtils.capitalizeFully(normalizedLastName);
+        return capitalizedLastName;
+    }
+
+    public Project parseProject(List<Object> projectsSheet) {
         Project project = new Project();
-        project.setName(WordUtils.capitalizeFully(getProjectName(row)));
-        project.setClient(getClientName(row));
-        project.setDescription(getProjectDescription(row));
-        project.setEmployer(getEmployerName(row));
-        project.setStart(getStartDate(row));
-        project.setEnd(getEndDate(row));
+        project.setName(WordUtils.capitalizeFully(getProjectName(projectsSheet)));
+        project.setClient(getClientName(projectsSheet));
+        project.setDescription(getProjectDescription(projectsSheet));
+        project.setEmployer(getEmployerName(projectsSheet));
+        project.setStart(getStartDate(projectsSheet));
+        project.setEnd(getEndDate(projectsSheet));
         project.setId(project.hashCode());
 
         return project;
     }
 
-    public Role parseRole(List<Object> row) {
-        List<String> tasks = createTasks(row);
-        Role role=createRole(row, tasks);
+    public Role parseRole(List<Object> projectsSheet) {
+        List<String> tasks = createTasks(projectsSheet);
+        Role role=createRole(projectsSheet, tasks);
         role.setId(role.hashCode());
 
         return role;
     }
 
-    private  Role createRole(List<Object> row, List<String> tasks){
+    private  Role createRole(List<Object> projectsSheet, List<String> tasks){
         Role role = new Role();
-        role.setName(WordUtils.capitalizeFully(getRoleName(row)));
+        String roleName=getRoleName(projectsSheet);
+        String capitalizedRoleName = WordUtils.capitalizeFully(roleName);
+        role.setName(capitalizedRoleName);
         addTasksToRole(role, tasks);
 
         return role;
@@ -63,16 +80,16 @@ public class ProjectsSheetParser extends SheetParserImpl {
         taskList.addAll(tasks);
     }
 
-    private List<String> createTasks(List<Object> row){
-        List<String> tasks = Arrays.asList(getRoleTasks(row).split(",")).stream()
+    private List<String> createTasks(List<Object> projectsSheet){
+        List<String> tasks = Arrays.asList(getRoleTasks(projectsSheet).split(",")).stream()
                 .map(task -> WordUtils.capitalizeFully(task.trim()))
                 .collect(Collectors.toList());
         return tasks;
     }
 
-    public List<Skill> parseSkills(List<Object> row) {
-        int knowHow = getProjectDuration(row);
-        String[] parts = getSkills(row).split(",");
+    public List<Skill> parseSkills(List<Object> projectsSheet) {
+        int knowHow = getProjectDuration(projectsSheet);
+        String[] parts = getSkills(projectsSheet).split(",");
         List<Skill> skills= mapSkills(parts, knowHow);
 
         return skills;
@@ -95,10 +112,10 @@ public class ProjectsSheetParser extends SheetParserImpl {
         return skill;
     }
 
-    private int getProjectDuration(List<Object> row) {
-        LocalDate projectStartDate =getStartDate(row);
+    private int getProjectDuration(List<Object> projectsSheet) {
+        LocalDate projectStartDate =getStartDate(projectsSheet);
         LocalDate firstDayOfStartDate = projectStartDate.withDayOfMonth(1);
-        LocalDate projectEndDate= getEndDate(row);
+        LocalDate projectEndDate= getEndDate(projectsSheet);
         LocalDate nextMonthFromEndDate = projectEndDate.plusMonths(1);
         LocalDate firstDayOfNextMonth = nextMonthFromEndDate.withDayOfMonth(1);
 
@@ -107,47 +124,47 @@ public class ProjectsSheetParser extends SheetParserImpl {
         return period.isNegative() ? 0 : period.getYears() * 12 + period.getMonths();
     }
 
-    private String getEmployeeFirstName(List<Object> row) {
-        return parseStringValue(row, 0);
+    private String getEmployeeFirstName(List<Object> projectsSheet) {
+        return parseStringValue(projectsSheet, 0);
     }
 
-    private String getEmployeeLastName(List<Object> row) {
-        return parseStringValue(row, 1);
+    private String getEmployeeLastName(List<Object> projectsSheet) {
+        return parseStringValue(projectsSheet, 1);
     }
 
-    private String getEmployerName(List<Object> row) {
-        return parseStringValue(row, 2);
+    private String getEmployerName(List<Object> projectsSheet) {
+        return parseStringValue(projectsSheet, 2);
     }
 
-    private String getProjectName(List<Object> row) {
-        return parseStringValue(row, 3);
+    private String getProjectName(List<Object> projectsSheet) {
+        return parseStringValue(projectsSheet, 3);
     }
 
-    private String getRoleName(List<Object> row) {
-        return parseStringValue(row, 4);
+    private String getRoleName(List<Object> projectsSheet) {
+        return parseStringValue(projectsSheet, 4);
     }
 
-    private String getRoleTasks(List<Object> row) {
-        return parseStringValue(row, 5);
+    private String getRoleTasks(List<Object> projectsSheet) {
+        return parseStringValue(projectsSheet, 5);
     }
 
-    private LocalDate getStartDate(List<Object> row) {
-        return parseDateValue(row, 6);
+    private LocalDate getStartDate(List<Object> projectsSheet) {
+        return parseDateValue(projectsSheet, 6);
     }
 
-    private LocalDate getEndDate(List<Object> row) {
-        return parseDateValue(row, 7);
+    private LocalDate getEndDate(List<Object> projectsSheet) {
+        return parseDateValue(projectsSheet, 7);
     }
 
-    private String getClientName(List<Object> row) {
-        return parseStringValue(row, 8);
+    private String getClientName(List<Object> projectsSheet) {
+        return parseStringValue(projectsSheet, 8);
     }
 
-    private String getSkills(List<Object> row) {
-        return parseStringValue(row, 9);
+    private String getSkills(List<Object> projectsSheet) {
+        return parseStringValue(projectsSheet, 9);
     }
 
-    private String getProjectDescription(List<Object> row) {
-        return parseStringValue(row, 10);
+    private String getProjectDescription(List<Object> projectsSheet) {
+        return parseStringValue(projectsSheet, 10);
     }
 }

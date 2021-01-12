@@ -18,9 +18,9 @@ public class SheetParserImpl implements SheetParser {
     private static DateTimeFormatter dateWithDayFormatter = DateTimeFormatter.ofPattern("M/d/yyyy");
     private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("M/d/yyyy H:mm:ss");
 
-    public String parseStringValue(List<Object> row, Integer index) {
+    public String parseStringValue(List<Object> sheet, Integer index) {
         try {
-            String value = getStringValue(row, index);
+            String value = getStringValue(sheet, index);
             return value.trim();
         } catch (IndexOutOfBoundsException e) {
             logger.info("Spreadsheet is missing value in index " + index);
@@ -30,9 +30,9 @@ public class SheetParserImpl implements SheetParser {
         return "";
     }
 
-    public int parseIntegerValue(List<Object> row, Integer index) {
+    public int parseIntegerValue(List<Object> sheet, Integer index) {
         try {
-            String value = parseStringValue(row, index);
+            String value = parseStringValue(sheet, index);
 
             logger.info("Integer for parse is: ");
             logger.info(value);
@@ -46,11 +46,11 @@ public class SheetParserImpl implements SheetParser {
         return 0;
     }
 
-    public LocalDate parseDateValue(List<Object> row, Integer index) {
+    public LocalDate parseDateValue(List<Object> sheet, Integer index) {
         String value = "";
 
         try {
-            value = parseStringValue(row, index);
+            value = parseStringValue(sheet, index);
 
             logger.info("Date to parse is: ");
             logger.info(value);
@@ -73,9 +73,9 @@ public class SheetParserImpl implements SheetParser {
         return LocalDate.now();
     }
 
-    public LocalDateTime parseDateTimeValue(List<Object> row, Integer index) {
+    public LocalDateTime parseDateTimeValue(List<Object> sheet, Integer index) {
         try {
-            String value = parseStringValue(row, index);
+            String value = parseStringValue(sheet, index);
 
             logger.info("DateTime to parse is: ");
             logger.info(value);
@@ -89,11 +89,11 @@ public class SheetParserImpl implements SheetParser {
         return LocalDateTime.now();
     }
 
-    private String getStringValue(List<Object> row, Integer index) {
+    private String getStringValue(List<Object> sheet, Integer index) {
         String value = "";
 
-        if (row.size() >= index) {
-            value = (String) row.get(index);
+        if (sheet.size() >= index) {
+            value = (String) sheet.get(index);
         }
 
         return value;
