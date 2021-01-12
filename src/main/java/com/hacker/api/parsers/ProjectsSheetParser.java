@@ -4,6 +4,7 @@ import com.hacker.api.domain.Hacker;
 import com.hacker.api.domain.projects.Project;
 import com.hacker.api.domain.projects.Role;
 import com.hacker.api.domain.projects.Skill;
+import com.hacker.api.utils.StringUtils;
 import org.apache.commons.text.WordUtils;
 import org.springframework.stereotype.Component;
 
@@ -16,10 +17,16 @@ import java.util.stream.Collectors;
 @Component
 public class ProjectsSheetParser extends SheetParserImpl {
 
+
+
+
     public Hacker parseProjectHacker(List<Object> projectsSheet) {
         Hacker hacker = new Hacker();
-        hacker.setFirstName(WordUtils.capitalizeFully(getEmployeeFirstName(projectsSheet)));
-        hacker.setLastName(WordUtils.capitalizeFully(getEmployeeLastName(projectsSheet)));
+        String firstName = StringUtils.normalize(getEmployeeFirstName(projectsSheet));
+        String lastName = StringUtils.normalize(getEmployeeLastName(projectsSheet));
+
+        hacker.setFirstName(WordUtils.capitalizeFully(firstName));
+        hacker.setLastName(WordUtils.capitalizeFully(lastName));
         hacker.setId(hacker.hashCode());
 
         return hacker;
@@ -48,7 +55,9 @@ public class ProjectsSheetParser extends SheetParserImpl {
 
     private  Role createRole(List<Object> projectsSheet, List<String> tasks){
         Role role = new Role();
-        role.setName(WordUtils.capitalizeFully(getRoleName(projectsSheet)));
+        String roleName=getRoleName(projectsSheet);
+        String capitalizedRoleName = WordUtils.capitalizeFully(roleName);
+        role.setName(capitalizedRoleName);
         addTasksToRole(role, tasks);
 
         return role;
