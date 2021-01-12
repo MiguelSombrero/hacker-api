@@ -18,18 +18,30 @@ import java.util.stream.Collectors;
 public class ProjectsSheetParser extends SheetParserImpl {
 
 
-
-
     public Hacker parseProjectHacker(List<Object> projectsSheet) {
         Hacker hacker = new Hacker();
-        String firstName = StringUtils.normalize(getEmployeeFirstName(projectsSheet));
-        String lastName = StringUtils.normalize(getEmployeeLastName(projectsSheet));
+        String firstName = getNormalizedAndCapitalizedFirstName(projectsSheet);
+        hacker.setFirstName(firstName);
 
-        hacker.setFirstName(WordUtils.capitalizeFully(firstName));
-        hacker.setLastName(WordUtils.capitalizeFully(lastName));
+        String lastName = getNormalizedAndCapitalizedLastName(projectsSheet);
+        hacker.setLastName(lastName);
+
         hacker.setId(hacker.hashCode());
-
         return hacker;
+    }
+
+    private String getNormalizedAndCapitalizedFirstName(List<Object> projectsSheet){
+        String firstName = getEmployeeFirstName(projectsSheet);
+        String normalizedFirstName = StringUtils.normalize(firstName);
+        String capitalizedFirstName = WordUtils.capitalizeFully(normalizedFirstName);
+        return capitalizedFirstName;
+    }
+
+    private String getNormalizedAndCapitalizedLastName(List<Object> projectsSheet){
+        String lastName = getEmployeeLastName(projectsSheet);
+        String normalizedLastName = StringUtils.normalize(lastName);
+        String capitalizedLastName = WordUtils.capitalizeFully(normalizedLastName);
+        return capitalizedLastName;
     }
 
     public Project parseProject(List<Object> projectsSheet) {
