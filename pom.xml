@@ -20,6 +20,7 @@
 	</properties>
 
 	<dependencies>
+		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -79,6 +80,8 @@
 			<artifactId>google-api-services-sheets</artifactId>
 			<version>v4-rev516-1.23.0</version>
 		</dependency>
+
+		<!-- test -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

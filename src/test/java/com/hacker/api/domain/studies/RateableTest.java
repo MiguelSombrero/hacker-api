@@ -2,8 +2,13 @@ package com.hacker.api.domain.studies;
 
 import com.hacker.api.domain.BaseDomainTest;
 import com.hacker.api.utils.DomainObjectFactory;
+import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -104,5 +109,42 @@ public class RateableTest extends BaseDomainTest {
         Rateable.calculateRatingAndReturn(book);
 
         assertEquals(3.3, book.getRating(), 0.01);
+    }
+
+    @Test
+    public void sortsCollectionByRating() {
+        Review review1 = DomainObjectFactory.getReview("Pretty good book");
+        review1.setRating(4);
+
+        Review review2 = DomainObjectFactory.getReview("Could be worse");
+        review2.setRating(3);
+
+        Review review3 = DomainObjectFactory.getReview("OK");
+        review3.setRating(3);
+
+        Review review4 = DomainObjectFactory.getReview("Naah");
+        review4.setRating(2);
+
+        Review review5 = DomainObjectFactory.getReview("Yes");
+        review5.setRating(5);
+
+        VisualBook book1 = DomainObjectFactory.getPaperBook("Apocalypse Now");
+        book1.getReviews().add(review1);
+        book1.getReviews().add(review2);
+
+        VisualBook book2 = DomainObjectFactory.getPaperBook("The Scrum FieldBook");
+        book2.getReviews().add(review3);
+        book2.getReviews().add(review4);
+
+        VisualBook book3 = DomainObjectFactory.getPaperBook("The Selfish Gene");
+        book3.getReviews().add(review5);
+
+        List<Rateable> books = Rateable.calculateRatingAndReturnSorted(Stream
+                .of(book1, book3, book2)
+                .collect(Collectors.toList()));
+
+        assertEquals(5, books.get(0).getRating(), 0.01);
+        assertEquals(3.5, books.get(1).getRating(), 0.01);
+        assertEquals(2.5, books.get(2).getRating(), 0.01);
     }
 }
