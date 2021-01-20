@@ -1,11 +1,8 @@
 package com.hacker.api.service;
 
 import com.hacker.api.client.StudiesSheetClient;
-import com.hacker.api.domain.studies.Course;
+import com.hacker.api.domain.studies.*;
 import com.hacker.api.domain.Hacker;
-import com.hacker.api.domain.studies.Book;
-import com.hacker.api.domain.studies.Review;
-import com.hacker.api.domain.studies.Rateable;
 import com.hacker.api.parsers.StudiesSheetParser;
 import com.hacker.api.reducers.RateableReducer;
 import org.slf4j.Logger;
@@ -14,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -45,6 +45,24 @@ public class StudiesService {
         List<Rateable> sortedBooks = Rateable.calculateRatingAndReturnSorted(books.values());
 
         return sortedBooks;
+    }
+
+    public void addBookReview(AudioBookReview review) throws IOException {
+
+        List<List<Object>> values = Arrays.asList(
+                Arrays.asList(
+                        LocalDateTime.now().toString(),
+                        review.getEmail(),
+                        "Äänikirjabonus", "", "",
+                        review.getBookName(),
+                        review.getBookDuration(),
+                        review.getBookAuthors(), "",
+                        review.getReview(), "",
+                        review.getRating()
+                )
+        );
+
+        studiesSheetClient.addBookReview(values);
     }
 
     public List<Rateable> getCourses() throws IOException {
