@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class AudioBookReview {
     private String email;
     private String bookName;
-    private int bookDuration;
+    private String bookDuration;
     private String bookAuthors;
     private String review;
     private int rating;

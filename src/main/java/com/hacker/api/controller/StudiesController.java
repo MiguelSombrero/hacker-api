@@ -34,8 +34,9 @@ public class StudiesController {
 
     @PostMapping("/books/reviews")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addBookReview(@RequestBody AudioBookReview audioBookReview) throws IOException {
-        studiesService.addBookReview(audioBookReview);
+    public Review addBookReview(@RequestBody AudioBookReview audioBookReview) throws IOException {
+        Review result = studiesService.addBookReview(audioBookReview);
+        return result;
     }
 
     @GetMapping("/courses")

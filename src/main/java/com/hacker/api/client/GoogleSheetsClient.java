@@ -39,11 +39,17 @@ public class GoogleSheetsClient {
         return response;
     }
 
-    public void addValuesToSheet(String spreadsheetId, String range, ValueRange body) throws IOException {
-        AppendValuesResponse result = sheetsClient.spreadsheets()
+    public List<List<Object>> addValuesToSheet(String spreadsheetId, String range, ValueRange body) throws IOException {
+        List<List<Object>> response = sheetsClient.spreadsheets()
                 .values()
                 .append(spreadsheetId, range, body)
                 .setValueInputOption("RAW")
-                .execute();
+                .setIncludeValuesInResponse(true)
+                .execute()
+                .getUpdates()
+                .getUpdatedData()
+                .getValues();
+
+        return response;
     }
 }

@@ -30,8 +30,12 @@ public class StudiesSheetClient {
         return values;
     }
 
-    public void addBookReview(List<List<Object>> values) throws IOException {
+    public List<Object> addBookReview(List<List<Object>> values) throws IOException {
         ValueRange body = new ValueRange().setValues(values);
-        sheetsClient.addValuesToSheet(spreadsheetId, audioBooksRange, body);
+
+        List<List<Object>> bookReview = sheetsClient
+                .addValuesToSheet(spreadsheetId, audioBooksRange, body);
+
+        return bookReview.get(0);
     }
 }

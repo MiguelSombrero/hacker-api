@@ -47,8 +47,7 @@ public class StudiesService {
         return sortedBooks;
     }
 
-    public void addBookReview(AudioBookReview review) throws IOException {
-
+    public Review addBookReview(AudioBookReview review) throws IOException {
         List<List<Object>> values = Arrays.asList(
                 Arrays.asList(
                         LocalDateTime.now().toString(),
@@ -62,7 +61,8 @@ public class StudiesService {
                 )
         );
 
-        studiesSheetClient.addBookReview(values);
+        List<Object> bookReview = studiesSheetClient.addBookReview(values);
+        return parseBookReviewFromStudiesSheet(bookReview);
     }
 
     public List<Rateable> getCourses() throws IOException {
