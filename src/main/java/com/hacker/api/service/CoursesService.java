@@ -3,7 +3,8 @@ package com.hacker.api.service;
 import com.hacker.api.client.StudiesSheetClient;
 import com.hacker.api.domain.studies.*;
 import com.hacker.api.domain.Hacker;
-import com.hacker.api.parsers.StudiesSheetParser;
+import com.hacker.api.parsers.CoursesParser;
+import com.hacker.api.parsers.StudiesHackerParser;
 import com.hacker.api.reducers.RateableReducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,13 +30,16 @@ public class CoursesService {
     private RateableReducer rateableReducer;
 
     @Autowired
-    private StudiesSheetParser studiesSheetParser;
+    private CoursesParser coursesParser;
+
+    @Autowired
+    private StudiesHackerParser studiesHackerParser;
 
     public List<Rateable> getCourses() throws IOException {
         List<List<Object>> values = studiesSheetClient.getStudies();
 
         Map<Integer, Rateable> courses = values.stream()
-                .filter(studiesSheet -> studiesSheetParser.isWebCourse(studiesSheet))
+                .filter(studiesSheet -> coursesParser.isWebCourse(studiesSheet))
                 .map(this::parseCourseFromStudiesSheet)
                 .collect(groupingBy(Course::getId, reducing(null, rateableReducer.reduce())));
 
@@ -48,7 +52,7 @@ public class CoursesService {
         List<List<Object>> values = studiesSheetClient.getStudies();
 
         List<Review> reviews = values.stream()
-                .filter(row -> studiesSheetParser.isWebCourse(row))
+                .filter(row -> coursesParser.isWebCourse(row))
                 .map(this::parseCourseReviewFromStudiesSheet)
                 .sorted()
                 .collect(Collectors.toList());
@@ -57,20 +61,20 @@ public class CoursesService {
     }
 
     private Course parseCourseFromStudiesSheet(List<Object> studiesSheet) {
-        Hacker reviewer = studiesSheetParser.parseStudiesHacker(studiesSheet);
-        Review review = studiesSheetParser.parseReview(studiesSheet);
+        Hacker reviewer = studiesHackerParser.parseStudiesHacker(studiesSheet);
+        Review review = coursesParser.parseReview(studiesSheet);
         review.setReviewer(reviewer);
-        Course course = studiesSheetParser.parseWebCourse(studiesSheet);
+        Course course = coursesParser.parseWebCourse(studiesSheet);
         course.getReviews().add(review);
 
         return course;
     }
 
     private Review parseCourseReviewFromStudiesSheet(List<Object> studiesSheet) {
-        Hacker reviewer = studiesSheetParser.parseStudiesHacker(studiesSheet);
-        Course course = studiesSheetParser.parseWebCourse(studiesSheet);
+        Hacker reviewer = studiesHackerParser.parseStudiesHacker(studiesSheet);
+        Course course = coursesParser.parseWebCourse(studiesSheet);
 
-        Review review = studiesSheetParser.parseReview(studiesSheet);
+        Review review = coursesParser.parseReview(studiesSheet);
         review.setReviewer(reviewer);
         review.setCourse(course);
 

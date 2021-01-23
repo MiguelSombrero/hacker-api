@@ -3,7 +3,8 @@ package com.hacker.api.service;
 import com.hacker.api.client.StudiesSheetClient;
 import com.hacker.api.domain.Hacker;
 import com.hacker.api.domain.studies.*;
-import com.hacker.api.parsers.StudiesSheetParser;
+import com.hacker.api.parsers.BooksParser;
+import com.hacker.api.parsers.StudiesHackerParser;
 import com.hacker.api.reducers.RateableReducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,13 +32,16 @@ public class BooksService {
     private RateableReducer rateableReducer;
 
     @Autowired
-    private StudiesSheetParser studiesSheetParser;
+    private BooksParser booksParser;
+
+    @Autowired
+    private StudiesHackerParser studiesHackerParser;
 
     public List<Rateable> getBooks() throws IOException {
         List<List<Object>> values = studiesSheetClient.getStudies();
 
         Map<Integer, Rateable> books = values.stream()
-                .filter(studiesSheet -> studiesSheetParser.isBook(studiesSheet))
+                .filter(studiesSheet -> booksParser.isBook(studiesSheet))
                 .map(this::parseBookFromStudiesSheet)
                 .collect(groupingBy(Book::getId, reducing(null, rateableReducer.reduce())));
 
@@ -70,7 +74,7 @@ public class BooksService {
         List<List<Object>> values = studiesSheetClient.getStudies();
 
         List<Review> reviews = values.stream()
-                .filter(row -> studiesSheetParser.isBook(row))
+                .filter(row -> booksParser.isBook(row))
                 .map(this::parseBookReviewFromStudiesSheet)
                 .sorted()
                 .collect(Collectors.toList());
@@ -79,21 +83,21 @@ public class BooksService {
     }
 
     private Book parseBookFromStudiesSheet(List<Object> studiesSheet) {
-        Hacker reviewer = studiesSheetParser.parseStudiesHacker(studiesSheet);
-        Review review = studiesSheetParser.parseReview(studiesSheet);
+        Hacker reviewer = studiesHackerParser.parseStudiesHacker(studiesSheet);
+        Review review = booksParser.parseReview(studiesSheet);
         review.setReviewer(reviewer);
         review.setId(review.hashCode());
-        Book book = studiesSheetParser.parseBook(studiesSheet);
+        Book book = booksParser.parseBook(studiesSheet);
         book.getReviews().add(review);
 
         return book;
     }
 
     private Review parseBookReviewFromStudiesSheet(List<Object> studiesSheet) {
-        Hacker reviewer = studiesSheetParser.parseStudiesHacker(studiesSheet);
-        Book book = studiesSheetParser.parseBook(studiesSheet);
+        Hacker reviewer = studiesHackerParser.parseStudiesHacker(studiesSheet);
+        Book book = booksParser.parseBook(studiesSheet);
 
-        Review review = studiesSheetParser.parseReview(studiesSheet);
+        Review review = booksParser.parseReview(studiesSheet);
         review.setReviewer(reviewer);
         review.setBook(book);
 

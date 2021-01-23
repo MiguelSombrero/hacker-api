@@ -1,7 +1,5 @@
 package com.hacker.api.parsers;
 
-import com.hacker.api.domain.studies.Course;
-import com.hacker.api.domain.Hacker;
 import com.hacker.api.domain.studies.*;
 import org.apache.commons.text.WordUtils;
 import org.springframework.stereotype.Component;
@@ -10,45 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
-public class StudiesSheetParser extends SheetParserImpl {
-
-    private static final int first=0;
-    private static final int last=1;
-
-    public Hacker parseStudiesHacker(List<Object> studiesSheet) {
-        Hacker hacker;
-        String firstName = "";
-        String lastName = "";
-
-        try {
-            firstName = parseNamesFromList(studiesSheet, first);
-            lastName = parseNamesFromList(studiesSheet, last);
-
-        } catch (ArrayIndexOutOfBoundsException e) {
-            logger.info(String.format("Could not parse names from row %s", studiesSheet));
-        }
-
-        hacker=createHackerWithName(firstName, lastName);
-        return hacker;
-    }
-
-        private String parseNamesFromList(List<Object> studiesSheet, int whichName){
-            String email = getEmail(studiesSheet);
-            String[] parts = email.split("@");
-            String[] names = parts[0].split("\\.");
-
-            String name = WordUtils.capitalizeFully(names[whichName]);
-
-        return name;
-        }
-
-        private Hacker createHackerWithName(String firstName, String lastName){
-            Hacker hacker = new Hacker();
-            hacker.setFirstName(firstName);
-            hacker.setLastName(lastName);
-            hacker.setId(hacker.hashCode());
-            return hacker;
-        }
+public class BooksParser extends SheetParserImpl {
 
     public Book parseBook(List<Object> studiesSheet) {
         Book book = (isAudioBook(studiesSheet) ? 
@@ -80,17 +40,6 @@ public class StudiesSheetParser extends SheetParserImpl {
         return book;
     }
 
-    public Course parseWebCourse(List<Object> studiesSheet) {
-        String duration = getWebCourseDurationInHHMM(studiesSheet);
-
-        Course course = new Course();
-        course.setName(WordUtils.capitalizeFully(getWebCourseName(studiesSheet)));
-        course.setDuration(parseDuration(duration));
-        course.setId(course.hashCode());
-
-        return course;
-    }
-
     public Review parseReview(List<Object> studiesSheet) {
         Review review = null;
 
@@ -98,8 +47,6 @@ public class StudiesSheetParser extends SheetParserImpl {
             review = parseAudioBookReview(studiesSheet);
         } else if (isVisualBook(studiesSheet)) {
             review = parseVisualBookReview(studiesSheet);
-        } else if (isWebCourse(studiesSheet)) {
-            review = parseWebCourseReview(studiesSheet);
         }
 
         review.setCreated(getTimestamp(studiesSheet));
@@ -124,14 +71,6 @@ public class StudiesSheetParser extends SheetParserImpl {
         return review;
     }
 
-    public Review parseWebCourseReview(List<Object> studiesSheet) {
-        Review review = new Review();
-        review.setReview(getWebCourseReview(studiesSheet));
-        review.setRating(getWebCourseRating(studiesSheet));
-
-        return review;
-    }
-
     private int parseDuration(String duration) {
         int hours = 0;
         int minutes = 0;
@@ -150,10 +89,6 @@ public class StudiesSheetParser extends SheetParserImpl {
         return hours * 60 + minutes;
     }
 
-    public boolean isBookOrWebCourse(List<Object> studiesSheet) {
-        return isAudioBook(studiesSheet) || isVisualBook(studiesSheet) || isWebCourse(studiesSheet);
-    }
-
     public boolean isBook(List<Object> studiesSheet) {
         return isAudioBook(studiesSheet) || isVisualBook(studiesSheet);
     }
@@ -164,10 +99,6 @@ public class StudiesSheetParser extends SheetParserImpl {
 
     public boolean isVisualBook(List<Object> studiesSheet) {
         return isOfType(studiesSheet, "Kirjabonus");
-    }
-
-    public boolean isWebCourse(List<Object> studiesSheet) {
-        return isOfType(studiesSheet, "Verkkokurssibonus");
     }
 
     private boolean isOfType(List<Object> studiesSheet, String type) {
@@ -181,10 +112,6 @@ public class StudiesSheetParser extends SheetParserImpl {
     }
 
     private LocalDateTime getTimestamp(List<Object> studiesSheet) { return parseDateTimeValue(studiesSheet, 0); }
-
-    private String getEmail(List<Object> studiesSheet) {
-        return parseStringValue(studiesSheet, 1);
-    }
 
     public String getStudyType(List<Object> studiesSheet) {
         return parseStringValue(studiesSheet, 2);
@@ -230,22 +157,6 @@ public class StudiesSheetParser extends SheetParserImpl {
 
     private int getVisualBookRating(List<Object> studiesSheet) {
         return parseIntegerValue(studiesSheet, 18);
-    }
-
-    private String getWebCourseName(List<Object> studiesSheet) {
-        return parseStringValue(studiesSheet, 22);
-    }
-
-    private String getWebCourseDurationInHHMM(List<Object> studiesSheet) {
-        return parseStringValue(studiesSheet, 23);
-    }
-
-    private String getWebCourseReview(List<Object> studiesSheet) {
-        return parseStringValue(studiesSheet, 25);
-    }
-
-    private int getWebCourseRating(List<Object> studiesSheet) {
-        return parseIntegerValue(studiesSheet, 27);
     }
 
 }
