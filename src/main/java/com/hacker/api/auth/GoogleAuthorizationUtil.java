@@ -18,7 +18,7 @@ public class GoogleAuthorizationUtil {
                     .getResourceAsStream("/google-credentials.json");
 
             GoogleCredential credential = GoogleCredential.fromStream(in)
-                    .createScoped(Collections.singleton(SheetsScopes.SPREADSHEETS_READONLY));
+                    .createScoped(Collections.singleton(SheetsScopes.SPREADSHEETS));
 
             return credential;
         } catch (Exception e) {

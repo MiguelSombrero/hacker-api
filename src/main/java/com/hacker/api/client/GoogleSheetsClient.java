@@ -1,6 +1,7 @@
 package com.hacker.api.client;
 
 import com.google.api.services.sheets.v4.Sheets;
+import com.google.api.services.sheets.v4.model.AppendValuesResponse;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,20 @@ public class GoogleSheetsClient {
                 .setRanges(ranges)
                 .execute()
                 .getValueRanges();
+
+        return response;
+    }
+
+    public List<List<Object>> addValuesToSheet(String spreadsheetId, String range, ValueRange body) throws IOException {
+        List<List<Object>> response = sheetsClient.spreadsheets()
+                .values()
+                .append(spreadsheetId, range, body)
+                .setValueInputOption("RAW")
+                .setIncludeValuesInResponse(true)
+                .execute()
+                .getUpdates()
+                .getUpdatedData()
+                .getValues();
 
         return response;
     }
