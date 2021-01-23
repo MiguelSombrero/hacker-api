@@ -1,10 +1,7 @@
 package com.hacker.api.utils;
 
 import com.hacker.api.domain.Hacker;
-import com.hacker.api.domain.studies.AudioBook;
-import com.hacker.api.domain.studies.BookType;
-import com.hacker.api.domain.studies.VisualBook;
-import com.hacker.api.domain.studies.Review;
+import com.hacker.api.domain.studies.*;
 import com.hacker.api.domain.projects.Project;
 import com.hacker.api.domain.projects.Skill;
 
@@ -41,6 +38,14 @@ public class DomainObjectFactory {
         review.setReview(text);
 
         return review;
+    }
+
+    public static Course getCourse(String name) {
+        Course course = new Course();
+        course.setName(name);
+        course.setId(course.hashCode());
+
+        return course;
     }
 
     public static VisualBook getPaperBook(String name) {

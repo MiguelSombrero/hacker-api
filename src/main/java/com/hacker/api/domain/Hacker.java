@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Hacker {
     private int id;
+    private String email;
     private String firstName;
     private String lastName;
 

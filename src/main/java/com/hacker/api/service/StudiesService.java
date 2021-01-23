@@ -47,15 +47,17 @@ public class StudiesService {
         return sortedBooks;
     }
 
-    public Review addBookReview(AudioBookReview review) throws IOException {
+    public Review addBookReview(Review review) throws IOException {
+        AudioBook book = (AudioBook) review.getBook();
+
         List<List<Object>> values = Arrays.asList(
                 Arrays.asList(
                         LocalDateTime.now().toString(),
-                        review.getEmail(),
+                        review.getReviewer().getEmail(),
                         "Äänikirjabonus", "", "",
-                        review.getBookName(),
-                        review.getBookDuration(),
-                        review.getBookAuthors(), "",
+                        book.getName(),
+                        book.getDuration(),
+                        book.getAuthors(), "",
                         review.getReview(), "",
                         review.getRating()
                 )

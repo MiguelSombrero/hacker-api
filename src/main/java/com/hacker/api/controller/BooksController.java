@@ -1,7 +1,7 @@
 package com.hacker.api.controller;
 
-import com.hacker.api.domain.studies.*;
-import com.hacker.api.parsers.SheetParserImpl;
+import com.hacker.api.domain.studies.Rateable;
+import com.hacker.api.domain.studies.Review;
 import com.hacker.api.service.StudiesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +14,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/studies")
-public class StudiesController {
-    protected static Logger logger = LoggerFactory.getLogger(StudiesController.class);
+public class BooksController {
+    protected static Logger logger = LoggerFactory.getLogger(BooksController.class);
 
     @Autowired
     private StudiesService studiesService;
@@ -34,20 +34,8 @@ public class StudiesController {
 
     @PostMapping("/books/reviews")
     @ResponseStatus(HttpStatus.CREATED)
-    public Review addBookReview(@RequestBody AudioBookReview audioBookReview) throws IOException {
-        Review result = studiesService.addBookReview(audioBookReview);
-        return result;
-    }
-
-    @GetMapping("/courses")
-    public List<Rateable> getCourses() throws IOException {
-        List<Rateable> result = studiesService.getCourses();
-        return result;
-    }
-
-    @GetMapping("/courses/reviews")
-    public List<Review> getCourseReviews() throws IOException {
-        List<Review> result = studiesService.getCourseReviews();
+    public Review addBookReview(@RequestBody Review review) throws IOException {
+        Review result = studiesService.addBookReview(review);
         return result;
     }
 }
