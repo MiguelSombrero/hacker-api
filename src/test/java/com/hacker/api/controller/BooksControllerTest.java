@@ -2,10 +2,10 @@ package com.hacker.api.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hacker.api.domain.studies.AudioBookReview;
 import com.hacker.api.domain.studies.Book;
 import com.hacker.api.domain.studies.Review;
-import com.hacker.api.service.StudiesService;
+import com.hacker.api.service.BooksService;
+import com.hacker.api.service.CoursesService;
 import com.hacker.api.utils.DomainObjectFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +38,7 @@ public class BooksControllerTest {
     private Review review2;
 
     @MockBean
-    private StudiesService studiesService;
+    private BooksService booksService;
 
     @Autowired
     private WebApplicationContext webAppContext;
@@ -68,7 +68,7 @@ public class BooksControllerTest {
 
     @Test
     public void getBooksWhenEverythingOK() throws Exception {
-        Mockito.when(studiesService.getBooks()).thenReturn(Arrays.asList(book1, book2));
+        Mockito.when(booksService.getBooks()).thenReturn(Arrays.asList(book1, book2));
 
         MvcResult result = mockMvc.perform(get("/studies/books"))
             .andExpect(status().isOk())
@@ -80,7 +80,7 @@ public class BooksControllerTest {
 
     @Test
     public void getBooksWhenPathDoesNotExist() throws Exception {
-        Mockito.when(studiesService.getBooks()).thenReturn(Arrays.asList(book1, book2));
+        Mockito.when(booksService.getBooks()).thenReturn(Arrays.asList(book1, book2));
 
         MvcResult result = mockMvc.perform(get("/studies/books/notexists"))
                 .andExpect(status().isNotFound())
@@ -89,7 +89,7 @@ public class BooksControllerTest {
 
     @Test
     public void getBooksWhenTimeOutException() throws Exception {
-        Mockito.when(studiesService.getBooks()).thenThrow(SocketTimeoutException.class);
+        Mockito.when(booksService.getBooks()).thenThrow(SocketTimeoutException.class);
 
         MvcResult result = mockMvc.perform(get("/studies/books"))
                 .andExpect(status().is5xxServerError())
@@ -98,7 +98,7 @@ public class BooksControllerTest {
 
     @Test
     public void getBooksWhenIndexOutOfBoundsException() throws Exception {
-        Mockito.when(studiesService.getBooks()).thenThrow(IndexOutOfBoundsException.class);
+        Mockito.when(booksService.getBooks()).thenThrow(IndexOutOfBoundsException.class);
 
         MvcResult result = mockMvc.perform(get("/studies/books"))
                 .andExpect(status().is5xxServerError())
@@ -107,7 +107,7 @@ public class BooksControllerTest {
 
     @Test
     public void getBooksWhenIndexIllegalArgumentException() throws Exception {
-        Mockito.when(studiesService.getBooks()).thenThrow(IllegalArgumentException.class);
+        Mockito.when(booksService.getBooks()).thenThrow(IllegalArgumentException.class);
 
         MvcResult result = mockMvc.perform(get("/studies/books"))
                 .andExpect(status().isBadRequest())
@@ -116,7 +116,7 @@ public class BooksControllerTest {
 
     @Test
     public void getBooksWhenIOException() throws Exception {
-        Mockito.when(studiesService.getBooks()).thenThrow(IOException.class);
+        Mockito.when(booksService.getBooks()).thenThrow(IOException.class);
 
         MvcResult result = mockMvc.perform(get("/studies/books"))
                 .andExpect(status().is5xxServerError())
@@ -125,7 +125,7 @@ public class BooksControllerTest {
 
     @Test
     public void getBookReviewsWhenEverythingOK() throws Exception {
-        Mockito.when(studiesService.getBookReviews()).thenReturn(Arrays.asList(review1, review2));
+        Mockito.when(booksService.getBookReviews()).thenReturn(Arrays.asList(review1, review2));
 
         MvcResult result = mockMvc.perform(get("/studies/books/reviews"))
                 .andExpect(status().isOk())
@@ -137,7 +137,7 @@ public class BooksControllerTest {
 
     @Test
     public void getBookReviewsWhenPathDoesNotExist() throws Exception {
-        Mockito.when(studiesService.getBookReviews()).thenReturn(Arrays.asList(review1, review2));
+        Mockito.when(booksService.getBookReviews()).thenReturn(Arrays.asList(review1, review2));
 
         MvcResult result = mockMvc.perform(get("/studies/books/reviews/notexists"))
                 .andExpect(status().isNotFound())
@@ -146,7 +146,7 @@ public class BooksControllerTest {
 
     @Test
     public void getBookReviewsWhenTimeOutException() throws Exception {
-        Mockito.when(studiesService.getBookReviews()).thenThrow(SocketTimeoutException.class);
+        Mockito.when(booksService.getBookReviews()).thenThrow(SocketTimeoutException.class);
 
         MvcResult result = mockMvc.perform(get("/studies/books/reviews"))
                 .andExpect(status().is5xxServerError())
@@ -155,7 +155,7 @@ public class BooksControllerTest {
 
     @Test
     public void getBookReviewsWhenIndexOutOfBoundsException() throws Exception {
-        Mockito.when(studiesService.getBookReviews()).thenThrow(IndexOutOfBoundsException.class);
+        Mockito.when(booksService.getBookReviews()).thenThrow(IndexOutOfBoundsException.class);
 
         MvcResult result = mockMvc.perform(get("/studies/books/reviews"))
                 .andExpect(status().is5xxServerError())
@@ -164,7 +164,7 @@ public class BooksControllerTest {
 
     @Test
     public void getBookReviewsWhenIndexIllegalArgumentException() throws Exception {
-        Mockito.when(studiesService.getBookReviews()).thenThrow(IllegalArgumentException.class);
+        Mockito.when(booksService.getBookReviews()).thenThrow(IllegalArgumentException.class);
 
         MvcResult result = mockMvc.perform(get("/studies/books/reviews"))
                 .andExpect(status().isBadRequest())
@@ -173,7 +173,7 @@ public class BooksControllerTest {
 
     @Test
     public void getBookReviewsWhenIOException() throws Exception {
-        Mockito.when(studiesService.getBookReviews()).thenThrow(IOException.class);
+        Mockito.when(booksService.getBookReviews()).thenThrow(IOException.class);
 
         MvcResult result = mockMvc.perform(get("/studies/books/reviews"))
                 .andExpect(status().is5xxServerError())
@@ -182,7 +182,7 @@ public class BooksControllerTest {
 
     @Test
     public void postBookReviewWhenEverythingOK() throws Exception {
-        Mockito.when(studiesService.addBookReview(any(Review.class))).thenAnswer(a -> a.getArguments()[0]);
+        Mockito.when(booksService.addBookReview(any(Review.class))).thenAnswer(a -> a.getArguments()[0]);
 
         String body = objectAsString(this.review1);
 
@@ -198,7 +198,7 @@ public class BooksControllerTest {
 
     @Test
     public void postBookReviewWhenBodyIsIncorrect() throws Exception {
-        Mockito.when(studiesService.addBookReview(any(Review.class))).thenAnswer(a -> a.getArguments()[0]);
+        Mockito.when(booksService.addBookReview(any(Review.class))).thenAnswer(a -> a.getArguments()[0]);
 
         MvcResult result = mockMvc.perform(post("/studies/books/reviews")
                 .contentType("application/json")
@@ -209,7 +209,7 @@ public class BooksControllerTest {
 
     @Test
     public void postBookReviewsWhenPathDoesNotExist() throws Exception {
-        Mockito.when(studiesService.addBookReview(any(Review.class))).thenAnswer(a -> a.getArguments()[0]);
+        Mockito.when(booksService.addBookReview(any(Review.class))).thenAnswer(a -> a.getArguments()[0]);
 
         MvcResult result = mockMvc.perform(post("/studies/books/reviews/notexists"))
                 .andExpect(status().isNotFound())
@@ -218,7 +218,7 @@ public class BooksControllerTest {
 
     @Test
     public void postBookReviewsWhenTimeOutException() throws Exception {
-        Mockito.when(studiesService.addBookReview(any(Review.class))).thenThrow(SocketTimeoutException.class);
+        Mockito.when(booksService.addBookReview(any(Review.class))).thenThrow(SocketTimeoutException.class);
 
         String body = objectAsString(this.review1);
 
@@ -231,7 +231,7 @@ public class BooksControllerTest {
 
     @Test
     public void postBookReviewsWhenIndexOutOfBoundsException() throws Exception {
-        Mockito.when(studiesService.addBookReview(any(Review.class))).thenThrow(IndexOutOfBoundsException.class);
+        Mockito.when(booksService.addBookReview(any(Review.class))).thenThrow(IndexOutOfBoundsException.class);
 
         String body = objectAsString(this.review1);
 
@@ -244,7 +244,7 @@ public class BooksControllerTest {
 
     @Test
     public void postBookReviewsWhenIndexIllegalArgumentException() throws Exception {
-        Mockito.when(studiesService.addBookReview(any(Review.class))).thenThrow(IllegalArgumentException.class);
+        Mockito.when(booksService.addBookReview(any(Review.class))).thenThrow(IllegalArgumentException.class);
 
         String body = objectAsString(this.review1);
 
@@ -257,7 +257,7 @@ public class BooksControllerTest {
 
     @Test
     public void postBookReviewsWhenIOException() throws Exception {
-        Mockito.when(studiesService.addBookReview(any(Review.class))).thenThrow(IOException.class);
+        Mockito.when(booksService.addBookReview(any(Review.class))).thenThrow(IOException.class);
 
         String body = objectAsString(this.review1);
 

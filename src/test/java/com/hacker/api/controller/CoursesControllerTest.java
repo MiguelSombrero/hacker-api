@@ -2,7 +2,7 @@ package com.hacker.api.controller;
 
 import com.hacker.api.domain.studies.Course;
 import com.hacker.api.domain.studies.Review;
-import com.hacker.api.service.StudiesService;
+import com.hacker.api.service.CoursesService;
 import com.hacker.api.utils.DomainObjectFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ public class CoursesControllerTest {
     private Review review2;
 
     @MockBean
-    private StudiesService studiesService;
+    private CoursesService coursesService;
 
     @Autowired
     private WebApplicationContext webAppContext;
@@ -65,7 +65,7 @@ public class CoursesControllerTest {
 
     @Test
     public void getCoursesWhenEverythingOK() throws Exception {
-        Mockito.when(studiesService.getCourses()).thenReturn(Arrays.asList(course1, course2));
+        Mockito.when(coursesService.getCourses()).thenReturn(Arrays.asList(course1, course2));
 
         MvcResult result = mockMvc.perform(get("/studies/courses"))
             .andExpect(status().isOk())
@@ -77,7 +77,7 @@ public class CoursesControllerTest {
 
     @Test
     public void getCoursessWhenPathDoesNotExist() throws Exception {
-        Mockito.when(studiesService.getCourses()).thenReturn(Arrays.asList(course1, course2));
+        Mockito.when(coursesService.getCourses()).thenReturn(Arrays.asList(course1, course2));
 
         MvcResult result = mockMvc.perform(get("/studies/courses/notexists"))
                 .andExpect(status().isNotFound())
@@ -86,7 +86,7 @@ public class CoursesControllerTest {
 
     @Test
     public void getCoursesWhenTimeOutException() throws Exception {
-        Mockito.when(studiesService.getCourses()).thenThrow(SocketTimeoutException.class);
+        Mockito.when(coursesService.getCourses()).thenThrow(SocketTimeoutException.class);
 
         MvcResult result = mockMvc.perform(get("/studies/courses"))
                 .andExpect(status().is5xxServerError())
@@ -95,7 +95,7 @@ public class CoursesControllerTest {
 
     @Test
     public void getCoursesWhenIndexOutOfBoundsException() throws Exception {
-        Mockito.when(studiesService.getCourses()).thenThrow(IndexOutOfBoundsException.class);
+        Mockito.when(coursesService.getCourses()).thenThrow(IndexOutOfBoundsException.class);
 
         MvcResult result = mockMvc.perform(get("/studies/courses"))
                 .andExpect(status().is5xxServerError())
@@ -104,7 +104,7 @@ public class CoursesControllerTest {
 
     @Test
     public void getCoursessWhenIndexIllegalArgumentException() throws Exception {
-        Mockito.when(studiesService.getCourses()).thenThrow(IllegalArgumentException.class);
+        Mockito.when(coursesService.getCourses()).thenThrow(IllegalArgumentException.class);
 
         MvcResult result = mockMvc.perform(get("/studies/courses"))
                 .andExpect(status().isBadRequest())
@@ -113,7 +113,7 @@ public class CoursesControllerTest {
 
     @Test
     public void getCoursesWhenIOException() throws Exception {
-        Mockito.when(studiesService.getCourses()).thenThrow(IOException.class);
+        Mockito.when(coursesService.getCourses()).thenThrow(IOException.class);
 
         MvcResult result = mockMvc.perform(get("/studies/courses"))
                 .andExpect(status().is5xxServerError())
@@ -122,7 +122,7 @@ public class CoursesControllerTest {
 
     @Test
     public void getCourseReviewsWhenEverythingOK() throws Exception {
-        Mockito.when(studiesService.getCourseReviews()).thenReturn(Arrays.asList(review1, review2));
+        Mockito.when(coursesService.getCourseReviews()).thenReturn(Arrays.asList(review1, review2));
 
         MvcResult result = mockMvc.perform(get("/studies/courses/reviews"))
                 .andExpect(status().isOk())
@@ -134,7 +134,7 @@ public class CoursesControllerTest {
 
     @Test
     public void getCourseReviewsWhenPathDoesNotExist() throws Exception {
-        Mockito.when(studiesService.getCourseReviews()).thenReturn(Arrays.asList(review1, review2));
+        Mockito.when(coursesService.getCourseReviews()).thenReturn(Arrays.asList(review1, review2));
 
         MvcResult result = mockMvc.perform(get("/studies/courses/reviews/notexists"))
                 .andExpect(status().isNotFound())
@@ -143,7 +143,7 @@ public class CoursesControllerTest {
 
     @Test
     public void getCourseReviewsWhenTimeOutException() throws Exception {
-        Mockito.when(studiesService.getCourseReviews()).thenThrow(SocketTimeoutException.class);
+        Mockito.when(coursesService.getCourseReviews()).thenThrow(SocketTimeoutException.class);
 
         MvcResult result = mockMvc.perform(get("/studies/courses/reviews"))
                 .andExpect(status().is5xxServerError())
@@ -152,7 +152,7 @@ public class CoursesControllerTest {
 
     @Test
     public void getCourseReviewsWhenIndexOutOfBoundsException() throws Exception {
-        Mockito.when(studiesService.getCourseReviews()).thenThrow(IndexOutOfBoundsException.class);
+        Mockito.when(coursesService.getCourseReviews()).thenThrow(IndexOutOfBoundsException.class);
 
         MvcResult result = mockMvc.perform(get("/studies/courses/reviews"))
                 .andExpect(status().is5xxServerError())
@@ -161,7 +161,7 @@ public class CoursesControllerTest {
 
     @Test
     public void getCourseReviewsWhenIndexIllegalArgumentException() throws Exception {
-        Mockito.when(studiesService.getCourseReviews()).thenThrow(IllegalArgumentException.class);
+        Mockito.when(coursesService.getCourseReviews()).thenThrow(IllegalArgumentException.class);
 
         MvcResult result = mockMvc.perform(get("/studies/courses/reviews"))
                 .andExpect(status().isBadRequest())
@@ -170,7 +170,7 @@ public class CoursesControllerTest {
 
     @Test
     public void getCourseReviewsWhenIOException() throws Exception {
-        Mockito.when(studiesService.getCourseReviews()).thenThrow(IOException.class);
+        Mockito.when(coursesService.getCourseReviews()).thenThrow(IOException.class);
 
         MvcResult result = mockMvc.perform(get("/studies/courses/reviews"))
                 .andExpect(status().is5xxServerError())

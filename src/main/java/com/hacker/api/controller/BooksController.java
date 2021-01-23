@@ -2,7 +2,7 @@ package com.hacker.api.controller;
 
 import com.hacker.api.domain.studies.Rateable;
 import com.hacker.api.domain.studies.Review;
-import com.hacker.api.service.StudiesService;
+import com.hacker.api.service.BooksService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,24 +18,24 @@ public class BooksController {
     protected static Logger logger = LoggerFactory.getLogger(BooksController.class);
 
     @Autowired
-    private StudiesService studiesService;
+    private BooksService booksService;
 
     @GetMapping("/books")
     public List<Rateable> getBooks() throws IOException {
-        List<Rateable> result = studiesService.getBooks();
+        List<Rateable> result = booksService.getBooks();
         return result;
     }
 
     @GetMapping("/books/reviews")
     public List<Review> getBookReviews() throws IOException {
-        List<Review> result = studiesService.getBookReviews();
+        List<Review> result = booksService.getBookReviews();
         return result;
     }
 
     @PostMapping("/books/reviews")
     @ResponseStatus(HttpStatus.CREATED)
     public Review addBookReview(@RequestBody Review review) throws IOException {
-        Review result = studiesService.addBookReview(review);
+        Review result = booksService.addBookReview(review);
         return result;
     }
 }
