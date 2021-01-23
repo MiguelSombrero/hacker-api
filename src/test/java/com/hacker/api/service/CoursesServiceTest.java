@@ -1,7 +1,6 @@
 package com.hacker.api.service;
 
 import com.hacker.api.client.GoogleSheetsClient;
-import com.hacker.api.domain.studies.Book;
 import com.hacker.api.domain.studies.Course;
 import com.hacker.api.domain.studies.Rateable;
 import com.hacker.api.domain.studies.Review;
@@ -24,14 +23,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 
 @SpringBootTest
-public class StudiesServiceTest {
-    protected static Logger logger = LoggerFactory.getLogger(StudiesServiceTest.class);
+public class CoursesServiceTest {
+    protected static Logger logger = LoggerFactory.getLogger(CoursesServiceTest.class);
 
     @MockBean
     private GoogleSheetsClient sheetsClient;
 
     @Autowired
-    private StudiesService studiesService;
+    private CoursesService coursesService;
 
     @BeforeEach
     public void setUp() throws IOException {
@@ -80,58 +79,14 @@ public class StudiesServiceTest {
     }
 
     @Test
-    public void getBooksFilterBooksCorrectly() throws IOException {
-        List<Rateable> books = studiesService.getBooks();
-        assertEquals(5, books.size());
-    }
-
-    @Test
-    public void getBooksParsesAndMergesBooksCorrectly() throws IOException {
-        List<Rateable> books = studiesService.getBooks();
-
-        Book yksikkotestausPaper = books.stream()
-                .map(rateable -> (Book) rateable)
-                .filter(book -> filterBookByNameAndType(book, "Yksikkötestaus", "Paperiversio"))
-                .findFirst().get();
-
-        assertEquals("Manninen, Olli-Pekka", yksikkotestausPaper.getAuthors());
-        assertEquals(3.3, yksikkotestausPaper.getRating());
-        assertEquals(3, yksikkotestausPaper.getReviews().size());
-
-        Review review = yksikkotestausPaper.getReviews().stream()
-                .filter(rev -> rev.getRating() == 4)
-                .findFirst().get();
-
-        assertEquals("2020-06-17T20:11:56", review.getCreated().toString());
-        assertEquals("Ihan hyvä kirja", review.getReview());
-        assertEquals("Miika", review.getReviewer().getFirstname());
-        assertEquals("Somero", review.getReviewer().getLastname());
-        assertEquals(null, review.getBook());
-        assertEquals(null, review.getCourse());
-    }
-
-    @Test
-    public void getBooksSortsBooksByRating() throws IOException {
-        List<Book> books = studiesService.getBooks()
-                .stream().map(rateable -> (Book) rateable)
-                .collect(Collectors.toList());
-
-        assertEquals("Clean Code", books.get(0).getName()); // 5
-        assertEquals("Tunne Lukkosi", books.get(1).getName()); // 4
-        assertEquals("Yksikkötestaus", books.get(2).getName()); // 3 sähköinen
-        assertEquals("Yksikkötestaus", books.get(3).getName()); // 3.3 paperi
-        assertEquals("Geenin Itsekkyys", books.get(4).getName()); // 2
-    }
-
-    @Test
     public void getCoursesFilterCoursesCorrectly() throws IOException {
-        List<Rateable> course = studiesService.getCourses();
+        List<Rateable> course = coursesService.getCourses();
         assertEquals(2, course.size());
     }
 
     @Test
     public void getCoursesParsesAndMergesBooksCorrectly() throws IOException {
-        List<Rateable> courses = studiesService.getCourses();
+        List<Rateable> courses = coursesService.getCourses();
 
         Course modernReact = courses.stream()
                 .map(rateable -> (Course) rateable)
@@ -148,15 +103,15 @@ public class StudiesServiceTest {
 
         assertEquals("2019-06-20T11:11:56", review.getCreated().toString());
         assertEquals("Hieno kurssi", review.getReview());
-        assertEquals("Miika", review.getReviewer().getFirstname());
-        assertEquals("Somero", review.getReviewer().getLastname());
+        assertEquals("Miika", review.getReviewer().getFirstName());
+        assertEquals("Somero", review.getReviewer().getLastName());
         assertEquals(null, review.getBook());
         assertEquals(null, review.getCourse());
     }
 
     @Test
     public void getCoursesSortsCoursesByRating() throws IOException {
-        List<Course> courses = studiesService.getCourses()
+        List<Course> courses = coursesService.getCourses()
                 .stream().map(rateable -> (Course) rateable)
                 .collect(Collectors.toList());
 
@@ -165,65 +120,25 @@ public class StudiesServiceTest {
     }
 
     @Test
-    public void getBookReviewsFilterBooksCorrectly() throws IOException {
-        List<Review> reviews = studiesService.getBookReviews();
-        assertEquals(8, reviews.size());
-    }
-
-    @Test
-    public void getCourseReviewsFilterBooksCorrectly() throws IOException {
-        List<Review> reviews = studiesService.getCourseReviews();
-        assertEquals(3, reviews.size());
-    }
-
-    @Test
-    public void getBookReviewsSortsReviewsByCreated() throws IOException {
-        List<Review> reviews = studiesService.getBookReviews();
-
-        assertEquals("2021-01-15T20:11:56", reviews.get(0).getCreated().toString());
-        assertEquals("2020-06-22T20:11:56", reviews.get(1).getCreated().toString());
-        assertEquals("2020-06-17T20:11:56", reviews.get(2).getCreated().toString());
-        assertEquals("2019-08-17T20:11:56", reviews.get(3).getCreated().toString());
-        assertEquals("2019-07-17T20:11:56", reviews.get(4).getCreated().toString());
-    }
-
-    @Test
     public void getCourseReviewsSortsReviewsByCreated() throws IOException {
-        List<Review> reviews = studiesService.getCourseReviews();
+        List<Review> reviews = coursesService.getCourseReviews();
         assertEquals("2019-06-20T20:11:56", reviews.get(0).getCreated().toString());
         assertEquals("2019-06-20T11:11:56", reviews.get(1).getCreated().toString());
         assertEquals("2019-06-17T20:11:56", reviews.get(2).getCreated().toString());
     }
 
     @Test
-    public void getBookReviewsParsesBookReviewCorrectly() throws IOException {
-        List<Review> reviews = studiesService.getBookReviews();
-
-        Review review = reviews.stream()
-                .filter(rev -> rev.getBook().getName().equals("Clean Code"))
-                .findFirst().get();
-
-        assertEquals("Klassikko!", review.getReview());
-        assertEquals("Jukka", review.getReviewer().getFirstname());
-        assertEquals("Jukkanen", review.getReviewer().getLastname());
-        assertEquals(null, review.getCourse());
-    }
-
-    @Test
     public void getCourseReviewsParsesCourseReviewCorrectly() throws IOException {
-        List<Review> reviews = studiesService.getCourseReviews();
+        List<Review> reviews = coursesService.getCourseReviews();
 
         Review review = reviews.stream()
                 .filter(rev -> rev.getCourse().getName().equals("Scrum Mastery"))
                 .findFirst().get();
 
         assertEquals("No joo", review.getReview());
-        assertEquals("Miika", review.getReviewer().getFirstname());
-        assertEquals("Somero", review.getReviewer().getLastname());
+        assertEquals("Miika", review.getReviewer().getFirstName());
+        assertEquals("Somero", review.getReviewer().getLastName());
         assertEquals(null, review.getBook());
     }
 
-    private boolean filterBookByNameAndType(Book book, String name, String type) {
-        return book.getName().equals(name) && book.getType().getName().equals(type);
-    }
 }

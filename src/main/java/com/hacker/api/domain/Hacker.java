@@ -15,8 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 public class Hacker {
     private int id;
-    private String firstname;
-    private String lastname;
+    private String email;
+    private String firstName;
+    private String lastName;
 
     @EqualsAndHashCode.Exclude
     private List<Skill> skills = new ArrayList<>();

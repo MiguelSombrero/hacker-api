@@ -5,34 +5,24 @@ import com.hacker.api.utils.DomainObjectFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.OptionalInt;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 public class RateableTest extends BaseDomainTest {
 
+    Review review1, review2, review3, review4, review5;
+
     @Test
     public void calculatesRatingRightWhenResultIsInteger() {
-        Review review1 = DomainObjectFactory.getReview("Pretty good book");
-        review1.setRating(3);
+        setReviewRatings(3,5,5,5,2);
 
-        Review review2 = DomainObjectFactory.getReview("Could be worse");
-        review2.setRating(5);
-
-        Review review3 = DomainObjectFactory.getReview("Seen better");
-        review3.setRating(5);
-
-        Review review4 = DomainObjectFactory.getReview("Not my book");
-        review4.setRating(5);
-
-        Review review5 = DomainObjectFactory.getReview("OK");
-        review5.setRating(2);
-
-        VisualBook book = DomainObjectFactory.getPaperBook("Apocalypse Now");
-        book.getReviews().add(review1);
-        book.getReviews().add(review2);
-        book.getReviews().add(review3);
-        book.getReviews().add(review4);
-        book.getReviews().add(review5);
+        VisualBook book = getDefaultBook();
+        addReviews(book);
 
         Rateable.calculateRatingAndReturn(book);
 
@@ -41,27 +31,10 @@ public class RateableTest extends BaseDomainTest {
 
     @Test
     public void calculatesRatingRightWhenContainsZeros() {
-        Review review1 = DomainObjectFactory.getReview("Pretty good book");
-        review1.setRating(3);
+        setReviewRatings(3,4,0,0,2);
 
-        Review review2 = DomainObjectFactory.getReview("Could be worse");
-        review2.setRating(4);
-
-        Review review3 = DomainObjectFactory.getReview("Seen better");
-        review3.setRating(0);
-
-        Review review4 = DomainObjectFactory.getReview("Not my book");
-        review4.setRating(0);
-
-        Review review5 = DomainObjectFactory.getReview("OK");
-        review5.setRating(2);
-
-        VisualBook book = DomainObjectFactory.getPaperBook("Apocalypse Now");
-        book.getReviews().add(review1);
-        book.getReviews().add(review2);
-        book.getReviews().add(review3);
-        book.getReviews().add(review4);
-        book.getReviews().add(review5);
+        VisualBook book = getDefaultBook();
+        addReviews(book);
 
         Rateable.calculateRatingAndReturn(book);
 
@@ -70,15 +43,10 @@ public class RateableTest extends BaseDomainTest {
 
     @Test
     public void calculatesRatingRightWhenFractions() {
-        Review review1 = DomainObjectFactory.getReview("Pretty good book");
-        review1.setRating(4);
+        setReviewRatings(4,5);
 
-        Review review2 = DomainObjectFactory.getReview("Could be worse");
-        review2.setRating(5);
-
-        VisualBook book = DomainObjectFactory.getPaperBook("Apocalypse Now");
-        book.getReviews().add(review1);
-        book.getReviews().add(review2);
+        VisualBook book = getDefaultBook();
+        addReviews(book);
 
         Rateable.calculateRatingAndReturn(book);
 
@@ -87,22 +55,53 @@ public class RateableTest extends BaseDomainTest {
 
     @Test
     public void roundsRatingRightWhenIrrationalNumber() {
-        Review review1 = DomainObjectFactory.getReview("Pretty good book");
-        review1.setRating(4);
+        setReviewRatings(4,3,3);
 
-        Review review2 = DomainObjectFactory.getReview("Could be worse");
-        review2.setRating(3);
-
-        Review review3 = DomainObjectFactory.getReview("OK");
-        review3.setRating(3);
-
-        VisualBook book = DomainObjectFactory.getPaperBook("Apocalypse Now");
-        book.getReviews().add(review1);
-        book.getReviews().add(review2);
-        book.getReviews().add(review3);
+        VisualBook book = getDefaultBook();
+        addReviews(book);
 
         Rateable.calculateRatingAndReturn(book);
 
         assertEquals(3.3, book.getRating(), 0.01);
+    }
+
+    private void setReviewRatings(int rating1, int rating2, int rating3){
+        setReviewRatings(rating1, rating2, rating3, 0, 0);
+    }
+
+    private void setReviewRatings(int rating1, int rating2){
+        setReviewRatings(rating1, rating2, 0, 0, 0);
+    }
+
+    private void setReviewRatings(int rating1, int rating2, int rating3, int rating4, int rating5){
+        review1 = DomainObjectFactory.getReview("Pretty good book");
+        review1.setRating(rating1);
+
+        review2 = DomainObjectFactory.getReview("Could be worse");
+        review2.setRating(rating2);
+
+        review3 = DomainObjectFactory.getReview("Seen better");
+        review3.setRating(rating3);
+
+        review4 = DomainObjectFactory.getReview("Not my book");
+        review4.setRating(rating4);
+
+        review5 = DomainObjectFactory.getReview("OK");
+        review5.setRating(rating5);
+
+    }
+
+    private void addReviews(Book book){
+        List<Review> reviewList = new ArrayList<>();
+        reviewList.add(review1);
+        reviewList.add(review2);
+        reviewList.add(review3);
+        reviewList.add(review4);
+        reviewList.add(review5);
+        book.setReviews(reviewList);
+    }
+    private VisualBook getDefaultBook(){
+        VisualBook book = DomainObjectFactory.getPaperBook("Apocalypse Now");
+        return book;
     }
 }

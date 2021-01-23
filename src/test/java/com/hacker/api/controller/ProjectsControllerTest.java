@@ -75,8 +75,8 @@ public class ProjectsControllerTest {
         MvcResult result = mockMvc.perform(get("/projects/hackers"))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", "application/json"))
-                .andExpect(jsonPath("$[0].firstname", is("Miika")))
-                .andExpect(jsonPath("$[1].firstname", is("Jukka")))
+                .andExpect(jsonPath("$[0].firstName", is("Miika")))
+                .andExpect(jsonPath("$[1].firstName", is("Jukka")))
                 .andReturn();
 
         logger.info("resultti");
