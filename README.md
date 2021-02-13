@@ -2,23 +2,20 @@
 
 ![GitHub Actions](https://github.com/MiguelSombrero/hacker-api/workflows/Java%20CI%20with%20Maven/badge.svg)
 
-Hacker API serves `Book` (/api/books) and `Hacker` (/api/hackers) objects by API endpoints.
+Hacker API reads Google Sheets API, parses Java objects and return them as JSON response.
 
-Hacker API uses Google API Client for fetching data from Google Sheets, parses this data to `Book` and `Hacker` objects and sends a JSON response to caller.  
+## Endpoints
 
-## In production
+### `GET /api/studies/books`
 
-Hacker API and Hacker UI is running in Heroku:
+Finds all Books.
 
-
-## `/api/books`
-
-### Google Sheet for `Book` objects
+#### Google Sheet for `Book` objects
 
 Books (both audio and regular) is parsed from Google sheets that contains book reviews.
-Example spreadsheet can be found [here](https://docs.google.com/spreadsheets/d/1iken0UPCQ9jHCkJxeRzZRIA8T7PBVZ9Fo4FrclE0pVs/edit#gid=483319555)
+Example spreadsheet can be <MISSING>
 
-### Example response
+#### Example response
 
     [
         {
@@ -61,14 +58,146 @@ Example spreadsheet can be found [here](https://docs.google.com/spreadsheets/d/1
         }
     ]
     
-## `/api/hackers`
+### `GET /api/studies/books/reviews`
 
-### Google Sheet for `Hacker` objects
+Finds all Book Reviews.
+
+#### Google Sheet for `Review` objects
+
+Same is with `Books` objects.
+
+#### Example response
+
+    [
+        {
+            "id": 2024715031,
+            "created": "2021-01-03T11:59:07",
+            "review": "Huippu kirja!",
+            "rating": 4,
+            "reviewer": {
+                "id": 1754187377,
+                "email": testi@testi.fi,
+                "firstName": "Juho",
+                "lastName": "Testinen",
+                "skills": [],
+                "projects": []
+            },
+            "book": {
+                "id": 880471245,
+                "rating": 0.0,
+                "reviews": [],
+                "authors": "Jari Litmanen",
+                "name": "Litmanen 10",
+                "type": {
+                    "name": "Äänikirja"
+                },
+                "duration": 580
+            },
+            "course": null
+        }    
+    ]
+
+### `POST /api/studies/books/reviews`
+
+Creates new Book Review.
+
+#### Example request body
+
+    {
+	    "review": "Tosi hyvä kirja - jippii",
+	    "rating": 5,
+	    "reviewer": {
+		    "email": "miika.somero@testi.fi"
+	    },
+	    "book": {
+		    "type": "Äänikirja",
+		    "name": "Geenin Itsekkyys",
+		    "duration": 620,
+		    "authors": "Dawkins, Richard"
+	    }
+    }
+
+### `GET /api/studies/courses`
+
+Finds all Courses.
+
+#### Google Sheet for `Course` objects
+
+Same as with `Books` objects.
+
+#### Example response
+
+    [
+        {
+            "id": 2050048570,
+            "rating": 5.0,
+            "reviews": [
+              {
+                "id": 1499053504,
+                "created": "2019-08-11T09:35:05",
+                "review": "Hyvä kurssi",
+                "rating": 5,
+                "reviewer": {
+                  "id": 980821762,
+                  "firstname": "Kimmo",
+                  "lastname": "Testinen",
+                  "skills": [],
+                  "projects": []
+                },
+                "book": null,
+                "course": null
+              }
+            ],
+            "duration": 4200,
+            "name": "React 16 – The Complete Guide"
+          },
+    ]
+
+### `GET /api/studies/courses/reviews`
+
+Finds all Course Reviews.
+
+#### Google Sheet for `Review` objects
+
+Same as with `Books` objects.
+
+#### Example response
+
+    [
+        {
+            "id": 1923889721,
+            "created": "2020-12-31T20:48:29",
+            "review": "Huippu!",
+            "rating": 4,
+            "reviewer": {
+              "id": 173153942,
+              "email": testi@testi.fi,
+              "firstName": "Henna",
+              "lastName": "Testinen",
+              "skills": [],
+              "projects": []
+            },
+            "book": null,
+            "course": {
+              "id": 1786177975,
+              "rating": 0.0,
+              "reviews": [],
+              "duration": 77,
+              "name": "Microsoft Azure Developer: Develop Solutions With Blob Storage"
+            }
+          }
+    ]
+
+### `/api/projects/hackers`
+
+Find all Hackers in projects.
+
+#### Google Sheet for `Hacker` objects
 
 Hackers is parsed from Google sheet that contains project information for every hacker (i.e. employee).
-Example spreadsheet can be found [here](https://docs.google.com/spreadsheets/d/13hvpwT57SZ7MpnsTlNVLJmmSzfYbgntTwypWdcNLV34/edit#gid=0)
+Example spreadsheet can be found <MISSING>
 
-### Example response
+#### Example response
 
     [
         {
@@ -131,23 +260,20 @@ Example spreadsheet can be found [here](https://docs.google.com/spreadsheets/d/1
         }
     ]
 
-## Requirements
+## Project requirements
 
-Hacker API uses Google Sheets API which requires authentication. To use Hacker API you need to do the following
+### Google credentials
 
-### Create credentials
-
-Create new project in [Google Developer Console](https://console.developers.google.com/) and enable Google Sheets API to that.
-
-Add service account credentials to you project and a new key. Upload credentials to you machine.
+Hacker API uses Google Sheets API which requires authentication.
+To use Hacker API you need Google service account, or some other way to authenticate.
 
 Save your service account credentials in `/resources/google-credentials.json`.
 Class `GoogleAuthorizationUtil` reads credentials from that file and authenticates requests for Google Sheets API.
 
-### Create spreadsheets
+### Google Spreadsheets
 
 Create spreadsheets that corresponds to examples shown above.
-Give viewing rights to spreadsheets for your service account.
+Give writing rights to spreadsheets for your service account.
 
 ### Update application-{environment}.properties files
 
@@ -157,7 +283,7 @@ Properties ending `.spreadsheet` correspond to a spreadsheet id and properties e
 
 In development, you only have to update file `application-development.properties`.
 
-## Available scripts
+## Available commands
 
 ### Clone project
 
