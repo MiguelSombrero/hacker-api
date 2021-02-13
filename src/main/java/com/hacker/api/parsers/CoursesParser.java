@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
-public class CoursesParser extends SheetParserImpl {
+public class CoursesParser extends StudiesSheetParser {
 
     public Course parseWebCourse(List<Object> studiesSheet) {
         String duration = getWebCourseDurationInHHMM(studiesSheet);
@@ -31,36 +31,8 @@ public class CoursesParser extends SheetParserImpl {
         return review;
     }
 
-    private int parseDuration(String duration) {
-        int hours = 0;
-        int minutes = 0;
-
-        try {
-            String[] parts = duration.split(":");
-            hours = Integer.parseInt(parts[0]);
-            minutes = Integer.parseInt(parts[1]);
-
-        } catch (ArrayIndexOutOfBoundsException e) {
-            logger.info(String.format("Could not parse duration"));
-        } catch (NumberFormatException e) {
-            logger.info(String.format("Could not parse duration"));
-        }
-
-        return hours * 60 + minutes;
-    }
-
     public boolean isWebCourse(List<Object> studiesSheet) {
         return isOfType(studiesSheet, "Verkkokurssibonus");
-    }
-
-    private boolean isOfType(List<Object> studiesSheet, String type) {
-        String value = getStudyType(studiesSheet).toLowerCase();
-
-        if (!value.isEmpty() && value.equals(type.toLowerCase())) {
-            return true;
-        }
-
-        return false;
     }
 
     private LocalDateTime getTimestamp(List<Object> studiesSheet) { return parseDateTimeValue(studiesSheet, 0); }

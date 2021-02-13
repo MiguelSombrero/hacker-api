@@ -19,74 +19,65 @@ public class SheetParserImpl implements SheetParser {
     private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("M/d/yyyy H:mm:ss");
 
     public String parseStringValue(List<Object> sheet, Integer index) {
+        String value = "";
+
         try {
-            String value = getStringValue(sheet, index);
-            return value.trim();
+            value = getStringValue(sheet, index).trim();
         } catch (IndexOutOfBoundsException e) {
             logger.info("Spreadsheet is missing value in index " + index);
         }
 
-        logger.info("Returning empty string");
-        return "";
+        return value;
     }
 
     public int parseIntegerValue(List<Object> sheet, Integer index) {
+        int value = 0;
+
         try {
-            String value = parseStringValue(sheet, index);
-
-            logger.info("Integer for parse is: ");
-            logger.info(value);
-
-            return Integer.valueOf(value);
+            String stringValue = parseStringValue(sheet, index);
+            value = Integer.valueOf(stringValue);
         } catch (NumberFormatException e) {
-            logger.info("Cannot parse value to integer");
+            logger.info("Cannot parse value to integer - Returning 0");
         }
 
-        logger.info("Returning 0");
-        return 0;
+        return value;
     }
 
     public LocalDate parseDateValue(List<Object> sheet, Integer index) {
-        String value = "";
+        LocalDate value = LocalDate.now();
+        String stringValue = "";
 
         try {
-            value = parseStringValue(sheet, index);
-
-            logger.info("Date to parse is: ");
-            logger.info(value);
-
-            YearMonth ym = YearMonth.parse(value, dateFormatter);
-            return ym.atDay(1);
+            stringValue = parseStringValue(sheet, index);
+            YearMonth ym = YearMonth.parse(stringValue, dateFormatter);
+            value = ym.atDay(1);
         } catch (DateTimeParseException e) {
             logger.info("Cannot parse value to LocalDate with yearmonth formatter");
             logger.info("Trying to parse date with yearmonthday formatter");
 
             try {
-                return LocalDate.parse(value, dateWithDayFormatter);
+                value = LocalDate.parse(stringValue, dateWithDayFormatter);
 
             } catch (DateTimeParseException ex) {
-                logger.info("Cannot parse value to LocalDate with yearmonthday formatter");
+                logger.info("Cannot parse value to LocalDate with yearmonthday formatter - Returning current date");
             }
         }
 
-        logger.info("Returning current date");
-        return LocalDate.now();
+        return value;
     }
 
     public LocalDateTime parseDateTimeValue(List<Object> sheet, Integer index) {
+        LocalDateTime value = LocalDateTime.now();
+        String stringValue = "";
+
         try {
-            String value = parseStringValue(sheet, index);
-
-            logger.info("DateTime to parse is: ");
-            logger.info(value);
-
-            return LocalDateTime.parse(value, dateTimeFormatter);
+            stringValue = parseStringValue(sheet, index);
+            value = LocalDateTime.parse(stringValue, dateTimeFormatter);
         } catch (DateTimeParseException e) {
-            logger.info("Cannot parse value to LocalDateTime");
+            logger.info("Cannot parse value to LocalDateTime - Returning current datetime");
         }
 
-        logger.info("Returning current datetime");
-        return LocalDateTime.now();
+        return value;
     }
 
     private String getStringValue(List<Object> sheet, Integer index) {

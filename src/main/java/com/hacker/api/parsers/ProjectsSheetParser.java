@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 @Component
 public class ProjectsSheetParser extends SheetParserImpl {
 
-
     public Hacker parseProjectHacker(List<Object> projectsSheet) {
         Hacker hacker = new Hacker();
         String firstName = getNormalizedAndCapitalizedFirstName(projectsSheet);
