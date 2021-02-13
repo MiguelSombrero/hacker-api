@@ -75,11 +75,11 @@ public class BooksParser extends StudiesSheetParser {
         return isAudioBook(studiesSheet) || isVisualBook(studiesSheet);
     }
 
-    public boolean isAudioBook(List<Object> studiesSheet) {
+    protected boolean isAudioBook(List<Object> studiesSheet) {
         return isOfType(studiesSheet, "Äänikirjabonus");
     }
 
-    public boolean isVisualBook(List<Object> studiesSheet) {
+    protected boolean isVisualBook(List<Object> studiesSheet) {
         return isOfType(studiesSheet, "Kirjabonus");
     }
 
